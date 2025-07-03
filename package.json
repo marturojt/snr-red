@@ -1,7 +1,7 @@
 {
-  "name": "url-shortener-monorepo",
+  "name": "snr-red",
   "version": "1.0.0",
-  "description": "URL Shortener with QR Code Generator and Analytics",
+  "description": "SNR.red - Modern URL Shortener with QR Code Generator and Analytics",
   "private": true,
   "workspaces": [
     "apps/*",
@@ -11,10 +11,20 @@
     "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
     "dev:frontend": "npm run dev --workspace=frontend",
     "dev:backend": "npm run dev --workspace=backend",
-    "build": "npm run build --workspaces",
+    "build": "npm run build:types && npm run build --workspaces",
+    "build:types": "npm run build --workspace=@url-shortener/types",
+    "build:frontend": "npm run build --workspace=frontend",
+    "build:backend": "npm run build --workspace=backend",
     "start": "npm run start --workspaces",
+    "start:frontend": "npm run start --workspace=frontend",
+    "start:backend": "npm run start --workspace=backend",
     "lint": "npm run lint --workspaces",
-    "type-check": "npm run type-check --workspaces"
+    "type-check": "npm run type-check --workspaces",
+    "deploy": "./scripts/deploy.sh production",
+    "deploy:dev": "./scripts/deploy.sh development",
+    "deploy:server": "./scripts/deploy-to-server.sh",
+    "setup:server": "./scripts/setup-server.sh",
+    "clean": "rm -rf apps/*/dist apps/*/.next packages/*/dist node_modules/.cache"
   },
   "devDependencies": {
     "concurrently": "^8.2.2",
@@ -23,5 +33,20 @@
   },
   "engines": {
     "node": ">=18.0.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/snr-red.git"
+  },
+  "keywords": [
+    "url-shortener",
+    "qr-code",
+    "analytics",
+    "nextjs",
+    "express",
+    "mongodb",
+    "typescript"
+  ],
+  "author": "snr.red",
+  "license": "MIT"
 }

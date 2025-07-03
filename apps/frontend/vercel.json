@@ -1,0 +1,30 @@
+{
+  "version": 2,
+  "name": "snr-red-frontend",
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/next"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "https://api.snr.red/api/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
+  ],
+  "env": {
+    "NEXT_PUBLIC_API_URL": "https://api.snr.red",
+    "NEXT_PUBLIC_APP_URL": "https://snr.red"
+  },
+  "regions": ["iad1"],
+  "functions": {
+    "apps/frontend/src/app/**": {
+      "maxDuration": 30
+    }
+  }
+}

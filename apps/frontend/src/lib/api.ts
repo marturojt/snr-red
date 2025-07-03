@@ -36,7 +36,7 @@ api.interceptors.response.use(
 export const urlApi = {
   // Create short URL
   create: async (data: CreateUrlRequest): Promise<UrlData> => {
-    const response: ApiResponse<UrlData> = await api.post('/urls', data);
+    const response: ApiResponse<UrlData> = await api.post('/urls/shorten', data);
     return response.data!;
   },
 

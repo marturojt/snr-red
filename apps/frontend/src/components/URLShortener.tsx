@@ -14,18 +14,18 @@ import {
   Link, 
   BarChart3, 
   Settings, 
-  Download,
   ExternalLink,
   RefreshCw,
   Trash2,
   Eye,
-  EyeOff
+  EyeOff,
+  Globe
 } from 'lucide-react';
 import { urlApi, qrApi } from '@/lib/api';
 import { copyToClipboard, isValidUrl, generateRandomString } from '@/lib/utils';
 import QRCodeDisplay from './QRCodeDisplay';
 import AnalyticsDashboard from './AnalyticsDashboard';
-import { cn } from '@/lib/utils';
+import UserUrls from './UserUrls';
 
 interface UrlData {
   id: string;
@@ -111,7 +111,7 @@ export default function URLShortener() {
     try {
       await copyToClipboard(text);
       toast.success(`${type} copied to clipboard!`);
-    } catch (error) {
+    } catch {
       toast.error('Failed to copy to clipboard');
     }
   }, []);

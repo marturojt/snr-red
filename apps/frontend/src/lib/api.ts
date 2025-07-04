@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { CreateUrlRequest, CreateUrlResponse, UrlData, UrlStatsResponse, ApiResponse } from '@url-shortener/types';
+import { CreateUrlRequest, UrlData, UrlStatsResponse, ApiResponse } from '@url-shortener/types';
+import { getUserId } from './utils';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
 
@@ -19,6 +20,13 @@ api.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    
+    // Add user ID for tracking
+    const userId = getUserId();
+    if (userId) {
+      config.headers['x-user-id'] = userId;
+    }
+    
     return config;
   },
   (error) => Promise.reject(error)
@@ -86,13 +94,13 @@ export const analyticsApi = {
 
 export const qrApi = {
   // Generate QR code
-  generate: async (data: string, options?: any): Promise<string> => {
+  generate: async (data: string, options?: Record<string, unknown>): Promise<string> => {
     const response: ApiResponse<{ qrCodeUrl: string }> = await api.post('/qr/generate', { data, options });
     return response.data!.qrCodeUrl;
   },
 
   // Generate QR code as data URL
-  generateDataUrl: async (data: string, options?: any): Promise<string> => {
+  generateDataUrl: async (data: string, options?: Record<string, unknown>): Promise<string> => {
     const response: ApiResponse<{ dataUrl: string }> = await api.post('/qr/generate/dataurl', { data, options });
     return response.data!.dataUrl;
   },

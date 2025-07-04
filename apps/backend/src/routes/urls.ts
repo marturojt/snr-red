@@ -49,6 +49,7 @@ router.post('/shorten', validateUrl, asyncHandler(async (req, res) => {
   }
 
   const urlData: CreateUrlRequest = req.body;
+  const userId = req.headers['x-user-id'] as string || req.query.userId as string;
 
   // Additional validation for expiration date
   if (urlData.expiresAt && new Date(urlData.expiresAt) <= new Date()) {
@@ -56,7 +57,7 @@ router.post('/shorten', validateUrl, asyncHandler(async (req, res) => {
   }
 
   try {
-    const result = await UrlService.create(urlData);
+    const result = await UrlService.create(urlData, userId);
     
     const response: ApiResponse = {
       success: true,

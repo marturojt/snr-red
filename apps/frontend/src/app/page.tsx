@@ -1,5 +1,5 @@
-import URLShortener from '@/components/URLShortener';
+import URLShortenerWithTabs from '@/components/URLShortenerWithTabs';
 
 export default function Home() {
-  return <URLShortener />;
+  return <URLShortenerWithTabs />;
 }

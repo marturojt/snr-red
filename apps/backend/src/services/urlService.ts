@@ -4,7 +4,7 @@ import { CreateUrlRequest, UrlData } from '@url-shortener/types';
 import { QrService } from './qrService';
 
 export class UrlService {
-  static async create(data: CreateUrlRequest): Promise<UrlData> {
+  static async create(data: CreateUrlRequest, userId?: string): Promise<UrlData> {
     // Generate short code
     let shortCode = data.customCode;
     if (!shortCode) {
@@ -32,6 +32,7 @@ export class UrlService {
       title: data.title,
       description: data.description,
       expiresAt: data.expiresAt,
+      userId: userId || null,
       isActive: true
     });
 

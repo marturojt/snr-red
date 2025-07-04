@@ -2,7 +2,7 @@ module.exports = {
   apps: [{
     name: 'snr-red-api',
     script: 'dist/index.js',
-    cwd: '/var/www/snr-red/backend',
+    cwd: '/var/www/snr-red/apps/backend',
     instances: 2, // Ajusta según cores de CPU disponibles
     exec_mode: 'cluster',
     

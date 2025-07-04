@@ -20,7 +20,7 @@ Vercel (Frontend)
 
 ```bash
 # En tu servidor Linux (Ubuntu/Debian)
-wget https://raw.githubusercontent.com/tu-usuario/snr-red/main/scripts/setup-server.sh
+wget https://raw.githubusercontent.com/marturojt/snr-red/main/scripts/setup-server.sh
 chmod +x setup-server.sh
 sudo ./setup-server.sh
 ```

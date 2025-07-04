@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Script de configuración para servidor Linux - snr.red
-# Ejecutar como root o con sudo
+# Ejecutar como usuario okami con sudo
 
 set -e
 
@@ -27,29 +27,29 @@ echo "🚀 Configurando servidor para snr.red..."
 
 # 1. Actualizar sistema
 echo "📦 Actualizando sistema..."
-apt update && apt upgrade -y
+sudo apt update && sudo apt upgrade -y
 print_status "Sistema actualizado"
 
 # 2. Instalar dependencias
 echo "🔧 Instalando dependencias..."
-apt install -y curl wget git apache2 certbot python3-certbot-apache ufw fail2ban
+sudo apt install -y curl wget git apache2 certbot python3-certbot-apache ufw fail2ban
 
 # 3. Instalar Node.js (v18 LTS)
 echo "📦 Instalando Node.js..."
-curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
-apt install -y nodejs
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo bash -
+sudo apt install -y nodejs
 print_status "Node.js $(node --version) instalado"
 
 # 4. Instalar MongoDB
 echo "🗄️  Instalando MongoDB..."
-wget -qO - https://www.mongodb.org/static/pgp/server-7.0.asc | gpg --dearmor | tee /usr/share/keyrings/mongodb.gpg > /dev/null
-echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-7.0.list
-apt update
-apt install -y mongodb-org
+wget -qO - https://www.mongodb.org/static/pgp/server-7.0.asc | gpg --dearmor | sudo tee /usr/share/keyrings/mongodb.gpg > /dev/null
+echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list
+sudo apt update
+sudo apt install -y mongodb-org
 
 # Iniciar y habilitar MongoDB
-systemctl start mongod
-systemctl enable mongod
+sudo systemctl start mongod
+sudo systemctl enable mongod
 print_status "MongoDB instalado y configurado"
 
 # 5. Instalar PM2
@@ -60,23 +60,25 @@ print_status "PM2 instalado"
 
 # 6. Configurar directorios
 echo "📁 Configurando directorios..."
-mkdir -p /var/www/snr-red/backend
-mkdir -p /var/log/snr-red
-chown -R www-data:www-data /var/www/snr-red
-chown -R www-data:www-data /var/log/snr-red
+sudo mkdir -p /var/www/snr-red/backend
+sudo mkdir -p /var/log/snr-red
+sudo chown -R okami:www-data /var/www/snr-red
+sudo chown -R okami:www-data /var/log/snr-red
+sudo chmod -R 755 /var/www/snr-red
+sudo chmod -R 755 /var/log/snr-red
 print_status "Directorios configurados"
 
 # 7. Configurar Apache
 echo "🌐 Configurando Apache..."
-a2enmod ssl
-a2enmod rewrite
-a2enmod proxy
-a2enmod proxy_http
-a2enmod headers
+sudo a2enmod ssl
+sudo a2enmod rewrite
+sudo a2enmod proxy
+sudo a2enmod proxy_http
+sudo a2enmod headers
 
 # Deshabilitar sitio por defecto
-a2dissite 000-default
-systemctl reload apache2
+sudo a2dissite 000-default
+sudo systemctl reload apache2
 print_status "Apache configurado"
 
 # 8. Configurar Firewall

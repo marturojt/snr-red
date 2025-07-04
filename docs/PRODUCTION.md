@@ -11,7 +11,7 @@
 ```bash
 NODE_ENV=production
 PORT=3001
-MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/snr-red-prod
+MONGODB_URI=mongodb://snrred_user:SECURE_PASSWORD_HERE@localhost:27017/snr-red-prod
 JWT_SECRET=SUPER_SECURE_JWT_SECRET_FOR_PRODUCTION_32_CHARS_MIN
 BASE_URL=https://snr.red
 FRONTEND_URL=https://snr.red
@@ -40,7 +40,7 @@ NEXT_PUBLIC_APP_URL=https://snr.red
 # Dominio: snr.red
 # Tipo    Nombre    Valor                          TTL
 A         @         76.76.19.19 (Vercel IP)       300
-CNAME     api       backend-production-abc.railway.app  300
+A         api       TU_SERVIDOR_IP                 300
 CNAME     www       snr.red                        300
 
 # Opcional para futuro
@@ -180,6 +180,75 @@ En caso de problemas:
 - **Railway**: Aumentar plan, añadir replicas
 - **Vercel**: Escalado automático
 - **MongoDB**: Aumentar tier, sharding
+
+## Configuración de MongoDB Local
+
+### Configuración de Producción
+```bash
+# Archivo de configuración: /etc/mongod.conf
+storage:
+  dbPath: /var/lib/mongodb
+  journal:
+    enabled: true
+
+systemLog:
+  destination: file
+  logAppend: true
+  path: /var/log/mongodb/mongod.log
+
+net:
+  port: 27017
+  bindIp: 127.0.0.1  # Solo conexiones locales
+
+security:
+  authorization: enabled  # Habilitar autenticación
+
+processManagement:
+  fork: true
+  pidFilePath: /var/run/mongodb/mongod.pid
+  timeZoneInfo: /usr/share/zoneinfo
+```
+
+### Usuario de Base de Datos
+```javascript
+// Crear usuario para la aplicación
+use snr-red-prod
+db.createUser({
+  user: "snrred_user",
+  pwd: "SECURE_PASSWORD_HERE",
+  roles: [
+    { role: "readWrite", db: "snr-red-prod" }
+  ]
+})
+```
+
+### Configuración de Backup
+```bash
+# Script de backup diario
+#!/bin/bash
+# /home/okami/scripts/backup-mongo.sh
+DATE=$(date +%Y%m%d_%H%M%S)
+BACKUP_DIR="/home/okami/backups/mongodb"
+mkdir -p $BACKUP_DIR
+
+mongodump --uri="mongodb://snrred_user:PASSWORD@localhost:27017/snr-red-prod" \
+  --out="$BACKUP_DIR/backup_$DATE"
+
+# Mantener solo los últimos 7 backups
+find $BACKUP_DIR -type d -name "backup_*" -mtime +7 -exec rm -rf {} \;
+```
+
+### Configuración de Seguridad
+```bash
+# Firewall - Solo permitir conexiones locales a MongoDB
+sudo ufw deny 27017
+sudo ufw allow from 127.0.0.1 to any port 27017
+
+# Permisos de archivos
+sudo chmod 600 /etc/mongod.conf
+sudo chown mongodb:mongodb /var/lib/mongodb
+sudo chown mongodb:mongodb /var/log/mongodb
+```
 
 ---
 

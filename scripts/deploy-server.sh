@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Script para deployar backend a servidor Linux con PM2
-# Usage: ./scripts/deploy-to-server.sh [server-ip-or-host] [user] [port] [git-repo-url]
+# Usage: ./scripts/deploy-server.sh [server-host] [user] [port] [git-repo-url]
 
 set -e
 
@@ -16,7 +16,6 @@ if [[ "$SERVER_HOST" =~ ^[a-zA-Z] ]] && ! [[ "$SERVER_HOST" =~ ^[0-9]+\.[0-9]+\.
     # Es un hostname, usar configuración SSH (sin especificar puerto)
     SSH_HOST="$SERVER_HOST"
     SCP_HOST="$SERVER_HOST"
-    # Para verificación de health, intentamos obtener la IP real o usar el hostname
     HEALTH_CHECK_HOST="$SERVER_HOST"
 else
     # Es una IP, usar configuración manual con puerto
@@ -54,19 +53,16 @@ print_error() {
 
 if [ "$SERVER_HOST" = "your-server-ip" ]; then
     print_error "Por favor proporciona la IP del servidor o nombre del host SSH"
-    echo "Usage: ./scripts/deploy-to-server.sh [server-ip-or-host] [user] [port] [git-repo-url]"
+    echo "Usage: ./scripts/deploy-server.sh [server-host] [user] [port] [git-repo-url]"
     echo "Examples:"
-    echo "  ./scripts/deploy-to-server.sh freejolitos                                           # Usar configuración SSH"
-    echo "  ./scripts/deploy-to-server.sh freejolitos okami 22 git@github.com:marturojt/snr-red.git    # Con repo específico"
-    echo "  ./scripts/deploy-to-server.sh 192.168.1.100 okami 10022                           # IP con puerto personalizado"
+    echo "  ./scripts/deploy-server.sh freejolitos                                           # Usar configuración SSH"
+    echo "  ./scripts/deploy-server.sh freejolitos okami 22 https://github.com/user/repo    # Con repo específico"
+    echo "  ./scripts/deploy-server.sh 192.168.1.100 okami 10022                           # IP con puerto personalizado"
     exit 1
 fi
 
 echo "🚀 Desplegando snr.red backend a $SERVER_HOST..."
 echo "📍 Repositorio: $GIT_REPO"
-
-# 1. Verificar y preparar servidor
-echo "� Verificando estado del servidor..."
 
 # Crear script para ejecutar en el servidor
 cat > /tmp/deploy-script.sh << DEPLOY_SCRIPT
@@ -94,22 +90,13 @@ if [ -d "\$BACKEND_PATH/.git" ]; then
     
     # Actualizar código
     git fetch origin
-    # Determinar rama principal (main o master)
-    if git show-ref --verify --quiet refs/remotes/origin/main; then
-        MAIN_BRANCH="main"
-    elif git show-ref --verify --quiet refs/remotes/origin/master; then
-        MAIN_BRANCH="master"
-    else
-        echo "❌ No se pudo determinar la rama principal"
-        exit 1
-    fi
-    git reset --hard origin/\$MAIN_BRANCH
+    git reset --hard origin/main
     
     # Restaurar .env si había backup
     if [ -f "/tmp/snr-red-env-backup" ]; then
         sudo cp /tmp/snr-red-env-backup apps/backend/.env
         sudo rm /tmp/snr-red-env-backup
-        echo "� .env restaurado"
+        echo "🔒 .env restaurado"
     fi
     
 else
@@ -161,7 +148,7 @@ sudo chmod -R 755 apps/backend/uploads
 sudo chown -R $SERVER_USER:www-data \$BACKEND_PATH
 sudo chmod -R 755 \$BACKEND_PATH
 
-echo "� Iniciando aplicación con PM2..."
+echo "🚀 Iniciando aplicación con PM2..."
 cd apps/backend
 
 # Verificar si PM2 está instalado
@@ -185,21 +172,17 @@ echo "   2. Reiniciar la aplicación: pm2 restart snr-red-api"
 echo "   3. Verificar logs: pm2 logs snr-red-api"
 DEPLOY_SCRIPT
 
-# 5. Ejecutar script de despliegue en el servidor
-echo "🚀 Ejecutando despliegue en el servidor..."
-
-# Copiar script al servidor y ejecutarlo
+# Transferir y ejecutar script
+echo "📤 Transfiriendo script al servidor..."
 if [[ "$SERVER_HOST" =~ ^[a-zA-Z] ]] && ! [[ "$SERVER_HOST" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-    # Usar configuración SSH del archivo ~/.ssh/config
-    scp /tmp/deploy-script.sh $SSH_HOST:/tmp/
-    ssh $SSH_HOST "chmod +x /tmp/deploy-script.sh && /tmp/deploy-script.sh && rm /tmp/deploy-script.sh"
+    scp /tmp/deploy-script.sh $SCP_HOST:/tmp/
+    ssh $SSH_HOST "GIT_REPO='$GIT_REPO' BACKEND_PATH='$BACKEND_PATH' bash /tmp/deploy-script.sh"
 else
-    # Usar IP con puerto específico
-    scp $SCP_OPTIONS /tmp/deploy-script.sh $SSH_HOST:/tmp/
-    ssh $SSH_OPTIONS $SSH_HOST "chmod +x /tmp/deploy-script.sh && /tmp/deploy-script.sh && rm /tmp/deploy-script.sh"
+    scp $SCP_OPTIONS /tmp/deploy-script.sh $SCP_HOST:/tmp/
+    ssh $SSH_OPTIONS $SSH_HOST "GIT_REPO='$GIT_REPO' BACKEND_PATH='$BACKEND_PATH' bash /tmp/deploy-script.sh"
 fi
 
-# 6. Verificar despliegue
+# Verificar despliegue
 echo "🧪 Verificando despliegue..."
 sleep 5
 
@@ -214,8 +197,8 @@ else
     print_warning "Health check omitido para hostname configurado. Verifica manualmente."
 fi
 
-# 7. Limpiar archivos temporales locales
-rm /tmp/deploy-script.sh
+# Limpiar archivos temporales locales
+rm -f /tmp/deploy-script.sh
 
 echo ""
 print_status "🎉 Despliegue completado!"
@@ -226,11 +209,13 @@ if [[ "$SERVER_HOST" =~ ^[a-zA-Z] ]] && ! [[ "$SERVER_HOST" =~ ^[0-9]+\.[0-9]+\.
     echo "   ssh $SERVER_HOST 'pm2 logs snr-red-api'"
     echo "   ssh $SERVER_HOST 'pm2 restart snr-red-api'"
     echo "   ssh $SERVER_HOST 'pm2 monit'"
+    echo "   ssh $SERVER_HOST 'nano /var/www/snr-red/apps/backend/.env'"
 else
     echo "   ssh $SSH_OPTIONS $SSH_HOST 'pm2 status'"
     echo "   ssh $SSH_OPTIONS $SSH_HOST 'pm2 logs snr-red-api'"
     echo "   ssh $SSH_OPTIONS $SSH_HOST 'pm2 restart snr-red-api'"
     echo "   ssh $SSH_OPTIONS $SSH_HOST 'pm2 monit'"
+    echo "   ssh $SSH_OPTIONS $SSH_HOST 'nano /var/www/snr-red/apps/backend/.env'"
 fi
 echo ""
 echo "🌐 URLs de prueba:"
@@ -238,7 +223,7 @@ echo "   Backend: http://$HEALTH_CHECK_HOST:3001/health"
 echo "   API: http://$HEALTH_CHECK_HOST:3001/api/urls/shorten"
 echo ""
 echo "📝 No olvides:"
-echo "   1. Configurar virtual host de Apache"
-echo "   2. Obtener certificados SSL"
-echo "   3. Configurar DNS"
-echo "   4. Configurar variables de entorno en .env"
+echo "   1. Configurar variables de entorno en .env (especialmente MongoDB password y JWT secret)"
+echo "   2. Configurar virtual host de Apache"
+echo "   3. Obtener certificados SSL"
+echo "   4. Configurar DNS"

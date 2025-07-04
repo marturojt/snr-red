@@ -76,6 +76,65 @@ app.get('/:shortCode', async (req, res) => {
   }
 });
 
+// Specific redirect route for Apache proxy
+app.get('/redirect/:shortCode', async (req, res) => {
+  try {
+    const { shortCode } = req.params;
+    
+    // Import here to avoid circular dependency
+    const { UrlService } = await import('./services/urlService');
+    const { AnalyticsService } = await import('./services/analyticsService');
+    
+    const url = await UrlService.getByShortCode(shortCode);
+    
+    if (!url || !url.isActive) {
+      return res.status(404).send(`
+        <!DOCTYPE html>
+        <html>
+        <head><title>URL Not Found - snr.red</title></head>
+        <body>
+          <h1>URL Not Found</h1>
+          <p>The short URL you're looking for doesn't exist or has been removed.</p>
+          <p><a href="https://snr.red">Create a new short URL</a></p>
+        </body>
+        </html>
+      `);
+    }
+    
+    if (url.expiresAt && new Date() > url.expiresAt) {
+      return res.status(410).send(`
+        <!DOCTYPE html>
+        <html>
+        <head><title>URL Expired - snr.red</title></head>
+        <body>
+          <h1>URL Expired</h1>
+          <p>This short URL has expired and is no longer available.</p>
+          <p><a href="https://snr.red">Create a new short URL</a></p>
+        </body>
+        </html>
+      `);
+    }
+    
+    // Track analytics
+    await AnalyticsService.trackClick(url.id, req);
+    
+    res.redirect(301, url.originalUrl);
+  } catch (error) {
+    console.error('Redirect error:', error);
+    res.status(500).send(`
+      <!DOCTYPE html>
+      <html>
+      <head><title>Error - snr.red</title></head>
+      <body>
+        <h1>Something went wrong</h1>
+        <p>We're experiencing technical difficulties. Please try again later.</p>
+        <p><a href="https://snr.red">Go to snr.red</a></p>
+      </body>
+      </html>
+    `);
+  }
+});
+
 // Error handling
 app.use(errorHandler);
 

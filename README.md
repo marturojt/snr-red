@@ -1,6 +1,8 @@
-# URL Shortener - Monorepo
+# SNR.red - URL Shortener
 
-Un acortador de URLs moderno con generador de QR y analytics detallados, construido como monorepo con Next.js y Node.js.
+Un acortador de URLs moderno y rápido construido con Next.js y Node.js.
+
+🌐 **Dominio de producción**: [snr.red](https://snr.red)
 
 ## 🚀 Características
 
@@ -20,7 +22,7 @@ Un acortador de URLs moderno con generador de QR y analytics detallados, constru
 ## 🏗️ Arquitectura del Monorepo
 
 ```
-sns-red/
+snr-red/
 ├── apps/
 │   ├── frontend/          # Next.js app
 │   └── backend/           # Node.js API
@@ -64,7 +66,7 @@ sns-red/
 ```bash
 # Clonar el repositorio
 git clone <repository-url>
-cd sns-red
+cd snr-red
 
 # Instalar dependencias del monorepo
 npm install

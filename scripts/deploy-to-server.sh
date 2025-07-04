@@ -1,5 +1,22 @@
 #!/bin/bash
 
+# =============================================================================
+# SNR.RED - URL Shortener Deployment Script
+# =============================================================================
+# 
+# Este script deploya automáticamente el proyecto SNR.RED a un servidor Linux
+# Configuración: MongoDB sin autenticación para simplificar el deployment
+# 
+# Uso: ./deploy-to-server.sh
+# 
+# Requisitos:
+# - MongoDB instalado en el servidor (sin autenticación)
+# - Node.js y npm instalados
+# - PM2 para gestión de procesos
+# - Apache configurado como reverse proxy
+# 
+# =============================================================================
+
 # Script para deployar backend a servidor Linux con PM2
 # Usage: ./scripts/deploy-to-serve    # Restaurar .env si había backup
     if [ -f "/tmp/snr-red-backend-env-backup" ]; then
@@ -174,7 +191,7 @@ if [ ! -f "apps/backend/.env" ]; then
     
     # Configurar valores por defecto para producción
     sed -i 's/NODE_ENV=development/NODE_ENV=production/' apps/backend/.env
-    sed -i 's|MONGODB_URI=.*|MONGODB_URI=mongodb://snrred_user:CHANGE_PASSWORD@localhost:27017/snr-red-prod|' apps/backend/.env
+    sed -i 's|MONGODB_URI=.*|MONGODB_URI=mongodb://localhost:27017/snr-red-prod|' apps/backend/.env
     sed -i 's|BASE_URL=.*|BASE_URL=https://snr.red|' apps/backend/.env
     sed -i 's|FRONTEND_URL=.*|FRONTEND_URL=https://snr.red|' apps/backend/.env
     sed -i 's/RATE_LIMIT_MAX_REQUESTS=100/RATE_LIMIT_MAX_REQUESTS=50/' apps/backend/.env

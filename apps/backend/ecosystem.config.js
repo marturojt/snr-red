@@ -10,7 +10,7 @@ module.exports = {
     env: {
       NODE_ENV: 'production',
       PORT: 3001,
-      MONGODB_URI: 'mongodb://localhost:27017/snr-red',
+      MONGODB_URI: 'mongodb://localhost:27017/snr-red-prod',
       BASE_URL: 'https://snr.red',
       FRONTEND_URL: 'https://snr.red'
     },

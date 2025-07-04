@@ -201,15 +201,43 @@ npm run start --workspace=backend
 
 ## 🚀 Deployment
 
-### Backend (Node.js)
+### Script de Deployment Automático
+```bash
+./scripts/deploy-to-server.sh
+```
+
+### Configuración Manual
+
+#### Backend (Node.js)
 1. Configurar variables de entorno de producción
 2. Construir el proyecto: `npm run build --workspace=backend`
 3. Iniciar: `npm run start --workspace=backend`
 
-### Frontend (Next.js)
+#### Frontend (Next.js)
 1. Configurar variables de entorno de producción
 2. Construir el proyecto: `npm run build --workspace=frontend`
 3. Iniciar: `npm run start --workspace=frontend`
+
+#### MongoDB
+La configuración actual usa MongoDB sin autenticación para simplificar el deployment.
+
+**Configuración en producción:**
+```yaml
+# /etc/mongod.conf
+security:
+  authorization: disabled
+```
+
+**Variables de entorno:**
+```bash
+# Backend
+MONGODB_URI=mongodb://localhost:27017/snr-red-prod
+
+# Frontend
+NEXT_PUBLIC_API_URL=https://api.snr.red/api
+```
+
+Ver [DEPLOYMENT-NO-AUTH.md](docs/DEPLOYMENT-NO-AUTH.md) para detalles completos.
 
 ### Docker (Opcional)
 ```bash

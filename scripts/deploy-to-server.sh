@@ -1,7 +1,38 @@
 #!/bin/bash
 
 # Script para deployar backend a servidor Linux con PM2
-# Usage: ./scripts/deploy-to-server.sh [server-ip-or-host] [user] [port] [git-repo-url]
+# Usage: ./scripts/deploy-to-serve    # Restaurar .env si había backup
+    if [ -f "/tmp/snr-red-backend-env-backup" ]; then
+        sudo cp /tmp/snr-red-backend-env-backup apps/backend/.env
+echo "📋 Comandos útiles para el servidor:"
+if [[ "$SERVER_HOST" =~ ^[a-zA-Z] ]] && ! [[ "$SERVER_HOST" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+    echo "   ssh $SERVER_HOST 'pm2 status'"
+    echo "   ssh $SERVER_HOST 'pm2 logs'"
+    echo "   ssh $SERVER_HOST 'pm2 restart snr-red-api'"
+    echo "   ssh $SERVER_HOST 'pm2 restart snr-red-frontend'"
+    echo "   ssh $SERVER_HOST 'pm2 monit'"
+else
+    echo "   ssh $SSH_OPTIONS $SSH_HOST 'pm2 status'"
+    echo "   ssh $SSH_OPTIONS $SSH_HOST 'pm2 logs'"
+    echo "   ssh $SSH_OPTIONS $SSH_HOST 'pm2 restart snr-red-api'"
+    echo "   ssh $SSH_OPTIONS $SSH_HOST 'pm2 restart snr-red-frontend'"
+    echo "   ssh $SSH_OPTIONS $SSH_HOST 'pm2 monit'"
+fi
+echo ""
+echo "🌐 URLs de prueba:"
+echo "   Frontend: http://$HEALTH_CHECK_HOST:3000"
+echo "   Backend: http://$HEALTH_CHECK_HOST:3001/health"
+echo "   API: http://$HEALTH_CHECK_HOST:3001/api/urls/shorten"/tmp/snr-red-backend-env-backup
+        echo "🔒 .env backend restaurado"
+    fi
+    
+    if [ -f "/tmp/snr-red-frontend-env-backup" ]; then
+        sudo cp /tmp/snr-red-frontend-env-backup apps/frontend/.env.local
+        sudo rm /tmp/snr-red-frontend-env-backup
+        echo "🔒 .env frontend restaurado"
+    fi
+
+server-ip-or-host] [user] [port] [git-repo-url]
 
 set -e
 
@@ -88,22 +119,18 @@ if [ -d "\$BACKEND_PATH/.git" ]; then
     
     # Hacer backup de .env si existe
     if [ -f "apps/backend/.env" ]; then
-        sudo cp apps/backend/.env /tmp/snr-red-env-backup
-        echo "🔒 Backup de .env creado"
+        sudo cp apps/backend/.env /tmp/snr-red-backend-env-backup
+        echo "🔒 Backup de .env backend creado"
     fi
     
-    # Actualizar código
-    git fetch origin
-    # Determinar rama principal (main o master)
-    if git show-ref --verify --quiet refs/remotes/origin/main; then
-        MAIN_BRANCH="main"
-    elif git show-ref --verify --quiet refs/remotes/origin/master; then
-        MAIN_BRANCH="master"
-    else
-        echo "❌ No se pudo determinar la rama principal"
-        exit 1
+    if [ -f "apps/frontend/.env.local" ]; then
+        sudo cp apps/frontend/.env.local /tmp/snr-red-frontend-env-backup
+        echo "🔒 Backup de .env frontend creado"
     fi
-    git reset --hard origin/\$MAIN_BRANCH
+    
+    # Actualizar código desde la rama prod
+    git fetch origin
+    git reset --hard origin/prod
     
     # Restaurar .env si había backup
     if [ -f "/tmp/snr-red-env-backup" ]; then
@@ -121,20 +148,28 @@ else
         sudo mv \$BACKEND_PATH \$BACKEND_PATH.backup.\$(date +%Y%m%d-%H%M%S)
     fi
     
-    sudo git clone \$GIT_REPO \$BACKEND_PATH
+    sudo git clone -b prod \$GIT_REPO \$BACKEND_PATH
     sudo chown -R $SERVER_USER:www-data \$BACKEND_PATH
     cd \$BACKEND_PATH
 fi
 
 echo "📦 Instalando dependencias..."
-npm ci
+# Instalar dependencias del monorepo
+if [ -f "package-lock.json" ]; then
+    npm ci
+else
+    npm install
+fi
 
 echo "🔧 Construyendo proyecto..."
-npm run build
+# Construir tipos, backend y frontend
+npm run build:types
+npm run build:backend
+npm run build:frontend
 
 # Configurar .env si no existe
 if [ ! -f "apps/backend/.env" ]; then
-    echo "⚙️  Configurando variables de entorno..."
+    echo "⚙️  Configurando variables de entorno backend..."
     cp apps/backend/.env.example apps/backend/.env
     
     # Configurar valores por defecto para producción
@@ -145,24 +180,33 @@ if [ ! -f "apps/backend/.env" ]; then
     sed -i 's/RATE_LIMIT_MAX_REQUESTS=100/RATE_LIMIT_MAX_REQUESTS=50/' apps/backend/.env
     sed -i 's/ANALYTICS_RETENTION_DAYS=365/ANALYTICS_RETENTION_DAYS=730/' apps/backend/.env
     
-    echo "📝 Archivo .env configurado con valores de producción"
-    echo "⚠️  IMPORTANTE: Edita /var/www/snr-red/apps/backend/.env y configura:"
-    echo "   - MONGODB_URI con tu password real"
-    echo "   - JWT_SECRET con una clave segura de 32+ caracteres"
+    echo "📝 Archivo .env backend configurado con valores de producción"
+fi
+
+# Configurar .env.local para frontend si no existe
+if [ ! -f "apps/frontend/.env.local" ]; then
+    echo "⚙️  Configurando variables de entorno frontend..."
+    cat > apps/frontend/.env.local << EOF
+NEXT_PUBLIC_API_URL=https://api.snr.red
+NEXT_PUBLIC_APP_URL=https://snr.red
+EOF
+    echo "📝 Archivo .env.local frontend configurado"
 fi
 
 # Crear directorios necesarios
-echo "📁 Creando directorios de uploads..."
+echo "📁 Creando directorios de uploads y logs..."
 mkdir -p apps/backend/uploads/qr
+sudo mkdir -p /var/log/snr-red
 sudo chown -R $SERVER_USER:www-data apps/backend/uploads
+sudo chown -R $SERVER_USER:www-data /var/log/snr-red
 sudo chmod -R 755 apps/backend/uploads
+sudo chmod -R 755 /var/log/snr-red
 
 # Configurar permisos
 sudo chown -R $SERVER_USER:www-data \$BACKEND_PATH
 sudo chmod -R 755 \$BACKEND_PATH
 
-echo "� Iniciando aplicación con PM2..."
-cd apps/backend
+echo "🚀 Iniciando aplicaciones con PM2..."
 
 # Verificar si PM2 está instalado
 if ! command -v pm2 &> /dev/null; then
@@ -170,7 +214,18 @@ if ! command -v pm2 &> /dev/null; then
     sudo npm install -g pm2
 fi
 
-# Iniciar con PM2
+# Detener aplicaciones existentes
+pm2 stop snr-red-api 2>/dev/null || true
+pm2 stop snr-red-frontend 2>/dev/null || true
+
+# Iniciar backend
+echo "🔧 Iniciando backend..."
+cd apps/backend
+pm2 start ecosystem.config.js --env production
+
+# Iniciar frontend
+echo "🌐 Iniciando frontend..."
+cd ../frontend
 pm2 start ecosystem.config.js --env production
 
 # Configurar PM2 para auto-start
@@ -181,8 +236,9 @@ echo "✅ Despliegue completado exitosamente!"
 echo ""
 echo "📋 Próximos pasos:"
 echo "   1. Editar /var/www/snr-red/apps/backend/.env con tus credenciales"
-echo "   2. Reiniciar la aplicación: pm2 restart snr-red-api"
-echo "   3. Verificar logs: pm2 logs snr-red-api"
+echo "   2. Reiniciar aplicaciones: pm2 restart snr-red-api snr-red-frontend"
+echo "   3. Verificar logs: pm2 logs"
+echo "   4. Verificar estado: pm2 status"
 DEPLOY_SCRIPT
 
 # 5. Ejecutar script de despliegue en el servidor

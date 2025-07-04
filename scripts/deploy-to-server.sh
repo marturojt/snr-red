@@ -187,7 +187,7 @@ fi
 if [ ! -f "apps/frontend/.env.local" ]; then
     echo "⚙️  Configurando variables de entorno frontend..."
     cat > apps/frontend/.env.local << EOF
-NEXT_PUBLIC_API_URL=https://api.snr.red
+NEXT_PUBLIC_API_URL=https://api.snr.red/api
 NEXT_PUBLIC_APP_URL=https://snr.red
 EOF
     echo "📝 Archivo .env.local frontend configurado"

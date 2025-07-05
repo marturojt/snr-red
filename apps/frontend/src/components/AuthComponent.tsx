@@ -14,7 +14,8 @@ import {
   Crown,
   LogOut,
   UserPlus,
-  LogIn
+  LogIn,
+  Settings
 } from 'lucide-react';
 import { authApi } from '@/lib/api';
 
@@ -27,6 +28,7 @@ interface User {
   updatedAt: Date;
   lastLoginAt?: Date;
   isActive: boolean;
+  isAdmin?: boolean; // Make optional for backward compatibility
 }
 
 interface AuthComponentProps {
@@ -192,6 +194,17 @@ export default function AuthComponent({ user, onAuthChange }: AuthComponentProps
 
           {/* Actions */}
           <div className="flex gap-2 pt-4">
+            {user.isAdmin && (
+              <Button
+                onClick={() => window.location.href = '/admin'}
+                variant="outline"
+                className="flex items-center gap-2"
+              >
+                <Settings className="w-4 h-4" />
+                Admin Panel
+              </Button>
+            )}
+            
             {user.plan === 'free' && (
               <Button
                 onClick={handleUpgradePlan}

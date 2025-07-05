@@ -95,6 +95,7 @@ export interface User {
   updatedAt: Date;
   lastLoginAt?: Date;
   isActive: boolean;
+  isAdmin?: boolean;
   subscription?: {
     status: 'active' | 'cancelled' | 'expired';
     startDate: Date;

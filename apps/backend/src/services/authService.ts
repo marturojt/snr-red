@@ -52,14 +52,20 @@ export class AuthService {
   }
 
   static async login(data: LoginRequest): Promise<AuthResult> {
+    console.log('Login attempt for email:', data.email);
+    
     // Find user
     const user = await User.findOne({ email: data.email, isActive: true });
+    console.log('User found:', user ? 'Yes' : 'No');
     if (!user) {
+      console.log('User not found or inactive');
       throw new Error('Invalid email or password');
     }
 
+    console.log('Checking password...');
     // Check password
     const isPasswordValid = await bcrypt.compare(data.password, user.password);
+    console.log('Password valid:', isPasswordValid);
     if (!isPasswordValid) {
       throw new Error('Invalid email or password');
     }
@@ -71,6 +77,7 @@ export class AuthService {
     // Generate token
     const token = this.generateToken(user);
 
+    console.log('Login successful for user:', user.email);
     return { user, token };
   }
 

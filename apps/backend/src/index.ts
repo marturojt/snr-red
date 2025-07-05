@@ -11,6 +11,7 @@ import analyticsRoutes from './routes/analytics';
 import qrRoutes from './routes/qr';
 import authRoutes from './routes/auth';
 import adminRoutes from './routes/admin';
+import adminTestRoutes from './routes/admin-test';
 import { CleanupService } from './services/cleanupService';
 
 dotenv.config();
@@ -49,6 +50,7 @@ app.use('/api/urls', urlRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/qr', qrRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/admin-test', adminTestRoutes);
 
 // Health check
 app.get('/health', (req, res) => {

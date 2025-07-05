@@ -10,6 +10,7 @@ export interface IUser extends Document {
   updatedAt: Date;
   lastLoginAt?: Date;
   isActive: boolean;
+  isAdmin: boolean;
   subscription?: {
     status: 'active' | 'cancelled' | 'expired';
     startDate: Date;
@@ -52,6 +53,11 @@ const userSchema = new Schema<IUser>({
   isActive: {
     type: Boolean,
     default: true,
+    index: true
+  },
+  isAdmin: {
+    type: Boolean,
+    default: false,
     index: true
   },
   subscription: {

@@ -2,6 +2,35 @@ import axios from 'axios';
 import { CreateUrlRequest, UrlData, UrlStatsResponse, ApiResponse } from '@url-shortener/types';
 import { getUserId } from './utils';
 
+// Auth interfaces (temporary until types are updated)
+interface LoginRequest {
+  email: string;
+  password: string;
+}
+
+interface RegisterRequest {
+  email: string;
+  password: string;
+  name: string;
+  plan?: 'free' | 'premium';
+}
+
+interface User {
+  id: string;
+  email: string;
+  name: string;
+  plan: 'free' | 'premium';
+  createdAt: Date;
+  updatedAt: Date;
+  lastLoginAt?: Date;
+  isActive: boolean;
+}
+
+interface AuthResponse {
+  user: User;
+  token: string;
+}
+
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
 
 const api = axios.create({
@@ -21,10 +50,12 @@ api.interceptors.request.use(
       config.headers.Authorization = `Bearer ${token}`;
     }
     
-    // Add user ID for tracking
-    const userId = getUserId();
-    if (userId) {
-      config.headers['x-user-id'] = userId;
+    // Add user ID for tracking (for non-authenticated users)
+    if (!token) {
+      const userId = getUserId();
+      if (userId) {
+        config.headers['x-user-id'] = userId;
+      }
     }
     
     return config;
@@ -109,6 +140,61 @@ export const qrApi = {
   delete: async (filename: string): Promise<void> => {
     await api.delete(`/qr/${filename}`);
   },
+};
+
+export const authApi = {
+  // Register new user
+  register: async (data: RegisterRequest): Promise<AuthResponse> => {
+    const response: ApiResponse<AuthResponse> = await api.post('/auth/register', data);
+    return response.data!;
+  },
+
+  // Login user
+  login: async (data: LoginRequest): Promise<AuthResponse> => {
+    const response: ApiResponse<AuthResponse> = await api.post('/auth/login', data);
+    return response.data!;
+  },
+
+  // Get current user
+  getCurrentUser: async (): Promise<User> => {
+    const response: ApiResponse<User> = await api.get('/auth/me');
+    return response.data!;
+  },
+
+  // Update user plan
+  updatePlan: async (plan: 'free' | 'premium'): Promise<User> => {
+    const response: ApiResponse<User> = await api.put('/auth/plan', { plan });
+    return response.data!;
+  },
+
+  // Get user's URLs (authenticated)
+  getMyUrls: async (): Promise<UrlData[]> => {
+    const response: ApiResponse<UrlData[]> = await api.get('/urls/my-urls');
+    return response.data!;
+  },
+
+  // Logout (client-side)
+  logout: () => {
+    localStorage.removeItem('auth-token');
+    localStorage.removeItem('user');
+  },
+
+  // Save token and user
+  saveAuth: (authResponse: AuthResponse) => {
+    localStorage.setItem('auth-token', authResponse.token);
+    localStorage.setItem('user', JSON.stringify(authResponse.user));
+  },
+
+  // Get stored user
+  getStoredUser: (): User | null => {
+    const userStr = localStorage.getItem('user');
+    return userStr ? JSON.parse(userStr) : null;
+  },
+
+  // Check if user is authenticated
+  isAuthenticated: (): boolean => {
+    return !!localStorage.getItem('auth-token');
+  }
 };
 
 export default api;

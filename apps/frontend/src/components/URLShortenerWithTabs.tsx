@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -18,13 +18,15 @@ import {
   RefreshCw,
   Eye,
   EyeOff,
-  Globe
+  Globe,
+  User
 } from 'lucide-react';
-import { urlApi, qrApi } from '@/lib/api';
+import { urlApi, qrApi, authApi } from '@/lib/api';
 import { copyToClipboard, isValidUrl, generateRandomString } from '@/lib/utils';
 import QRCodeDisplay from './QRCodeDisplay';
 import AnalyticsDashboard from './AnalyticsDashboard';
 import UserUrls from './UserUrls';
+import AuthComponent from './AuthComponent';
 
 interface UrlData {
   id: string;
@@ -39,6 +41,17 @@ interface UrlData {
   description?: string;
 }
 
+interface User {
+  id: string;
+  email: string;
+  name: string;
+  plan: 'free' | 'premium';
+  createdAt: Date;
+  updatedAt: Date;
+  lastLoginAt?: Date;
+  isActive: boolean;
+}
+
 export default function URLShortenerWithTabs() {
   const [originalUrl, setOriginalUrl] = useState('');
   const [customCode, setCustomCode] = useState('');
@@ -50,6 +63,15 @@ export default function URLShortenerWithTabs() {
   const [shortenedUrl, setShortenedUrl] = useState<UrlData | null>(null);
   const [qrCodeDataUrl, setQrCodeDataUrl] = useState<string | null>(null);
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+
+  // Check for existing auth on component mount
+  useEffect(() => {
+    const storedUser = authApi.getStoredUser();
+    if (storedUser) {
+      setUser(storedUser);
+    }
+  }, []);
 
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
@@ -140,7 +162,7 @@ export default function URLShortenerWithTabs() {
 
           {/* Main Tabs */}
           <Tabs defaultValue="create" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-2">
+            <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="create" className="flex items-center gap-2">
                 <Link className="w-4 h-4" />
                 Create URL
@@ -148,6 +170,10 @@ export default function URLShortenerWithTabs() {
               <TabsTrigger value="my-urls" className="flex items-center gap-2">
                 <Globe className="w-4 h-4" />
                 My URLs
+              </TabsTrigger>
+              <TabsTrigger value="account" className="flex items-center gap-2">
+                <User className="w-4 h-4" />
+                Account
               </TabsTrigger>
             </TabsList>
 
@@ -414,7 +440,12 @@ export default function URLShortenerWithTabs() {
 
             {/* My URLs Tab */}
             <TabsContent value="my-urls">
-              <UserUrls />
+              <UserUrls user={user} />
+            </TabsContent>
+
+            {/* Account Tab */}
+            <TabsContent value="account">
+              <AuthComponent user={user} onAuthChange={setUser} />
             </TabsContent>
           </Tabs>
         </div>

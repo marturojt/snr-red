@@ -2,9 +2,15 @@ import { nanoid } from 'nanoid';
 import { Url, IUrl } from '../models/Url';
 import { CreateUrlRequest, UrlData } from '@url-shortener/types';
 import { QrService } from './qrService';
+import { CleanupService } from './cleanupService';
 
 export class UrlService {
-  static async create(data: CreateUrlRequest, userId?: string): Promise<UrlData> {
+  static async create(
+    data: CreateUrlRequest, 
+    userId?: string, 
+    registeredUserId?: string,
+    userType: 'anonymous' | 'free' | 'premium' = 'anonymous'
+  ): Promise<UrlData> {
     // Generate short code
     let shortCode = data.customCode;
     if (!shortCode) {
@@ -24,6 +30,9 @@ export class UrlService {
     const baseUrl = process.env.BASE_URL || 'http://localhost:3001';
     const shortUrl = `${baseUrl}/${shortCode}`;
 
+    // Calculate auto expiration based on user type
+    const autoExpiresAt = CleanupService.calculateAutoExpiration(userType);
+
     // Create URL record
     const urlData = new Url({
       originalUrl: data.originalUrl,
@@ -33,6 +42,10 @@ export class UrlService {
       description: data.description,
       expiresAt: data.expiresAt,
       userId: userId || null,
+      registeredUserId: registeredUserId || null,
+      userType,
+      autoExpiresAt,
+      lastAccessedAt: new Date(),
       isActive: true
     });
 
@@ -70,6 +83,22 @@ export class UrlService {
     const urls = await Url.find({ userId, isActive: true })
       .sort({ createdAt: -1 });
     return urls.map(url => url.toJSON() as UrlData);
+  }
+
+  static async getAllByRegisteredUser(registeredUserId: string): Promise<UrlData[]> {
+    const urls = await Url.find({ registeredUserId, isActive: true })
+      .sort({ createdAt: -1 });
+    return urls.map(url => url.toJSON() as UrlData);
+  }
+
+  static async getByShortCodeAndUpdateAccess(shortCode: string): Promise<UrlData | null> {
+    const url = await Url.findOne({ shortCode, isActive: true });
+    if (url) {
+      // Update last accessed time
+      await CleanupService.updateLastAccessed(url._id);
+      return url.toJSON() as UrlData;
+    }
+    return null;
   }
 
   static async update(id: string, updates: Partial<UrlData>): Promise<UrlData | null> {

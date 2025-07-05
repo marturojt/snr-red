@@ -9,6 +9,9 @@ import { errorHandler } from './middleware/errorHandler';
 import urlRoutes from './routes/urls';
 import analyticsRoutes from './routes/analytics';
 import qrRoutes from './routes/qr';
+import authRoutes from './routes/auth';
+import adminRoutes from './routes/admin';
+import { CleanupService } from './services/cleanupService';
 
 dotenv.config();
 
@@ -41,9 +44,11 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
 // Routes
+app.use('/api/auth', authRoutes);
 app.use('/api/urls', urlRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/qr', qrRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Health check
 app.get('/health', (req, res) => {
@@ -155,10 +160,43 @@ async function startServer() {
       console.log(`📊 Environment: ${process.env.NODE_ENV}`);
       console.log(`🌐 Frontend URL: ${process.env.FRONTEND_URL}`);
     });
+
+    // Start cleanup service
+    startCleanupService();
   } catch (error) {
     console.error('Failed to start server:', error);
     process.exit(1);
   }
+}
+
+// Cleanup service
+function startCleanupService() {
+  // Run cleanup every 24 hours
+  const cleanupInterval = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+  
+  setInterval(async () => {
+    try {
+      console.log('🧹 Starting URL cleanup...');
+      const result = await CleanupService.cleanupExpiredUrls();
+      console.log(`✅ Cleanup completed: ${result.deletedCount} URLs deleted`);
+      console.log(`   - Anonymous: ${result.anonymousDeleted}`);
+      console.log(`   - Free: ${result.freeDeleted}`);
+      console.log(`   - Premium: ${result.premiumDeleted}`);
+    } catch (error) {
+      console.error('❌ Cleanup failed:', error);
+    }
+  }, cleanupInterval);
+
+  // Run initial cleanup after 5 minutes
+  setTimeout(async () => {
+    try {
+      console.log('🧹 Running initial cleanup...');
+      const result = await CleanupService.cleanupExpiredUrls();
+      console.log(`✅ Initial cleanup completed: ${result.deletedCount} URLs deleted`);
+    } catch (error) {
+      console.error('❌ Initial cleanup failed:', error);
+    }
+  }, 5 * 60 * 1000); // 5 minutes
 }
 
 startServer();

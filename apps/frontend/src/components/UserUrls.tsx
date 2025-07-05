@@ -14,7 +14,7 @@ import {
   Calendar,
   Globe
 } from 'lucide-react';
-import { urlApi } from '@/lib/api';
+import { urlApi, authApi } from '@/lib/api';
 import { getUserId, copyToClipboard, formatDate } from '@/lib/utils';
 
 interface UrlData {
@@ -30,7 +30,22 @@ interface UrlData {
   description?: string;
 }
 
-export default function UserUrls() {
+interface User {
+  id: string;
+  email: string;
+  name: string;
+  plan: 'free' | 'premium';
+  createdAt: Date;
+  updatedAt: Date;
+  lastLoginAt?: Date;
+  isActive: boolean;
+}
+
+interface UserUrlsProps {
+  user: User | null;
+}
+
+export default function UserUrls({ user }: UserUrlsProps) {
   const [urls, setUrls] = useState<UrlData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -38,21 +53,28 @@ export default function UserUrls() {
   const loadUserUrls = useCallback(async () => {
     try {
       setIsLoading(true);
-      const userId = getUserId();
-      if (!userId) {
-        setUrls([]);
-        return;
+      
+      if (user) {
+        // Authenticated user - get their registered URLs
+        const userUrls = await authApi.getMyUrls();
+        setUrls(userUrls);
+      } else {
+        // Anonymous user - get URLs by browser ID
+        const userId = getUserId();
+        if (!userId) {
+          setUrls([]);
+          return;
+        }
+        const userUrls = await urlApi.getUserUrls(userId);
+        setUrls(userUrls);
       }
-
-      const userUrls = await urlApi.getUserUrls(userId);
-      setUrls(userUrls);
     } catch (error) {
       console.error('Error loading user URLs:', error);
       toast.error('Failed to load your URLs');
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     loadUserUrls();
@@ -120,15 +142,23 @@ export default function UserUrls() {
             Your URLs
           </CardTitle>
           <CardDescription>
-            You haven&apos;t created any URLs yet
+            {user 
+              ? `You haven&apos;t created any URLs yet with your account`
+              : `You haven&apos;t created any URLs yet with this browser`
+            }
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="text-center py-8">
             <Globe className="w-12 h-12 text-gray-400 mx-auto mb-4" />
             <p className="text-gray-500 mb-4">
-              Start by creating your first shortened URL above!
+              Start by creating your first shortened URL!
             </p>
+            {!user && (
+              <p className="text-sm text-gray-400">
+                💡 Tip: Create an account to manage your URLs permanently and get extended storage.
+              </p>
+            )}
           </div>
         </CardContent>
       </Card>
@@ -142,9 +172,17 @@ export default function UserUrls() {
           <Globe className="w-5 h-5" />
           Your URLs
           <Badge variant="secondary">{urls.length}</Badge>
+          {user && (
+            <Badge variant={user.plan === 'premium' ? 'default' : 'secondary'}>
+              {user.plan === 'premium' ? 'Premium' : 'Free'} Plan
+            </Badge>
+          )}
         </CardTitle>
         <CardDescription>
-          Manage and track your shortened URLs
+          {user 
+            ? `Manage and track your shortened URLs (${user.plan === 'premium' ? 'Premium features enabled' : 'Free plan - URLs expire after 3 months'})`
+            : 'Manage and track your shortened URLs (Anonymous - URLs expire after 3 months)'
+          }
         </CardDescription>
       </CardHeader>
       <CardContent>

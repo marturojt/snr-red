@@ -2,6 +2,7 @@ import express from 'express';
 import { body, param, validationResult } from 'express-validator';
 import { UrlService } from '../services/urlService';
 import { createError, asyncHandler } from '../middleware/errorHandler';
+import { optionalAuth, authenticateToken } from '../middleware/auth';
 import { CreateUrlRequest, ApiResponse } from '@url-shortener/types';
 
 const router = express.Router();
@@ -42,14 +43,29 @@ const validateShortCode = [
 ];
 
 // Create short URL
-router.post('/shorten', validateUrl, asyncHandler(async (req, res) => {
+router.post('/shorten', optionalAuth, validateUrl, asyncHandler(async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     throw createError(400, errors.array()[0].msg);
   }
 
   const urlData: CreateUrlRequest = req.body;
-  const userId = req.headers['x-user-id'] as string || req.query.userId as string;
+  const anonymousUserId = req.headers['x-user-id'] as string;
+
+  // Determine user type and IDs
+  let userId: string | undefined;
+  let registeredUserId: string | undefined;
+  let userType: 'anonymous' | 'free' | 'premium' = 'anonymous';
+
+  if (req.user) {
+    // Authenticated user
+    registeredUserId = req.user.id;
+    userType = req.user.plan;
+  } else if (anonymousUserId) {
+    // Anonymous user with browser ID
+    userId = anonymousUserId;
+    userType = 'anonymous';
+  }
 
   // Additional validation for expiration date
   if (urlData.expiresAt && new Date(urlData.expiresAt) <= new Date()) {
@@ -57,7 +73,7 @@ router.post('/shorten', validateUrl, asyncHandler(async (req, res) => {
   }
 
   try {
-    const result = await UrlService.create(urlData, userId);
+    const result = await UrlService.create(urlData, userId, registeredUserId, userType);
     
     const response: ApiResponse = {
       success: true,
@@ -118,6 +134,18 @@ router.get('/check/:shortCode', validateShortCode, asyncHandler(async (req, res)
 router.get('/user/:userId', asyncHandler(async (req, res) => {
   const { userId } = req.params;
   const urls = await UrlService.getAllByUser(userId);
+
+  const response: ApiResponse = {
+    success: true,
+    data: urls
+  };
+
+  res.json(response);
+}));
+
+// Get authenticated user's URLs
+router.get('/my-urls', authenticateToken, asyncHandler(async (req, res) => {
+  const urls = await UrlService.getAllByRegisteredUser(req.user!.id);
 
   const response: ApiResponse = {
     success: true,

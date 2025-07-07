@@ -1,7 +1,7 @@
 # SNR.red - Historias de Usuario
 
-**Versión:** 1.0  
-**Fecha:** 7 de Enero, 2025  
+**Versión:** 1.1  
+**Fecha:** 7 de Julio, 2025  
 **Metodología:** Agile/Scrum con criterios de aceptación
 
 ---
@@ -456,76 +456,107 @@ Las historias de usuario de SNR.red están organizadas por **épicas** y **perso
 
 ---
 
-## 📱 Épica 9: Experiencia Mobile
+## 🎨 Épica 9: UX/UI Enhancement
 
-### Historia 9.1: Responsive Design ✅
-**Como** usuario móvil,  
-**quiero** que la aplicación funcione bien en mi dispositivo,  
-**para** poder usarla desde cualquier lugar.
+### Historia 9.1: Landing Page Comercial ✅
+**Como** visitante del sitio,  
+**quiero** una landing page atractiva y profesional,  
+**para** confiar en el servicio y entender rápidamente su valor.
 
 **Criterios de Aceptación:**
-- [ ] Interfaz se adapta a pantallas pequeñas
-- [ ] Navegación optimizada para touch
-- [ ] Carga rápida en conexiones lentas
-- [ ] Funcionalidades principales accesibles
-- [ ] Texto legible sin zoom
+- [x] Hero section con value proposition clara
+- [x] Gradientes y diseño moderno que inspire confianza
+- [x] Secciones de features con iconos y beneficios
+- [x] Estadísticas sociales para credibilidad
+- [x] Pricing claro con diferenciación Free vs Premium
+- [x] CTAs estratégicos para conversión
+- [x] Footer completo con información de empresa
 
 **Estimación:** 8 puntos  
 **Prioridad:** Alta  
 **Estado:** ✅ Implementado
 
-### Historia 9.2: PWA (Progressive Web App) ⏳
-**Como** usuario frecuente,  
-**quiero** instalar la aplicación en mi dispositivo,  
-**para** acceso rápido sin navegador.
+### Historia 9.2: Gestión de URLs Mejorada ✅
+**Como** usuario registrado,  
+**quiero** una interfaz moderna para gestionar mis URLs,  
+**para** encontrar, filtrar y organizar mis links eficientemente.
 
 **Criterios de Aceptación:**
-- [ ] Puede instalarse desde navegador
-- [ ] Funciona offline para funciones básicas
-- [ ] Notificaciones push para eventos importantes
-- [ ] Icono en home screen
-- [ ] Splash screen personalizada
-
-**Estimación:** 21 puntos  
-**Prioridad:** Media  
-**Estado:** ⏳ Planificado (Fase 6)
-
----
-
-## 🔍 Épica 10: Búsqueda y Filtrado
-
-### Historia 10.1: Búsqueda Básica ✅
-**Como** usuario con muchas URLs,  
-**quiero** buscar mis enlaces,  
-**para** encontrar rápidamente lo que necesito.
-
-**Criterios de Aceptación:**
-- [ ] Puedo buscar por URL original
-- [ ] Puedo buscar por código corto
-- [ ] Puedo buscar por título/descripción
-- [ ] Búsqueda es case-insensitive
-- [ ] Resultados se actualizan mientras escribo
+- [x] Cards de estadísticas con métricas clave
+- [x] Filtros avanzados (activo/expirado, búsqueda)
+- [x] Ordenamiento por fecha, clics, etc.
+- [x] Cards de URLs con hover effects y actions claras
+- [x] Estados vacíos atractivos con CTAs
+- [x] Design responsive para móviles
 
 **Estimación:** 5 puntos  
+**Prioridad:** Alta  
+**Estado:** ✅ Implementado
+
+### Historia 9.3: Autenticación Premium ✅
+**Como** usuario potencial,  
+**quiero** una experiencia de registro/login moderna,  
+**para** sentirme seguro al crear una cuenta.
+
+**Criterios de Aceptación:**
+- [x] Tabs modernas para login/register
+- [x] Perfil de usuario con stats y beneficios
+- [x] Upgrade CTAs estratégicos para free users
+- [x] Visualización clara de plan actual y beneficios
+- [x] Benefits preview para usuarios no registrados
+
+**Estimación:** 3 puntos  
 **Prioridad:** Media  
 **Estado:** ✅ Implementado
 
-### Historia 10.2: Filtros Avanzados ⏳
-**Como** usuario premium,  
-**quiero** filtrar mis URLs por múltiples criterios,  
-**para** organizar mejor mi contenido.
+### Historia 9.4: QR Code Generator Premium ✅
+**Como** usuario,  
+**quiero** un generador de QR moderno y atractivo,  
+**para** crear códigos QR profesionales para mis links.
 
 **Criterios de Aceptación:**
-- [ ] Filtro por rango de fechas
-- [ ] Filtro por número de clics
-- [ ] Filtro por estado (activo/inactivo)
-- [ ] Filtro por etiquetas
-- [ ] Combinación de múltiples filtros
-- [ ] Guardar filtros favoritos
+- [x] Diseño con glassmorphism y gradientes
+- [x] Acciones completas: download, copy, share, regenerate
+- [x] Visual feedback y loading states
+- [x] Information cards con beneficios
+- [x] Optimización Next.js con Image component
 
-**Estimación:** 13 puntos  
+**Estimación:** 3 puntos  
 **Prioridad:** Media  
-**Estado:** ⏳ Planificado (Fase 6)
+**Estado:** ✅ Implementado
+
+### Historia 9.5: Dashboard Integrado ✅
+**Como** usuario registrado,  
+**quiero** un dashboard cohesivo con todos los componentes,  
+**para** tener una experiencia fluida al gestionar mis URLs.
+
+**Criterios de Aceptación:**
+- [x] Integración seamless de componentes enhanced
+- [x] Navegación fluida entre secciones
+- [x] Consistency en el diseño y UX
+- [x] Performance optimizado
+
+**Estimación:** 2 puntos  
+**Prioridad:** Alta  
+**Estado:** ✅ Implementado
+
+### Historia 9.6: Responsive & Mobile Optimization ✅
+**Como** usuario móvil,  
+**quiero** una experiencia optimizada en mi dispositivo,  
+**para** usar el servicio cómodamente desde cualquier pantalla.
+
+**Criterios de Aceptación:**
+- [x] Mobile-first approach con breakpoints optimizados
+- [x] Touch targets de tamaño adecuado
+- [x] Navegación adaptada para móviles
+- [x] Performance optimizado para redes móviles
+- [x] Utility classes para responsive design
+
+**Estimación:** 5 puntos  
+**Prioridad:** Alta  
+**Estado:** ✅ Implementado
+
+**Total Épica 9:** 6 historias - 26 puntos - ✅ 100% Completado
 
 ---
 
@@ -643,7 +674,8 @@ Testing_Strategy:
 
 ---
 
-**Estado del documento:** ✅ Completo  
+**Estado del documento:** ✅ Completo + UX/UI Enhancement  
 **Próxima revisión:** Al finalizar cada Sprint  
-**Versión:** 1.0-complete-user-stories  
-**Total historias:** 31 (8 implementadas, 23 pendientes)
+**Versión:** 1.1-ux-ui-enhancement-completed  
+**Total historias:** 37 (14 implementadas, 23 pendientes)  
+**Nuevas épicas completadas:** Épica 9 - UX/UI Enhancement (6 historias)

@@ -4,6 +4,8 @@ import { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 import { 
   Copy, 
@@ -12,7 +14,15 @@ import {
   QrCode,
   BarChart3,
   Calendar,
-  Globe
+  Globe,
+  Search,
+  Filter,
+  SortAsc,
+  Plus,
+  Eye,
+  TrendingUp,
+  Zap,
+  Link2
 } from 'lucide-react';
 import { urlApi, authApi } from '@/lib/api';
 import { getUserId, copyToClipboard, formatDate } from '@/lib/utils';
@@ -48,6 +58,8 @@ interface UserUrlsProps {
 export default function UserUrls({ user }: UserUrlsProps) {
   const [urls, setUrls] = useState<UrlData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [filter, setFilter] = useState<'all' | 'active' | 'expired'>('all');
+  const [sortBy, setSortBy] = useState<'newest' | 'oldest' | 'clicks'>('newest');
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const loadUserUrls = useCallback(async () => {

@@ -1,5 +1,5 @@
-import URLShortenerWithTabs from '@/components/URLShortenerWithTabs';
+import ModernLandingPage from '@/components/ModernLandingPage';
 
 export default function Home() {
-  return <URLShortenerWithTabs />;
+  return <ModernLandingPage />;
 }

@@ -2,6 +2,75 @@ import axios from 'axios';
 import { CreateUrlRequest, UrlData, UrlStatsResponse, ApiResponse } from '@url-shortener/types';
 import { getUserId } from './utils';
 
+// vCard interfaces (temporary until types package is updated)
+interface VCardData {
+  id: string;
+  userId?: string;
+  personalInfo: {
+    firstName: string;
+    lastName: string;
+    company?: string;
+    title?: string;
+    photo?: string;
+  };
+  contact: {
+    phone?: string;
+    email?: string;
+    website?: string;
+  };
+  social: {
+    linkedin?: string;
+    whatsapp?: string;
+    instagram?: string;
+    twitter?: string;
+  };
+  address?: {
+    street?: string;
+    city?: string;
+    state?: string;
+    country?: string;
+    zipCode?: string;
+  };
+  theme: 'professional' | 'creative' | 'minimal';
+  qrCode: string;
+  shortUrl: string;
+  shortCode: string;
+  views: number;
+  saves: number;
+  createdAt: Date;
+  updatedAt: Date;
+  isActive: boolean;
+}
+
+interface CreateVCardRequest {
+  personalInfo: {
+    firstName: string;
+    lastName: string;
+    company?: string;
+    title?: string;
+    photo?: string;
+  };
+  contact: {
+    phone?: string;
+    email?: string;
+    website?: string;
+  };
+  social?: {
+    linkedin?: string;
+    whatsapp?: string;
+    instagram?: string;
+    twitter?: string;
+  };
+  address?: {
+    street?: string;
+    city?: string;
+    state?: string;
+    country?: string;
+    zipCode?: string;
+  };
+  theme?: 'professional' | 'creative' | 'minimal';
+}
+
 // Auth interfaces (temporary until types are updated)
 interface LoginRequest {
   email: string;
@@ -194,6 +263,63 @@ export const authApi = {
   // Check if user is authenticated
   isAuthenticated: (): boolean => {
     return !!localStorage.getItem('auth-token');
+  }
+};
+
+// vCard API
+export const vcardApi = {
+  // Create vCard
+  create: async (data: CreateVCardRequest): Promise<VCardData> => {
+    const response: ApiResponse<VCardData> = await api.post('/vcard/create', data);
+    return response.data!;
+  },
+
+  // Get vCard by short code
+  getByShortCode: async (shortCode: string): Promise<VCardData> => {
+    const response: ApiResponse<VCardData> = await api.get(`/vcard/${shortCode}`);
+    return response.data!;
+  },
+
+  // Get user vCards
+  getUserVCards: async (userId: string): Promise<VCardData[]> => {
+    const response: ApiResponse<VCardData[]> = await api.get(`/vcard/user/${userId}`);
+    return response.data!;
+  },
+
+  // Download vCard as VCF
+  download: async (shortCode: string): Promise<void> => {
+    const response = await fetch(`${API_BASE_URL}/vcard/${shortCode}/download`, {
+      headers: {
+        'Authorization': localStorage.getItem('auth-token') ? `Bearer ${localStorage.getItem('auth-token')}` : '',
+        'x-user-id': getUserId()
+      }
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to download vCard');
+    }
+    
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.style.display = 'none';
+    a.href = url;
+    a.download = `contact.vcf`;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+  },
+
+  // Update vCard
+  update: async (id: string, data: any): Promise<any> => {
+    const response: ApiResponse<any> = await api.put(`/vcard/${id}`, data);
+    return response.data!;
+  },
+
+  // Delete vCard
+  delete: async (id: string): Promise<void> => {
+    await api.delete(`/vcard/${id}`);
   }
 };
 

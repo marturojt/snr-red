@@ -36,6 +36,9 @@ const translations = {
     'hero.title': 'Shorten URLs with',
     'hero.titleHighlight': ' Super Powers',
     'hero.description': 'Create powerful short links, generate QR codes, and track performance with our advanced analytics platform.',
+    'hero.mainTitle': 'Digital Tools for',
+    'hero.mainTitleHighlight': ' Modern Business',
+    'hero.mainDescription': 'Shorten URLs, generate QR codes, create digital business cards - all in one powerful platform',
     'hero.placeholder': 'Enter your long URL here... (e.g., https://example.com)',
     'hero.shorten': 'Shorten',
     'hero.anonymous': 'Anonymous URLs expire in 30 days.',
@@ -56,6 +59,18 @@ const translations = {
     'features.qr.description': 'Automatically generate QR codes for your short URLs with customizable designs',
     'features.security.title': 'Enterprise Security',
     'features.security.description': 'Password protection, expiration dates, and malware scanning for maximum security',
+    'features.url.title': 'URL Shortening',
+    'features.url.description': 'Create short, memorable links with custom branding and tracking',
+    'features.vcard.title': 'vCard Generator',
+    'features.vcard.description': 'Create professional digital business cards with QR codes',
+
+    // Tabs
+    'tabs.url': 'URL Shortener',
+    'tabs.vcard': 'vCard Generator',
+
+    // vCard
+    'vcard.title': 'Create Digital Business Cards',
+    'vcard.description': 'Generate professional vCards with QR codes for easy sharing',
 
     // Stats
     'stats.urls': 'URLs Shortened',
@@ -142,6 +157,9 @@ const translations = {
     'hero.title': 'Acorta URLs con',
     'hero.titleHighlight': ' Super Poderes',
     'hero.description': 'Crea enlaces cortos poderosos, genera códigos QR y rastrea el rendimiento con nuestra plataforma de analytics avanzada.',
+    'hero.mainTitle': 'Herramientas Digitales para',
+    'hero.mainTitleHighlight': ' Negocios Modernos',
+    'hero.mainDescription': 'Acorta URLs, genera códigos QR, crea tarjetas de presentación digitales - todo en una plataforma poderosa',
     'hero.placeholder': 'Ingresa tu URL larga aquí... (ej: https://ejemplo.com)',
     'hero.shorten': 'Acortar',
     'hero.anonymous': 'Las URLs anónimas expiran en 30 días.',
@@ -162,6 +180,18 @@ const translations = {
     'features.qr.description': 'Genera automáticamente códigos QR para tus URLs cortas con diseños personalizables',
     'features.security.title': 'Seguridad Empresarial',
     'features.security.description': 'Protección con contraseña, fechas de expiración y escaneo de malware para máxima seguridad',
+    'features.url.title': 'Acortamiento de URLs',
+    'features.url.description': 'Crea enlaces cortos y memorables con marca personalizada y seguimiento',
+    'features.vcard.title': 'Generador de vCard',
+    'features.vcard.description': 'Crea tarjetas de presentación digitales profesionales con códigos QR',
+
+    // Tabs
+    'tabs.url': 'Acortador de URLs',
+    'tabs.vcard': 'Generador de vCard',
+
+    // vCard
+    'vcard.title': 'Crear Tarjetas de Presentación Digitales',
+    'vcard.description': 'Genera vCards profesionales con códigos QR para compartir fácilmente',
 
     // Stats
     'stats.urls': 'URLs Acortadas',

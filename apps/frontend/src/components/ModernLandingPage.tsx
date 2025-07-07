@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
 import { 
   Link, 
@@ -18,7 +19,8 @@ import {
   ExternalLink,
   Sparkles,
   Crown,
-  Play
+  Play,
+  User
 } from 'lucide-react';
 import { urlApi, qrApi, authApi } from '@/lib/api';
 import { copyToClipboard, isValidUrl } from '@/lib/utils';
@@ -28,6 +30,7 @@ import AuthComponent from './AuthComponent';
 import ModernDashboard from './ModernDashboard';
 import EnhancedUserUrls from './EnhancedUserUrls';
 import LanguageSelector from './LanguageSelector';
+import VCardGenerator from './VCardGenerator';
 
 interface UrlData {
   id: string;
@@ -64,6 +67,7 @@ export default function ModernLandingPage() {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showDashboard, setShowDashboard] = useState(false);
   const [showAnonymousUrls, setShowAnonymousUrls] = useState(false);
+  const [activeTab, setActiveTab] = useState<'url' | 'vcard'>('url');
 
   // Check for existing auth on component mount
   useEffect(() => {
@@ -254,61 +258,98 @@ export default function ModernLandingPage() {
                 {t('hero.badge')}
               </Badge>
               <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-                {t('hero.title')}
+                {t('hero.mainTitle')}
                 <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                  {t('hero.titleHighlight')}
+                  {t('hero.mainTitleHighlight')}
                 </span>
               </h1>
               <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-                {t('hero.description')}
+                {t('hero.mainDescription')}
               </p>
             </div>
 
-            {/* URL Shortener Form */}
-            <Card className="max-w-2xl mx-auto shadow-2xl border-0 bg-white/80 backdrop-blur-md">
+            {/* Tabbed Interface */}
+            <Card className="max-w-4xl mx-auto shadow-2xl border-0 bg-white/80 backdrop-blur-md">
               <CardContent className="p-8">
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="relative">
-                    <Input
-                      type="url"
-                      placeholder={t('hero.placeholder')}
-                      value={originalUrl}
-                      onChange={(e) => setOriginalUrl(e.target.value)}
-                      className="h-14 text-lg pr-32 border-2 border-gray-200 focus:border-blue-500 rounded-xl"
-                      disabled={isLoading}
-                    />
-                    <Button
-                      type="submit"
-                      disabled={isLoading}
-                      className="absolute right-2 top-2 h-10 px-6 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-lg"
-                    >
-                      {isLoading ? (
-                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                      ) : (
-                        <>
-                          <Zap className="w-4 h-4 mr-2" />
-                          {t('hero.shorten')}
-                        </>
+                <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'url' | 'vcard')}>
+                  <TabsList className="grid w-full grid-cols-2 mb-6">
+                    <TabsTrigger value="url" className="flex items-center gap-2">
+                      <Link className="w-4 h-4" />
+                      {t('tabs.url')}
+                    </TabsTrigger>
+                    <TabsTrigger value="vcard" className="flex items-center gap-2">
+                      <User className="w-4 h-4" />
+                      {t('tabs.vcard')}
+                    </TabsTrigger>
+                  </TabsList>
+
+                  <TabsContent value="url" className="space-y-6">
+                    <div className="text-center mb-6">
+                      <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                        {t('hero.title')}
+                      </h3>
+                      <p className="text-gray-600">
+                        {t('hero.description')}
+                      </p>
+                    </div>
+                    
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                      <div className="relative">
+                        <Input
+                          type="url"
+                          placeholder={t('hero.placeholder')}
+                          value={originalUrl}
+                          onChange={(e) => setOriginalUrl(e.target.value)}
+                          className="h-14 text-lg pr-32 border-2 border-gray-200 focus:border-blue-500 rounded-xl"
+                          disabled={isLoading}
+                        />
+                        <Button
+                          type="submit"
+                          disabled={isLoading}
+                          className="absolute right-2 top-2 h-10 px-6 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-lg"
+                        >
+                          {isLoading ? (
+                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                          ) : (
+                            <>
+                              <Zap className="w-4 h-4 mr-2" />
+                              {t('hero.shorten')}
+                            </>
+                          )}
+                        </Button>
+                      </div>
+                      
+                      {!user && (
+                        <p className="text-sm text-gray-500 flex items-center justify-center">
+                          <Shield className="w-4 h-4 mr-1" />
+                          {t('hero.anonymous')} 
+                          <Button
+                            type="button"
+                            variant="link"
+                            size="sm"
+                            onClick={() => setShowAuthModal(true)}
+                            className="text-blue-600 p-0 ml-1"
+                          >
+                            {t('hero.signup')}
+                          </Button>
+                        </p>
                       )}
-                    </Button>
-                  </div>
-                  
-                  {!user && (
-                    <p className="text-sm text-gray-500 flex items-center justify-center">
-                      <Shield className="w-4 h-4 mr-1" />
-                      {t('hero.anonymous')} 
-                      <Button
-                        type="button"
-                        variant="link"
-                        size="sm"
-                        onClick={() => setShowAuthModal(true)}
-                        className="text-blue-600 p-0 ml-1"
-                      >
-                        {t('hero.signup')}
-                      </Button>
-                    </p>
-                  )}
-                </form>
+                    </form>
+                  </TabsContent>
+
+                  <TabsContent value="vcard" className="space-y-6">
+                    <div className="text-center mb-6">
+                      <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                        {t('vcard.title')}
+                      </h3>
+                      <p className="text-gray-600">
+                        {t('vcard.description')}
+                      </p>
+                    </div>
+                    
+                    <VCardGenerator />
+                  </TabsContent>
+                </Tabs>
               </CardContent>
             </Card>
 
@@ -375,17 +416,17 @@ export default function ModernLandingPage() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
             <Card className="text-center hover:shadow-lg transition-shadow duration-300 border-0 bg-gradient-to-br from-blue-50 to-blue-100">
               <CardHeader>
                 <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-                  <BarChart3 className="w-6 h-6 text-white" />
+                  <Link className="w-6 h-6 text-white" />
                 </div>
-                <CardTitle className="text-xl">{t('features.analytics.title')}</CardTitle>
+                <CardTitle className="text-xl">{t('features.url.title')}</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">
-                  {t('features.analytics.description')}
+                  {t('features.url.description')}
                 </p>
               </CardContent>
             </Card>
@@ -407,13 +448,27 @@ export default function ModernLandingPage() {
             <Card className="text-center hover:shadow-lg transition-shadow duration-300 border-0 bg-gradient-to-br from-green-50 to-green-100">
               <CardHeader>
                 <div className="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-                  <Shield className="w-6 h-6 text-white" />
+                  <User className="w-6 h-6 text-white" />
                 </div>
-                <CardTitle className="text-xl">{t('features.security.title')}</CardTitle>
+                <CardTitle className="text-xl">{t('features.vcard.title')}</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">
-                  {t('features.security.description')}
+                  {t('features.vcard.description')}
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="text-center hover:shadow-lg transition-shadow duration-300 border-0 bg-gradient-to-br from-orange-50 to-orange-100">
+              <CardHeader>
+                <div className="w-12 h-12 bg-orange-600 rounded-lg flex items-center justify-center mx-auto mb-4">
+                  <BarChart3 className="w-6 h-6 text-white" />
+                </div>
+                <CardTitle className="text-xl">{t('features.analytics.title')}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600">
+                  {t('features.analytics.description')}
                 </p>
               </CardContent>
             </Card>

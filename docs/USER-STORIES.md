@@ -1,6 +1,6 @@
 # SNR.red - Historias de Usuario
 
-**Versión:** 1.1  
+**Versión:** 1.2  
 **Fecha:** 7 de Julio, 2025  
 **Metodología:** Agile/Scrum con criterios de aceptación
 
@@ -560,6 +560,96 @@ Las historias de usuario de SNR.red están organizadas por **épicas** y **perso
 
 ---
 
+## 🎴 Épica 10: Generador de vCard
+
+### Historia 10.1: Crear vCard como Usuario ✅
+**Como** usuario (anónimo o registrado),  
+**quiero** crear una tarjeta de presentación digital,  
+**para** compartir mi información de contacto de forma profesional.
+
+**Criterios de Aceptación:**
+- [x] Puedo acceder al generador de vCard desde la interfaz principal
+- [x] Completo un formulario multi-paso con información personal
+- [x] Agrego información de contacto (email, teléfono, sitio web)
+- [x] Incluyo enlaces a redes sociales
+- [x] Selecciono un tema visual (profesional, creativo, minimal)
+- [x] Genero la vCard con URL corta y código QR automáticamente
+- [x] Puedo descargar el archivo .vcf para importar contactos
+
+**Estimación:** 8 puntos  
+**Prioridad:** Alta  
+**Estado:** ✅ Implementado
+
+### Historia 10.2: Compartir vCard ✅
+**Como** usuario que ha creado una vCard,  
+**quiero** compartir mi tarjeta de presentación digital,  
+**para** que otros puedan acceder fácilmente a mi información.
+
+**Criterios de Aceptación:**
+- [x] Recibo una URL corta única para mi vCard
+- [x] La URL muestra una página profesional con mi información
+- [x] Otros usuarios pueden descargar mi contacto desde la página
+- [x] El código QR permite acceso rápido desde móviles
+- [x] Puedo copiar la URL para compartir en redes sociales
+- [x] La página es responsive y se ve bien en todos los dispositivos
+
+**Estimación:** 5 puntos  
+**Prioridad:** Alta  
+**Estado:** ✅ Implementado
+
+### Historia 10.3: Visualizar vCard ✅
+**Como** visitante,  
+**quiero** ver una vCard compartida conmigo,  
+**para** acceder a la información de contacto de forma atractiva.
+
+**Criterios de Aceptación:**
+- [x] Accedo a la vCard a través de URL corta o código QR
+- [x] Veo la información organizada de forma profesional
+- [x] Puedo descargar el contacto a mi teléfono (.vcf)
+- [x] Puedo hacer clic en email/teléfono para contactar directamente
+- [x] Los enlaces sociales abren en nueva pestaña
+- [x] El diseño es moderno y responsive
+
+**Estimación:** 5 puntos  
+**Prioridad:** Alta  
+**Estado:** ✅ Implementado
+
+### Historia 10.4: Interfaz Integrada ✅
+**Como** usuario,  
+**quiero** acceder tanto al acortador de URLs como al generador de vCard,  
+**para** usar ambas herramientas desde una interfaz unificada.
+
+**Criterios de Aceptación:**
+- [x] Veo pestañas claras para "URL Shortener" y "vCard Generator"
+- [x] Puedo cambiar entre funcionalidades sin perder progreso
+- [x] La interfaz mantiene el diseño consistente en ambas pestañas
+- [x] Las traducciones funcionan en ambas secciones
+- [x] Los iconos y labels son claros y descriptivos
+
+**Estimación:** 3 puntos  
+**Prioridad:** Media  
+**Estado:** ✅ Implementado
+
+### Historia 10.5: Gestión de vCards (Futuro) 🔮
+**Como** usuario registrado,  
+**quiero** gestionar mis vCards creadas,  
+**para** editarlas, eliminarlas o ver estadísticas.
+
+**Criterios de Aceptación:**
+- [ ] Veo todas mis vCards en el dashboard personal
+- [ ] Puedo editar la información de mis vCards existentes
+- [ ] Puedo eliminar vCards que ya no necesito
+- [ ] Veo estadísticas de visualizaciones por vCard
+- [ ] Puedo crear múltiples vCards para diferentes propósitos
+
+**Estimación:** 8 puntos  
+**Prioridad:** Baja  
+**Estado:** 🔮 Futuro
+
+**Total Épica 10:** 5 historias - 29 puntos - ✅ 80% Completado (4/5)
+
+---
+
 ## 📚 Criterios de Aceptación Generales
 
 ### Criterios Técnicos Transversales
@@ -587,6 +677,10 @@ Las historias de usuario de SNR.red están organizadas por **épicas** y **perso
 - [x] Gestión básica de URLs
 - [x] Analytics básicos
 - [x] Panel de administración
+- [x] UX/UI Enhancement completo
+- [x] Internacionalización (i18n)
+- [x] URLs anónimas
+- [x] Generador de vCard
 
 ### Prioridad 2 (Próximas 8 semanas)
 - [ ] Analytics avanzados con gráficos
@@ -674,8 +768,8 @@ Testing_Strategy:
 
 ---
 
-**Estado del documento:** ✅ Completo + UX/UI Enhancement  
+**Estado del documento:** ✅ Completo + UX/UI Enhancement + vCard Generator  
 **Próxima revisión:** Al finalizar cada Sprint  
-**Versión:** 1.1-ux-ui-enhancement-completed  
-**Total historias:** 37 (14 implementadas, 23 pendientes)  
-**Nuevas épicas completadas:** Épica 9 - UX/UI Enhancement (6 historias)
+**Versión:** 1.2-vcard-generator-completed  
+**Total historias:** 42 (18 implementadas, 24 pendientes)  
+**Nuevas épicas completadas:** Épica 9 - UX/UI Enhancement (6 historias), Épica 10 - vCard Generator (4/5 historias)

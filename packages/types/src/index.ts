@@ -121,3 +121,95 @@ export interface RegisterRequest {
   name: string;
   plan?: 'free' | 'premium';
 }
+
+export interface VCardData {
+  id: string;
+  userId?: string;
+  personalInfo: {
+    firstName: string;
+    lastName: string;
+    company?: string;
+    title?: string;
+    photo?: string;
+  };
+  contact: {
+    phone?: string;
+    email?: string;
+    website?: string;
+  };
+  social: {
+    linkedin?: string;
+    whatsapp?: string;
+    instagram?: string;
+    twitter?: string;
+  };
+  address?: {
+    street?: string;
+    city?: string;
+    state?: string;
+    country?: string;
+    zipCode?: string;
+  };
+  theme: 'professional' | 'creative' | 'minimal';
+  qrCode: string;
+  shortUrl: string;
+  shortCode: string;
+  views: number;
+  saves: number;
+  createdAt: Date;
+  updatedAt: Date;
+  isActive: boolean;
+}
+
+export interface CreateVCardRequest {
+  personalInfo: {
+    firstName: string;
+    lastName: string;
+    company?: string;
+    title?: string;
+    photo?: string;
+  };
+  contact: {
+    phone?: string;
+    email?: string;
+    website?: string;
+  };
+  social?: {
+    linkedin?: string;
+    whatsapp?: string;
+    instagram?: string;
+    twitter?: string;
+  };
+  address?: {
+    street?: string;
+    city?: string;
+    state?: string;
+    country?: string;
+    zipCode?: string;
+  };
+  theme?: 'professional' | 'creative' | 'minimal';
+}
+
+export interface VCardStatsResponse {
+  vcard: VCardData;
+  totalViews: number;
+  totalSaves: number;
+  viewsThisMonth: number;
+  savesThisMonth: number;
+  analytics: VCardAnalytics[];
+}
+
+export interface VCardAnalytics {
+  id: string;
+  vcardId: string;
+  timestamp: Date;
+  action: 'view' | 'save' | 'download';
+  userAgent?: string;
+  ipAddress?: string;
+  referer?: string;
+  country?: string;
+  city?: string;
+  device?: string;
+  browser?: string;
+  os?: string;
+}

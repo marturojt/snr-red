@@ -12,6 +12,7 @@ import qrRoutes from './routes/qr';
 import authRoutes from './routes/auth';
 import adminRoutes from './routes/admin';
 import adminTestRoutes from './routes/admin-test';
+import vcardRoutes from './routes/vcard';
 import { CleanupService } from './services/cleanupService';
 
 dotenv.config();
@@ -51,10 +52,47 @@ app.use('/api/analytics', analyticsRoutes);
 app.use('/api/qr', qrRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/admin-test', adminTestRoutes);
+app.use('/api/vcard', vcardRoutes);
 
 // Health check
 app.get('/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
+});
+
+// vCard page handler (before URL redirect to avoid conflicts)
+app.get('/v/:shortCode', async (req, res) => {
+  try {
+    const { shortCode } = req.params;
+    
+    // Import here to avoid circular dependency
+    const { vcardService } = await import('./services/vcardService');
+    
+    const vcard = await vcardService.getVCardByShortCode(shortCode);
+    
+    if (!vcard || !vcard.isActive) {
+      return res.status(404).send(`
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>vCard Not Found</title>
+        </head>
+        <body>
+          <h1>vCard Not Found</h1>
+          <p>The requested vCard could not be found.</p>
+        </body>
+        </html>
+      `);
+    }
+
+    // Redirect to frontend vCard page
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+    res.redirect(`${frontendUrl}/vcard/${shortCode}`);
+  } catch (error) {
+    console.error('Error serving vCard:', error);
+    res.status(500).send('Internal Server Error');
+  }
 });
 
 // URL redirect handler

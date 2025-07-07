@@ -248,7 +248,102 @@ apps/frontend/src/components/
 └── SubscriptionManager.tsx
 ```
 
-### 🔐 Fase 5: Seguridad y Moderación
+### � Fase 5: Sistema de Publicidad y Monetización
+**Prioridad:** Alta  
+**Estimación:** 2-3 semanas
+
+#### Funcionalidades pendientes:
+- [ ] **Página de publicidad intermedia** para usuarios free/anónimos
+  - Mostrar anuncio antes de redirección final
+  - Countdown timer (5-10 segundos)
+  - Botón "Skip Ad" para usuarios premium
+  - Analytics de impresiones publicitarias
+- [ ] **Gestión de campañas publicitarias**
+  - Panel admin para gestionar anuncios
+  - Subida de banners e imágenes
+  - Configuración de targeting básico
+  - Programación de campañas (fecha inicio/fin)
+- [ ] **Integración con redes publicitarias**
+  - Google AdSense integration
+  - Soporte para anuncios nativos
+  - Sistema de rotación de anuncios
+  - Optimización por CTR
+- [ ] **Configuración de bypass**
+  - Usuarios premium saltan publicidad automáticamente
+  - Configuración admin de tiempo de espera
+  - Blacklist de URLs que no deben mostrar ads
+  - Whitelist de dominios seguros
+
+#### Flujo técnico:
+1. Usuario hace clic en URL corta
+2. Sistema verifica tipo de usuario (anónimo/free/premium)
+3. Si es premium → redirección directa
+4. Si es free/anónimo → página intermedia con ad
+5. Después del timer → redirección a destino final
+6. Registro de métricas publicitarias
+
+#### Variables de entorno requeridas:
+```env
+GOOGLE_ADSENSE_CLIENT_ID=ca-pub-...
+AD_DISPLAY_DURATION=7  # segundos
+ENABLE_ADS=true
+AD_BYPASS_PREMIUM=true
+```
+
+#### Archivos a crear:
+```
+apps/backend/src/services/
+├── adService.ts
+├── redirectService.ts
+└── adAnalyticsService.ts
+apps/backend/src/models/
+├── Ad.ts
+└── AdImpression.ts
+apps/backend/src/routes/
+└── ads.ts
+apps/frontend/src/app/
+└── redirect/[shortCode]/page.tsx  # Página intermedia
+apps/frontend/src/components/
+├── AdDisplay.tsx
+├── AdCountdown.tsx
+└── admin/AdManagement.tsx
+```
+
+#### Modelo de datos sugerido:
+```typescript
+interface Ad {
+  id: string;
+  title: string;
+  imageUrl: string;
+  targetUrl: string;
+  isActive: boolean;
+  displayDuration: number; // segundos
+  impressions: number;
+  clicks: number;
+  budget?: number;
+  startDate: Date;
+  endDate?: Date;
+  targeting?: {
+    countries?: string[];
+    userTypes?: ('anonymous' | 'free')[];
+  };
+}
+
+interface AdImpression {
+  id: string;
+  adId: string;
+  urlId: string;
+  userId?: string;
+  userType: 'anonymous' | 'free' | 'premium';
+  timestamp: Date;
+  userAgent?: string;
+  ipAddress?: string;
+  clicked: boolean;
+  revenue?: number;
+}
+```
+
+### �🔐 Fase 6: Seguridad y Moderación
 **Prioridad:** Media  
 **Estimación:** 1-2 semanas
 

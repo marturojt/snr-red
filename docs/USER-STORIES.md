@@ -650,6 +650,97 @@ Las historias de usuario de SNR.red están organizadas por **épicas** y **perso
 
 ---
 
+## 📺 Épica 11: Sistema de Publicidad y Monetización
+
+### Historia 11.1: Página Intermedia con Publicidad ⏳
+**Como** propietario del negocio,  
+**quiero** mostrar publicidad a usuarios free/anónimos antes de redirecciones,  
+**para** generar ingresos adicionales por impresiones.
+
+**Criterios de Aceptación:**
+- [ ] Usuarios free/anónimos ven página intermedia con anuncio
+- [ ] Usuarios premium son redirigidos directamente
+- [ ] Countdown timer configurable (5-10 segundos)
+- [ ] Botón "Skip Ad" deshabilitado hasta fin del timer
+- [ ] Registro de impresiones y métricas publicitarias
+- [ ] Diseño responsive y atractivo de la página intermedia
+
+**Estimación:** 8 puntos  
+**Prioridad:** Alta  
+**Estado:** ⏳ Planificado
+
+### Historia 11.2: Gestión de Campañas Publicitarias ⏳
+**Como** administrador,  
+**quiero** gestionar campañas publicitarias,  
+**para** controlar qué anuncios se muestran y cuándo.
+
+**Criterios de Aceptación:**
+- [ ] Panel admin para crear/editar/eliminar anuncios
+- [ ] Subida de imágenes y banners publicitarios
+- [ ] Configuración de URLs de destino
+- [ ] Programación de fechas de inicio y fin
+- [ ] Configuración de targeting básico (tipos de usuario)
+- [ ] Vista previa de cómo se ve el anuncio
+
+**Estimación:** 5 puntos  
+**Prioridad:** Alta  
+**Estado:** ⏳ Planificado
+
+### Historia 11.3: Analytics de Publicidad ⏳
+**Como** administrador,  
+**quiero** ver métricas de rendimiento publicitario,  
+**para** optimizar las campañas y ROI.
+
+**Criterios de Aceptación:**
+- [ ] Dashboard con impresiones totales por anuncio
+- [ ] CTR (Click Through Rate) por campaña
+- [ ] Filtros por fechas y tipos de usuario
+- [ ] Gráficos de rendimiento temporal
+- [ ] Reportes exportables de métricas publicitarias
+- [ ] Comparativas entre diferentes anuncios
+
+**Estimación:** 5 puntos  
+**Prioridad:** Media  
+**Estado:** ⏳ Planificado
+
+### Historia 11.4: Configuración de Bypass Premium ⏳
+**Como** usuario premium,  
+**quiero** ser redirigido directamente sin ver anuncios,  
+**para** tener una experiencia sin interrupciones.
+
+**Criterios de Aceptación:**
+- [ ] Usuarios premium saltan automáticamente la página de anuncios
+- [ ] Verificación de estado de suscripción en tiempo real
+- [ ] Configuración admin para habilitar/deshabilitar bypass
+- [ ] Mensaje opcional mostrando beneficio premium
+- [ ] Logs de redirecciones premium para analytics
+- [ ] Manejo de casos edge (suscripción expirada, etc.)
+
+**Estimación:** 3 puntos  
+**Prioridad:** Media  
+**Estado:** ⏳ Planificado
+
+### Historia 11.5: Integración con Redes Publicitarias 🔮
+**Como** propietario del negocio,  
+**quiero** integrar con Google AdSense u otras redes,  
+**para** monetizar automáticamente sin gestionar anuncios manualmente.
+
+**Criterios de Aceptación:**
+- [ ] Integración con Google AdSense
+- [ ] Sistema de rotación de anuncios automático
+- [ ] Fallback a anuncios propios si no hay externos
+- [ ] Configuración de políticas de contenido
+- [ ] Optimización automática por rendimiento
+- [ ] Reportes combinados (propios + red publicitaria)
+
+**Estimación:** 8 puntos  
+**Prioridad:** Baja  
+**Estado:** 🔮 Futuro
+
+**Total Épica 11:** 5 historias - 29 puntos - ⏳ 0% Completado (0/5)
+
+---
+
 ## 📚 Criterios de Aceptación Generales
 
 ### Criterios Técnicos Transversales
@@ -683,6 +774,7 @@ Las historias de usuario de SNR.red están organizadas por **épicas** y **perso
 - [x] Generador de vCard
 
 ### Prioridad 2 (Próximas 8 semanas)
+- [ ] **Sistema de publicidad y monetización** (Épica 11 - Alta prioridad)
 - [ ] Analytics avanzados con gráficos
 - [ ] Integración de pagos con Stripe
 - [ ] Moderación automática básica
@@ -768,8 +860,9 @@ Testing_Strategy:
 
 ---
 
-**Estado del documento:** ✅ Completo + UX/UI Enhancement + vCard Generator  
+**Estado del documento:** ✅ Completo + UX/UI Enhancement + vCard Generator + Sistema Publicidad  
 **Próxima revisión:** Al finalizar cada Sprint  
-**Versión:** 1.2-vcard-generator-completed  
-**Total historias:** 42 (18 implementadas, 24 pendientes)  
-**Nuevas épicas completadas:** Épica 9 - UX/UI Enhancement (6 historias), Épica 10 - vCard Generator (4/5 historias)
+**Versión:** 1.3-ads-system-roadmap  
+**Total historias:** 47 (18 implementadas, 29 pendientes)  
+**Nuevas épicas agregadas:** Épica 11 - Sistema de Publicidad y Monetización (5 historias - Prioridad Alta)  
+**Épicas completadas:** Épica 9 - UX/UI Enhancement (6 historias), Épica 10 - vCard Generator (4/5 historias)

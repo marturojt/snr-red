@@ -1,8 +1,8 @@
 # SNR.red - Estado del Proyecto y Roadmap Técnico
 
-**Versión:** 1.4  
+**Versión:** 1.5  
 **Fecha de actualización:** 7 de Julio, 2025  
-**Estado actual:** UX/UI Enhancement implementado, sistema comercial moderno completado, i18n (EN/ES) implementado, URLs anónimas funcionales, generador de vCard integrado, formulario principal optimizado con opciones avanzadas colapsables, modal QR implementado para mejor experiencia de usuario, personalización de QR codes con presets y opciones avanzadas
+**Estado actual:** UX/UI Enhancement implementado, sistema comercial moderno completado, i18n (EN/ES) implementado, URLs anónimas funcionales, generador de vCard integrado, formulario principal optimizado con opciones avanzadas colapsables, modal QR implementado para mejor experiencia de usuario, personalización de QR codes con presets y opciones avanzadas, QR Display completamente internacionalizado
 
 ---
 
@@ -118,6 +118,22 @@ snr-red/
 - [x] **Integración con EnhancedUserUrls component**
 - [x] **API compatible con usuarios anónimos**
 
+### 🎯 Funcionalidades para Usuarios Invitados (Testing en Curso)
+- [x] **Acortamiento de URLs** sin registro (expiración: 30 días)
+- [x] **Generación de códigos QR** básicos y personalizados
+- [x] **Descarga de códigos QR** en formato PNG/SVG
+- [x] **Regeneración de códigos QR** con botón funcional
+- [x] **Personalización avanzada de QR** (colores, estilos, presets)
+- [x] **Creación de vCards** digitales con formulario completo
+- [x] **Gestión de URLs creadas** via botón "Mis URLs"
+- [x] **Interfaz bilingüe** (cambio EN/ES en tiempo real)
+- [x] **Analytics básicos** (visualización de estadísticas de clicks)
+- [x] **Compartir QR codes** via navegadores compatibles
+- [x] **Copiar URLs y QR** al portapapeles
+- [x] **Páginas de vCard públicas** para compartir contactos
+- [x] **Descarga de archivos .vcf** desde vCards generadas
+- [x] **Experiencia móvil optimizada** para todas las funcionalidades
+
 ### 🎴 Generador de vCard (RECIÉN IMPLEMENTADO)
 - [x] **Creación de tarjetas de presentación digitales**
 - [x] **Formulario multi-paso** con información personal, contacto y redes sociales
@@ -147,43 +163,71 @@ snr-red/
 ## 🏃‍♂️ Estado Actual de la Implementación
 
 ### ✅ Completado Recientemente (Sesión actual)
-1. **vCard Generator Feature implementado**:
+1. **Documentación Reorganizada y Limpia**:
+   - **NUEVO:** Limpieza masiva de documentación regada por diferentes carpetas
+   - **NUEVO:** Eliminación de 12 archivos duplicados entre `/docs/` y `/docs/development/`
+   - **NUEVO:** Estructura completamente organizada según SYSTEM-INSTRUCTIONS.md
+   - **NUEVO:** Documentación creada: DOCUMENTATION-CLEANUP.md
+   - **NUEVO:** Carpeta `/docs/` ahora solo contiene subcarpetas organizadas
+   - **NUEVO:** 35 archivos correctamente categorizados en system/, development/, deployment/, config/
+
+2. **vCard System Enhancement - Validaciones y UX Completas**:
+   - **NUEVO:** Campos obligatorios identificados y documentados (firstName, lastName)
+   - **NUEVO:** Validaciones robustas implementadas para todos los campos
+   - **NUEVO:** Máscaras inteligentes para teléfono (nacional/internacional)
+   - **NUEVO:** Formateo automático de websites con protocolo
+   - **NUEVO:** Validaciones específicas para redes sociales (LinkedIn, Instagram, Twitter, WhatsApp)
+   - **NUEVO:** Feedback visual mejorado con bordes rojos e iconos de error
+   - **NUEVO:** Limpieza automática de errores al escribir
+   - **NUEVO:** Validación multi-paso antes de envío
+   - **NUEVO:** URL de vCard corregida (/vcard/{shortCode})
+   - **NUEVO:** Ruta de compatibilidad /v/{id} → /vcard/{id}
+   - **NUEVO:** Documentación completa de validaciones en VCARD-VALIDATIONS-GUIDE.md
+3. **QR Display Internacionalización Completa**:
+   - **NUEVO:** Traducción completa del componente EnhancedQRCodeDisplay
+   - 24 nuevas traducciones en inglés y español
+   - Mensajes de toast traducidos para todas las acciones
+   - Verificación de funcionalidad del botón "Regenerate"
+   - Experiencia de usuario consistente en ambos idiomas
+   - Integración completa con sistema i18n existente
+
+2. **vCard Generator Feature implementado**:
    - Backend: Modelo, servicio y rutas API (`/api/vcard/*`)
    - Frontend: Componente VCardGenerator con formulario multi-paso
    - Integración: Interface con pestañas en landing page principal
    - Páginas: Visualización de vCard en `/vcard/[id]`
    - Features: Descarga .vcf, códigos QR, temas, sharing
 
-2. **UI/UX Enhancement completado**:
+3. **UI/UX Enhancement completado**:
    - ModernLandingPage con interfaz de pestañas
    - Integración completa de vCard generator
    - Actualización de features section con 4 características principales
    - Internacionalización para todas las nuevas características
 
-3. **Formulario Principal Optimizado**:
+4. **Formulario Principal Optimizado**:
    - Campos título y código personalizado agregados
    - Opciones avanzadas colapsables con toggle
    - Generación automática de códigos cortos
    - Botones de Analytics y QR funcionales con modales elegantes
    - **NUEVO:** Modal QR implementado para mejor experiencia de usuario
 
-4. **Experiencia de Usuario Mejorada**:
+5. **Experiencia de Usuario Mejorada**:
    - Analytics modal con métricas detalladas
    - QR modal con descarga directa (reemplazó ventana popup)
    - Diseño responsive y accesible
    - Traducciones completas EN/ES para nuevas funcionalidades
 
-5. **Personalización de Códigos QR**:
+6. **Personalización de Códigos QR**:
    - **NUEVO:** Sistema completo de personalización de QR codes
    - Presets temáticos: Classic, Modern, Vibrant, Elegant, Nature, Sunset
    - Personalización de colores: foreground y background
-   - Opciones de estilo: cuadrado, redondeado, puntos
+   - Opciones de estilo: cuadrado, redondeado, puntos, círculos
    - Configuración avanzada: tamaño, margen, formato, corrección de errores
    - Vista previa en tiempo real
    - Interfaz con pestañas para organizar opciones
    - Soporte completo i18n (EN/ES)
 
-6. **UX/UI QR Mejorada - Rápido + Personalización Opcional**:
+7. **UX/UI QR Mejorada - Rápido + Personalización Opcional**:
    - **NUEVO:** Flujo optimizado: QR inmediato + personalización opcional
    - QR básico se muestra instantáneamente al hacer clic
    - Botón "Personalizar Código QR" para usuarios que desean más control
@@ -194,7 +238,7 @@ snr-red/
    - Debouncing inteligente para evitar llamadas API excesivas
    - Diseño responsivo optimizado para móvil y desktop
 
-7. **Panel de administración completo**:
+8. **Panel de administración completo**:
    - Backend: Rutas admin con autenticación (`/api/admin/*`)
    - Frontend: Layout y componentes admin (`/admin/*`)
    - Dashboard con métricas en tiempo real
@@ -230,9 +274,13 @@ snr-red/
     - Integración con sistema de temas
 
 ### 🔄 Estado de Validación Requerida
-- **vCard Generator**: ✅ Implementado y funcionando
-- **vCard Pages**: ✅ Páginas de visualización funcionando
+- **Documentación**: ✅ Completamente reorganizada y limpia (35 archivos organizados)
+- **vCard Generator**: ✅ Implementado, validaciones completas, URLs corregidas
+- **vCard Validations**: ✅ Implementadas todas las validaciones con feedback visual
+- **vCard Pages**: ✅ Páginas de visualización funcionando con URLs corregidas
 - **vCard API**: ✅ Todas las rutas API funcionando (verificado con POST /api/vcard/create)
+- **vCard Preview**: ✅ Preview funcionando con URLs corregidas
+- **vCard Download**: ✅ Descarga de archivos .vcf funcionando
 - **Tabbed Interface**: ✅ Integración completa en landing page
 - **i18n for vCard**: ✅ Traducciones completas EN/ES implementadas
 - **Login admin**: Implementado pero necesita validación final
@@ -675,11 +723,11 @@ curl -X POST http://localhost:3001/api/auth/login \
 ## 📝 Notas para Futuras Iteraciones
 
 ### Para IA Assistant:
-1. **Estado actual:** UX/UI Enhancement implementado, experiencia comercial completada
-2. **Prioridad inmediata:** Integrar analytics reales y datos dinámicos en dashboard
+1. **Estado actual:** UX/UI Enhancement implementado, experiencia comercial completada, i18n completo, QR Display internacionalizado
+2. **Prioridad inmediata:** Testing de funcionalidad de usuario invitado, validación de flujos completos
 3. **Siguiente fase:** Real-time analytics con gráficos interactivos y metrics avanzadas
 4. **Decisiones técnicas:** Usar Chart.js para gráficos, Redis para caché futuro
-5. **UX/UI:** Base comercial establecida, próximo paso: A/B testing y optimización de conversión
+5. **UX/UI:** Base comercial establecida, i18n implementado, próximo paso: optimización de conversión y analytics avanzados
 
 ### Decisiones de Arquitectura:
 - **Monorepo:** Facilita desarrollo y despliegue conjunto

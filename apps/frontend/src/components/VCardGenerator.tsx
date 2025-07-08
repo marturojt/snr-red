@@ -17,7 +17,8 @@ import {
   Copy,
   ArrowRight,
   Check,
-  Linkedin
+  Linkedin,
+  AlertCircle
 } from 'lucide-react';
 import { vcardApi } from '@/lib/api';
 import { copyToClipboard } from '@/lib/utils';
@@ -51,6 +52,34 @@ interface VCardFormData {
   theme: 'professional' | 'creative' | 'minimal';
 }
 
+interface VCardErrors {
+  personalInfo: {
+    firstName: string;
+    lastName: string;
+    company: string;
+    title: string;
+    photo: string;
+  };
+  contact: {
+    phone: string;
+    email: string;
+    website: string;
+  };
+  social: {
+    linkedin: string;
+    whatsapp: string;
+    instagram: string;
+    twitter: string;
+  };
+  address: {
+    street: string;
+    city: string;
+    state: string;
+    country: string;
+    zipCode: string;
+  };
+}
+
 interface VCardResult {
   id: string;
   shortUrl: string;
@@ -66,6 +95,12 @@ export default function VCardGenerator() {
   const [currentStep, setCurrentStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [vcard, setVCard] = useState<VCardResult | null>(null);
+  const [errors, setErrors] = useState<VCardErrors>({
+    personalInfo: { firstName: '', lastName: '', company: '', title: '', photo: '' },
+    contact: { phone: '', email: '', website: '' },
+    social: { linkedin: '', whatsapp: '', instagram: '', twitter: '' },
+    address: { street: '', city: '', state: '', country: '', zipCode: '' }
+  });
   const [formData, setFormData] = useState<VCardFormData>({
     personalInfo: {
       firstName: '',
@@ -95,6 +130,213 @@ export default function VCardGenerator() {
     theme: 'professional'
   });
 
+  // Validation functions
+  // Enhanced validation functions
+  const validateEmail = useCallback((email: string): string => {
+    if (!email) return '';
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(email) ? '' : 'Please enter a valid email address';
+  }, []);
+
+  const validatePhone = useCallback((phone: string): string => {
+    if (!phone) return '';
+    const cleanPhone = phone.replace(/[\s\-\(\)]/g, '');
+    const phoneRegex = /^[\+]?[1-9][\d]{7,15}$/;
+    return phoneRegex.test(cleanPhone) ? '' : 'Please enter a valid phone number';
+  }, []);
+
+  const validateWebsite = useCallback((website: string): string => {
+    if (!website) return '';
+    const urlRegex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
+    return urlRegex.test(website) ? '' : 'Please enter a valid website URL';
+  }, []);
+
+  const validateLinkedIn = useCallback((linkedin: string): string => {
+    if (!linkedin) return '';
+    const linkedinRegex = /^(https?:\/\/)?(www\.)?(linkedin\.com\/(in|pub|public-profile)\/[a-zA-Z0-9-]+)\/?$/;
+    return linkedinRegex.test(linkedin) ? '' : 'Please enter a valid LinkedIn URL';
+  }, []);
+
+  const validateInstagram = useCallback((instagram: string): string => {
+    if (!instagram) return '';
+    const instagramRegex = /^(https?:\/\/)?(www\.)?(instagram\.com\/[a-zA-Z0-9_.]+)\/?$/;
+    return instagramRegex.test(instagram) ? '' : 'Please enter a valid Instagram URL';
+  }, []);
+
+  const validateTwitter = useCallback((twitter: string): string => {
+    if (!twitter) return '';
+    const twitterRegex = /^(https?:\/\/)?(www\.)?(twitter\.com\/[a-zA-Z0-9_]+|x\.com\/[a-zA-Z0-9_]+)\/?$/;
+    return twitterRegex.test(twitter) ? '' : 'Please enter a valid Twitter/X URL';
+  }, []);
+
+  const validateWhatsApp = useCallback((whatsapp: string): string => {
+    if (!whatsapp) return '';
+    const cleanWhatsApp = whatsapp.replace(/[\s\-\(\)]/g, '');
+    const whatsappRegex = /^[\+]?[1-9][\d]{7,15}$/;
+    return whatsappRegex.test(cleanWhatsApp) ? '' : 'Please enter a valid WhatsApp number';
+  }, []);
+
+  // Enhanced formatting functions
+  const formatPhone = useCallback((phone: string): string => {
+    // Remove all non-digits except +
+    const cleaned = phone.replace(/[^\d+]/g, '');
+    
+    // Handle international format
+    if (cleaned.startsWith('+')) {
+      const withoutPlus = cleaned.slice(1);
+      if (withoutPlus.length <= 3) {
+        return '+' + withoutPlus;
+      } else if (withoutPlus.length <= 6) {
+        return `+${withoutPlus.slice(0, 3)} ${withoutPlus.slice(3)}`;
+      } else if (withoutPlus.length <= 10) {
+        return `+${withoutPlus.slice(0, 3)} ${withoutPlus.slice(3, 6)} ${withoutPlus.slice(6)}`;
+      } else {
+        return `+${withoutPlus.slice(0, 3)} ${withoutPlus.slice(3, 6)} ${withoutPlus.slice(6, 10)} ${withoutPlus.slice(10)}`;
+      }
+    }
+    
+    // Handle national format
+    const digits = cleaned.replace(/\D/g, '');
+    if (digits.length <= 3) {
+      return digits;
+    } else if (digits.length <= 6) {
+      return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+    } else if (digits.length <= 10) {
+      return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
+    } else {
+      return `+${digits.slice(0, -10)} (${digits.slice(-10, -7)}) ${digits.slice(-7, -4)}-${digits.slice(-4)}`;
+    }
+  }, []);
+
+  const formatWebsite = useCallback((website: string): string => {
+    if (!website) return '';
+    if (website.startsWith('http://') || website.startsWith('https://')) {
+      return website;
+    }
+    return `https://${website}`;
+  }, []);
+
+  const validateStep = useCallback((step: number): boolean => {
+    const newErrors = { ...errors };
+    let hasErrors = false;
+
+    if (step === 1) {
+      // Personal Info validation (Required fields)
+      if (!formData.personalInfo.firstName.trim()) {
+        newErrors.personalInfo.firstName = 'First name is required';
+        hasErrors = true;
+      } else if (formData.personalInfo.firstName.length < 2) {
+        newErrors.personalInfo.firstName = 'First name must be at least 2 characters';
+        hasErrors = true;
+      } else {
+        newErrors.personalInfo.firstName = '';
+      }
+
+      if (!formData.personalInfo.lastName.trim()) {
+        newErrors.personalInfo.lastName = 'Last name is required';
+        hasErrors = true;
+      } else if (formData.personalInfo.lastName.length < 2) {
+        newErrors.personalInfo.lastName = 'Last name must be at least 2 characters';
+        hasErrors = true;
+      } else {
+        newErrors.personalInfo.lastName = '';
+      }
+
+      // Company validation (optional but if provided, must be valid)
+      if (formData.personalInfo.company && formData.personalInfo.company.length < 2) {
+        newErrors.personalInfo.company = 'Company name must be at least 2 characters';
+        hasErrors = true;
+      } else {
+        newErrors.personalInfo.company = '';
+      }
+
+      // Title validation (optional but if provided, must be valid)
+      if (formData.personalInfo.title && formData.personalInfo.title.length < 2) {
+        newErrors.personalInfo.title = 'Job title must be at least 2 characters';
+        hasErrors = true;
+      } else {
+        newErrors.personalInfo.title = '';
+      }
+
+    } else if (step === 2) {
+      // Contact validation
+      if (formData.contact.email) {
+        const emailError = validateEmail(formData.contact.email);
+        if (emailError) {
+          newErrors.contact.email = emailError;
+          hasErrors = true;
+        } else {
+          newErrors.contact.email = '';
+        }
+      }
+
+      if (formData.contact.phone) {
+        const phoneError = validatePhone(formData.contact.phone);
+        if (phoneError) {
+          newErrors.contact.phone = phoneError;
+          hasErrors = true;
+        } else {
+          newErrors.contact.phone = '';
+        }
+      }
+
+      if (formData.contact.website) {
+        const websiteError = validateWebsite(formData.contact.website);
+        if (websiteError) {
+          newErrors.contact.website = websiteError;
+          hasErrors = true;
+        } else {
+          newErrors.contact.website = '';
+        }
+      }
+
+    } else if (step === 3) {
+      // Social media validation
+      if (formData.social.linkedin) {
+        const linkedinError = validateLinkedIn(formData.social.linkedin);
+        if (linkedinError) {
+          newErrors.social.linkedin = linkedinError;
+          hasErrors = true;
+        } else {
+          newErrors.social.linkedin = '';
+        }
+      }
+
+      if (formData.social.instagram) {
+        const instagramError = validateInstagram(formData.social.instagram);
+        if (instagramError) {
+          newErrors.social.instagram = instagramError;
+          hasErrors = true;
+        } else {
+          newErrors.social.instagram = '';
+        }
+      }
+
+      if (formData.social.twitter) {
+        const twitterError = validateTwitter(formData.social.twitter);
+        if (twitterError) {
+          newErrors.social.twitter = twitterError;
+          hasErrors = true;
+        } else {
+          newErrors.social.twitter = '';
+        }
+      }
+
+      if (formData.social.whatsapp) {
+        const whatsappError = validateWhatsApp(formData.social.whatsapp);
+        if (whatsappError) {
+          newErrors.social.whatsapp = whatsappError;
+          hasErrors = true;
+        } else {
+          newErrors.social.whatsapp = '';
+        }
+      }
+    }
+
+    setErrors(newErrors);
+    return !hasErrors;
+  }, [errors, formData, validateEmail, validatePhone, validateWebsite, validateLinkedIn, validateInstagram, validateTwitter, validateWhatsApp]);
+
   const updatePersonalInfo = useCallback((field: keyof VCardFormData['personalInfo'], value: string) => {
     setFormData(prev => ({
       ...prev,
@@ -103,17 +345,51 @@ export default function VCardGenerator() {
         [field]: value
       }
     }));
-  }, []);
+    
+    // Clear error when user starts typing
+    if (errors.personalInfo[field]) {
+      setErrors(prev => ({
+        ...prev,
+        personalInfo: {
+          ...prev.personalInfo,
+          [field]: ''
+        }
+      }));
+    }
+  }, [errors.personalInfo]);
 
   const updateContact = useCallback((field: keyof VCardFormData['contact'], value: string) => {
+    let processedValue = value;
+    
+    // Apply phone formatting
+    if (field === 'phone') {
+      processedValue = formatPhone(value);
+    }
+    
+    // Apply website formatting
+    if (field === 'website') {
+      processedValue = formatWebsite(value);
+    }
+    
     setFormData(prev => ({
       ...prev,
       contact: {
         ...prev.contact,
-        [field]: value
+        [field]: processedValue
       }
     }));
-  }, []);
+    
+    // Clear error when user starts typing
+    if (errors.contact[field]) {
+      setErrors(prev => ({
+        ...prev,
+        contact: {
+          ...prev.contact,
+          [field]: ''
+        }
+      }));
+    }
+  }, [errors.contact, formatPhone, formatWebsite]);
 
   const updateSocial = useCallback((field: keyof VCardFormData['social'], value: string) => {
     setFormData(prev => ({
@@ -126,8 +402,28 @@ export default function VCardGenerator() {
   }, []);
 
   const handleSubmit = useCallback(async () => {
+    // Validate all steps before submission
+    const isStep1Valid = validateStep(1);
+    const isStep2Valid = validateStep(2);
+    const isStep3Valid = validateStep(3);
+    
+    if (!isStep1Valid || !isStep2Valid || !isStep3Valid) {
+      toast.error('Please fix all validation errors before submitting');
+      // Go back to the first step with errors
+      if (!isStep1Valid) {
+        setCurrentStep(1);
+      } else if (!isStep2Valid) {
+        setCurrentStep(2);
+      } else if (!isStep3Valid) {
+        setCurrentStep(3);
+      }
+      return;
+    }
+
+    // Double-check required fields
     if (!formData.personalInfo.firstName || !formData.personalInfo.lastName) {
       toast.error('First name and last name are required');
+      setCurrentStep(1);
       return;
     }
 
@@ -143,7 +439,7 @@ export default function VCardGenerator() {
     } finally {
       setIsLoading(false);
     }
-  }, [formData]);
+  }, [formData, validateStep]);
 
   const handleCopy = useCallback(async (text: string) => {
     try {
@@ -222,7 +518,14 @@ export default function VCardGenerator() {
                     onChange={(e) => updatePersonalInfo('firstName', e.target.value)}
                     placeholder="John"
                     required
+                    className={errors.personalInfo.firstName ? 'border-red-500' : ''}
                   />
+                  {errors.personalInfo.firstName && (
+                    <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                      <AlertCircle className="w-3 h-3" />
+                      {errors.personalInfo.firstName}
+                    </p>
+                  )}
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-1">Last Name *</label>
@@ -231,7 +534,14 @@ export default function VCardGenerator() {
                     onChange={(e) => updatePersonalInfo('lastName', e.target.value)}
                     placeholder="Doe"
                     required
+                    className={errors.personalInfo.lastName ? 'border-red-500' : ''}
                   />
+                  {errors.personalInfo.lastName && (
+                    <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                      <AlertCircle className="w-3 h-3" />
+                      {errors.personalInfo.lastName}
+                    </p>
+                  )}
                 </div>
               </div>
               <div>
@@ -240,7 +550,14 @@ export default function VCardGenerator() {
                   value={formData.personalInfo.company}
                   onChange={(e) => updatePersonalInfo('company', e.target.value)}
                   placeholder="Your Company Inc."
+                  className={errors.personalInfo.company ? 'border-red-500' : ''}
                 />
+                {errors.personalInfo.company && (
+                  <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                    <AlertCircle className="w-3 h-3" />
+                    {errors.personalInfo.company}
+                  </p>
+                )}
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1">Job Title</label>
@@ -248,7 +565,14 @@ export default function VCardGenerator() {
                   value={formData.personalInfo.title}
                   onChange={(e) => updatePersonalInfo('title', e.target.value)}
                   placeholder="Software Engineer"
+                  className={errors.personalInfo.title ? 'border-red-500' : ''}
                 />
+                {errors.personalInfo.title && (
+                  <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                    <AlertCircle className="w-3 h-3" />
+                    {errors.personalInfo.title}
+                  </p>
+                )}
               </div>
               <div className="flex justify-end">
                 <Button 
@@ -283,7 +607,14 @@ export default function VCardGenerator() {
                   value={formData.contact.email}
                   onChange={(e) => updateContact('email', e.target.value)}
                   placeholder="john@example.com"
+                  className={errors.contact.email ? 'border-red-500' : ''}
                 />
+                {errors.contact.email && (
+                  <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                    <AlertCircle className="w-3 h-3" />
+                    {errors.contact.email}
+                  </p>
+                )}
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1">Phone</label>
@@ -292,7 +623,14 @@ export default function VCardGenerator() {
                   value={formData.contact.phone}
                   onChange={(e) => updateContact('phone', e.target.value)}
                   placeholder="+1 234 567 8900"
+                  className={errors.contact.phone ? 'border-red-500' : ''}
                 />
+                {errors.contact.phone && (
+                  <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                    <AlertCircle className="w-3 h-3" />
+                    {errors.contact.phone}
+                  </p>
+                )}
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1">Website</label>
@@ -301,7 +639,14 @@ export default function VCardGenerator() {
                   value={formData.contact.website}
                   onChange={(e) => updateContact('website', e.target.value)}
                   placeholder="https://yourwebsite.com"
+                  className={errors.contact.website ? 'border-red-500' : ''}
                 />
+                {errors.contact.website && (
+                  <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                    <AlertCircle className="w-3 h-3" />
+                    {errors.contact.website}
+                  </p>
+                )}
               </div>
               <div className="flex justify-between">
                 <Button variant="outline" onClick={() => setCurrentStep(1)}>
@@ -337,7 +682,14 @@ export default function VCardGenerator() {
                     value={formData.social.linkedin}
                     onChange={(e) => updateSocial('linkedin', e.target.value)}
                     placeholder="https://linkedin.com/in/johndoe"
+                    className={errors.social.linkedin ? 'border-red-500' : ''}
                   />
+                  {errors.social.linkedin && (
+                    <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                      <AlertCircle className="w-3 h-3" />
+                      {errors.social.linkedin}
+                    </p>
+                  )}
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-1">WhatsApp</label>
@@ -345,7 +697,14 @@ export default function VCardGenerator() {
                     value={formData.social.whatsapp}
                     onChange={(e) => updateSocial('whatsapp', e.target.value)}
                     placeholder="+1234567890"
+                    className={errors.social.whatsapp ? 'border-red-500' : ''}
                   />
+                  {errors.social.whatsapp && (
+                    <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                      <AlertCircle className="w-3 h-3" />
+                      {errors.social.whatsapp}
+                    </p>
+                  )}
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-1">Instagram</label>
@@ -353,7 +712,14 @@ export default function VCardGenerator() {
                     value={formData.social.instagram}
                     onChange={(e) => updateSocial('instagram', e.target.value)}
                     placeholder="https://instagram.com/johndoe"
+                    className={errors.social.instagram ? 'border-red-500' : ''}
                   />
+                  {errors.social.instagram && (
+                    <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                      <AlertCircle className="w-3 h-3" />
+                      {errors.social.instagram}
+                    </p>
+                  )}
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-1">Twitter</label>
@@ -361,7 +727,14 @@ export default function VCardGenerator() {
                     value={formData.social.twitter}
                     onChange={(e) => updateSocial('twitter', e.target.value)}
                     placeholder="https://twitter.com/johndoe"
+                    className={errors.social.twitter ? 'border-red-500' : ''}
                   />
+                  {errors.social.twitter && (
+                    <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                      <AlertCircle className="w-3 h-3" />
+                      {errors.social.twitter}
+                    </p>
+                  )}
                 </div>
               </div>
 

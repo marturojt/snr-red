@@ -54,7 +54,7 @@ class VCardService {
       } while (!isUnique);
 
       // Generate URLs
-      const shortUrl = `${this.baseUrl}/v/${shortCode}`;
+      const shortUrl = `${this.baseUrl}/vcard/${shortCode}`;
       
       // Generate QR Code
       const qrCode = await QRCode.toDataURL(shortUrl, {

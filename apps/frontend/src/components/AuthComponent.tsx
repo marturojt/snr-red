@@ -137,24 +137,24 @@ export default function AuthComponent({ user, onAuthChange }: AuthComponentProps
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Mail className="w-4 h-4 text-gray-500" />
-                <span className="text-sm text-gray-600">Email:</span>
+                <Mail className="w-4 h-4 text-muted-foreground" />
+                <span className="text-sm text-muted-foreground">Email:</span>
               </div>
               <span className="font-medium">{user.email}</span>
             </div>
             
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <User className="w-4 h-4 text-gray-500" />
-                <span className="text-sm text-gray-600">Name:</span>
+                <User className="w-4 h-4 text-muted-foreground" />
+                <span className="text-sm text-muted-foreground">Name:</span>
               </div>
               <span className="font-medium">{user.name}</span>
             </div>
             
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Crown className="w-4 h-4 text-gray-500" />
-                <span className="text-sm text-gray-600">Plan:</span>
+                <Crown className="w-4 h-4 text-muted-foreground" />
+                <span className="text-sm text-muted-foreground">Plan:</span>
               </div>
               <Badge variant={user.plan === 'premium' ? 'default' : 'secondary'}>
                 {user.plan === 'premium' ? 'Premium' : 'Free'}
@@ -163,8 +163,8 @@ export default function AuthComponent({ user, onAuthChange }: AuthComponentProps
             
             {user.lastLoginAt && (
               <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">Last login:</span>
-                <span className="text-sm text-gray-800">
+                <span className="text-sm text-muted-foreground">Last login:</span>
+                <span className="text-sm text-foreground">
                   {new Date(user.lastLoginAt).toLocaleDateString()}
                 </span>
               </div>
@@ -174,7 +174,7 @@ export default function AuthComponent({ user, onAuthChange }: AuthComponentProps
           {/* Plan Benefits */}
           <div className="border-t pt-4">
             <h4 className="font-medium mb-2">Plan Benefits:</h4>
-            <ul className="text-sm text-gray-600 space-y-1">
+            <ul className="text-sm text-muted-foreground space-y-1">
               {user.plan === 'free' ? (
                 <>
                   <li>• URLs expire after 3 months</li>

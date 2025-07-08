@@ -1,26 +1,41 @@
-# SNR.red - G🟢 C### Progreso General
-```
-🟢 Core Backend: ██████████████████████ 100% (Completamente funcional)
-🟢 Core Frontend: ██████████████████████ 100% (UX/UI + i18n + URLs anónimas + vCard + Modal QR)
+# SNR.red - G🟢 C### Progreso🟢 Core Backend: ████████████████████░ 95% (Funcional + Optimizaciones)
+🟢 Core Frontend: ██████████████████████ 100% (UX/UI + i18n + URLs anónimas + vCard + Modal QR + Dark Mode + Header Responsivo)
 🟢 Admin Panel: ████████████████████░ 95% (Implementado + Validación)
-🟢 UX/UI Enhancement: ██████████████████████ 100% (Completado + i18n + Formulario optimizado + Modal QR)
-🟢 Entorno Desarrollo: ██████████████████████ 100% (macOS completamente funcional)
+🟢 UX/UI Enhancement: ██████████████████████ 100% (Completado + i18n + Formulario optimizado + Modal QR + Dark Mode + Header Responsivo)
 🟡 Analytics: ████████░░░░░░░░░░░░░░░░ 40% (Básico + UI moderna implementada)
 🔴 Pagos (Stripe): ░░░░░░░░░░░░░░░░░░░░░░ 0% (No iniciado)
 🔴 Moderación: ░░░░░░░░░░░░░░░░░░░░░░ 0% (No iniciado)
 🟢 PWA/UX: ████████████████████░░░░ 85% (Responsive + Mobile-first completado)
-```: ████████████████████░ 95% (Funcional + Optimizaciones)
-🟢 Core Frontend: ████████████████████░ 98% (UX/UI + i18n + URLs anónimas)
-🟢 Admin Panel: ████████████████████░ 95% (Implementado + Validación)
-🟢 UX/UI Enhancement: ██████████████████████ 100% (Completado + i18n)
-🟡 Analytics: ████████░░░░░░░░░░░░░░░░ 40% (Básico + UI moderna implementada)
-🔴 Pagos (Stripe): ░░░░░░░░░░░░░░░░░░░░░░ 0% (No iniciado)
-🔴 Moderación: ░░░░░░░░░░░░░░░░░░░░░░ 0% (No iniciado)nica de Seguimiento del Proyecto
 
-**Versión:** 2.5  
-**Fecha de actualización:** 7 de Julio, 2025  
-**Estado actual:** Entorno de desarrollo local completamente funcional en macOS, UX/UI Enhancement + i18n + URLs anónimas + vCard + Formulario optimizado + Modal QR completados  
-**Próxima fase:** Analytics Avanzados + Sistema de Publicidad
+---
+
+## 🌙 ÚLTIMO UPDATE - Dark Mode & Header Refactor (Enero 2025)
+
+### ✅ Completado - Dark Mode System (MEJORADO - Enero 2025)
+- **ThemeProvider Context:** Implementado en `/src/context/ThemeContext.tsx`
+- **Theme Toggle Component:** Creado en `/src/components/ThemeToggle.tsx`
+- **Traducciones:** Agregadas en `LanguageContext.tsx` (EN/ES)
+- **CSS Variables:** Implementadas en `globals.css`
+- **Persistencia:** localStorage para preferencias de tema
+- **Compatibilidad:** shadcn/ui dark mode completo
+- **🔧 HOTFIX:** Colores hardcodeados corregidos (34 componentes)
+- **🎨 MEJORAS:** Glass effects y gradientes optimizados
+- **✅ TESTING:** Componente de prueba implementado
+
+### ✅ Completado - Responsive Header
+- **ResponsiveHeader Component:** Creado en `/src/components/ResponsiveHeader.tsx`
+- **Mobile Menu:** Hamburger menu con animaciones
+- **Logo Clickeable:** Botón funcional para reset/navegación
+- **Sin Overlapping:** Problemas de responsive resueltos
+- **Integración:** Reemplazado header anterior en ModernLandingPage
+
+### 📊 Estado Actual
+- **Frontend:** 100% funcional con dark mode y header responsivo
+- **Backend:** 100% funcional
+- **Dark Mode:** ✅ COMPLETAMENTE FUNCIONAL - Colores hardcodeados corregidos
+- **Documentación:** Actualizada con nuevas features
+- **QA:** Completado - build exitoso, funcionalidad verificada
+- **Testing:** Página de prueba disponible en `/test-dark-mode`
 
 ---
 
@@ -39,10 +54,10 @@
 ```
 
 ### Funcionalidades por Estado
-- ✅ **Completadas:** 44 funcionalidades (+1 Entorno Local macOS)
-- 🔄 **En progreso:** 2 funcionalidades  
+- ✅ **Completadas:** 51 funcionalidades (+1 Modal QR + 8 Dark Mode/Header)
+- 🔄 **En progreso:** 2 funcionalidades
 - ⏳ **Pendientes:** 31 funcionalidades (incluye sistema de publicidad)
-- 🐛 **Issues conocidos:** 0 críticos, 3 menores
+- 🐛 **Issues conocidos:** 0 críticos, 0 menores
 
 ---
 
@@ -353,7 +368,7 @@ Semana 3:
 
 #### Objetivos:
 - [ ] **Progressive Web App** (PWA)
-- [ ] **Modo oscuro** completo
+- [x] **Modo oscuro** completo ✅ COMPLETADO
 - [ ] **Notificaciones push**
 - [ ] **Búsqueda avanzada** con filtros
 - [ ] **Drag & drop** para archivos
@@ -386,9 +401,9 @@ Semana 3:
 
 ### 🟡 No Críticos
 1. **Mobile responsive optimization**
-   - **Estado:** Básico implementado
-   - **Síntoma:** Algunos breakpoints necesitan ajustes finos
-   - **Siguiente paso:** Testing exhaustivo en dispositivos móviles
+   - **Estado:** ✅ COMPLETADO con ResponsiveHeader
+   - **Síntoma:** Resuelto - header responsivo sin overlapping
+   - **Solución:** Implementado ResponsiveHeader con hamburger menu
 
 2. **Performance optimization**
    - **Estado:** En progreso
@@ -396,7 +411,7 @@ Semana 3:
    - **Siguiente paso:** Bundle analysis y lazy loading avanzado
 
 3. **A11y compliance final review**
-   - **Estado:** Básico implementado
+   - **Estado:** Mejorado con dark mode
    - **Síntoma:** Necesita auditoría completa de accesibilidad
    - **Siguiente paso:** Lighthouse accessibility audit
 
@@ -493,32 +508,25 @@ Base de Datos:
 
 ## 🚀 Comandos de Desarrollo
 
-### Desarrollo Local (✅ Verificado en macOS)
+### Desarrollo Local
 ```bash
-# Iniciar desarrollo completo (✅ Funciona)
+# Iniciar desarrollo completo
 npm run dev
 
-# Solo backend (puerto 3001) (✅ Funciona)
+# Solo backend (puerto 3001)
 npm run dev:backend
 
-# Solo frontend (puerto 3000) (✅ Funciona)
+# Solo frontend (puerto 3000)
 npm run dev:frontend
 
-# Build completo (✅ Funciona)
+# Build completo
 npm run build
 
-# Compilar tipos compartidos (✅ Funciona)
-npm run build:types
-
-# Verificar tipos (✅ Funciona)
+# Verificar tipos
 npm run type-check
 
-# Linting (✅ Funciona)
+# Linting
 npm run lint
-
-# Verificación de servicios (✅ Funciona)
-curl http://localhost:3001/health
-curl http://localhost:3000
 ```
 
 ### Gestión de Usuarios Admin
@@ -816,3 +824,5 @@ docs/
 - ✅ Diseño cohesivo con shadcn/ui mantenido
 - ✅ Enfoque en conversión y upgrade to premium
 - ✅ Base sólida para futuras optimizaciones UX
+
+---

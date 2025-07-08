@@ -123,7 +123,7 @@ function UrlDetails({ url, onUpdate, onDelete }: UrlDetailsProps) {
     <div className="space-y-4">
       <div className="grid grid-cols-1 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-foreground mb-1">
             Original URL
           </label>
           <div className="flex items-center space-x-2">
@@ -136,20 +136,20 @@ function UrlDetails({ url, onUpdate, onDelete }: UrlDetailsProps) {
           </div>
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-foreground mb-1">
             Short Code
           </label>
           <Input value={url.shortCode} disabled />
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-foreground mb-1">
               User Type
             </label>
             <Input value={url.userType} disabled />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-foreground mb-1">
               Clicks
             </label>
             <Input value={url.clicks.toString()} disabled />
@@ -157,7 +157,7 @@ function UrlDetails({ url, onUpdate, onDelete }: UrlDetailsProps) {
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-foreground mb-1">
               Status
             </label>
             <Select value={isActive ? 'active' : 'inactive'} onValueChange={(value) => setIsActive(value === 'active')}>
@@ -171,7 +171,7 @@ function UrlDetails({ url, onUpdate, onDelete }: UrlDetailsProps) {
             </Select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-foreground mb-1">
               Expires At
             </label>
             <Input
@@ -185,25 +185,25 @@ function UrlDetails({ url, onUpdate, onDelete }: UrlDetailsProps) {
 
       {url.registeredUserId && (
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-foreground mb-1">
             Owner
           </label>
-          <div className="p-3 bg-gray-50 rounded-lg">
-            <div className="font-medium text-gray-900">{url.registeredUserId.name}</div>
-            <div className="text-sm text-gray-500">{url.registeredUserId.email}</div>
+          <div className="p-3 bg-muted rounded-lg">
+            <div className="font-medium text-foreground">{url.registeredUserId.name}</div>
+            <div className="text-sm text-muted-foreground">{url.registeredUserId.email}</div>
           </div>
         </div>
       )}
 
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-foreground mb-1">
             Created At
           </label>
           <Input value={new Date(url.createdAt).toLocaleString()} disabled />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-foreground mb-1">
             Last Accessed
           </label>
           <Input value={url.lastAccessedAt ? new Date(url.lastAccessedAt).toLocaleString() : 'Never'} disabled />
@@ -302,8 +302,8 @@ export default function UrlManagement() {
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
-          <h2 className="text-lg font-semibold text-gray-900 mb-2">Error Loading URLs</h2>
-          <p className="text-gray-600 mb-4">{error}</p>
+          <h2 className="text-lg font-semibold text-foreground mb-2">Error Loading URLs</h2>
+          <p className="text-muted-foreground mb-4">{error}</p>
           <Button onClick={fetchUrls}>
             <RefreshCw className="h-4 w-4 mr-2" />
             Try Again
@@ -318,8 +318,8 @@ export default function UrlManagement() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">URL Management</h1>
-          <p className="text-gray-600">Manage shortened URLs and their settings</p>
+          <h1 className="text-2xl font-bold text-foreground">URL Management</h1>
+          <p className="text-muted-foreground">Manage shortened URLs and their settings</p>
         </div>
         <Button onClick={fetchUrls} disabled={loading}>
           <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
@@ -339,7 +339,7 @@ export default function UrlManagement() {
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   placeholder="Search by URL or short code..."
                   value={search}
@@ -390,17 +390,17 @@ export default function UrlManagement() {
               </thead>
               <tbody>
                 {urls.map((url) => (
-                  <tr key={url._id} className="border-b hover:bg-gray-50">
+                  <tr key={url._id} className="border-b hover:bg-muted">
                     <td className="py-3 px-4">
                       <div className="max-w-xs">
-                        <div className="font-medium text-gray-900 truncate">{url.originalUrl}</div>
+                        <div className="font-medium text-foreground truncate">{url.originalUrl}</div>
                         {url.registeredUserId && (
-                          <div className="text-sm text-gray-500">{url.registeredUserId.name}</div>
+                          <div className="text-sm text-muted-foreground">{url.registeredUserId.name}</div>
                         )}
                       </div>
                     </td>
                     <td className="py-3 px-4">
-                      <code className="text-sm bg-gray-100 px-2 py-1 rounded">
+                      <code className="text-sm bg-muted px-2 py-1 rounded">
                         /{url.shortCode}
                       </code>
                     </td>
@@ -409,7 +409,7 @@ export default function UrlManagement() {
                         {url.userType}
                       </Badge>
                     </td>
-                    <td className="py-3 px-4 text-sm text-gray-600">
+                    <td className="py-3 px-4 text-sm text-muted-foreground">
                       {url.clicks.toLocaleString()}
                     </td>
                     <td className="py-3 px-4">
@@ -417,7 +417,7 @@ export default function UrlManagement() {
                         {url.isActive ? 'Active' : 'Inactive'}
                       </Badge>
                     </td>
-                    <td className="py-3 px-4 text-sm text-gray-600">
+                    <td className="py-3 px-4 text-sm text-muted-foreground">
                       {new Date(url.createdAt).toLocaleDateString()}
                     </td>
                     <td className="py-3 px-4">
@@ -449,7 +449,7 @@ export default function UrlManagement() {
 
           {/* Pagination */}
           <div className="flex items-center justify-between mt-6">
-            <div className="text-sm text-gray-600">
+            <div className="text-sm text-muted-foreground">
               Page {page} of {totalPages}
             </div>
             <div className="flex items-center space-x-2">

@@ -96,7 +96,7 @@ export default function QRCodeDisplay({ url, qrCodeDataUrl, qrCodeUrl }: QRCodeD
           <div className="space-y-4">
             {/* QR Code Display */}
             <div className="flex justify-center">
-              <div className="p-4 bg-white border-2 border-gray-200 rounded-lg shadow-sm">
+              <div className="p-4 bg-background border-2 border-border rounded-lg shadow-sm">
                 <img
                   src={localQrDataUrl}
                   alt="QR Code"
@@ -140,8 +140,8 @@ export default function QRCodeDisplay({ url, qrCodeDataUrl, qrCodeUrl }: QRCodeD
 
             {/* URL Display */}
             <div className="text-center">
-              <p className="text-sm text-gray-600 mb-1">Encoded URL:</p>
-              <p className="text-sm font-mono bg-gray-100 p-2 rounded break-all">
+              <p className="text-sm text-muted-foreground mb-1">Encoded URL:</p>
+              <p className="text-sm font-mono bg-muted p-2 rounded break-all">
                 {url}
               </p>
             </div>
@@ -149,8 +149,8 @@ export default function QRCodeDisplay({ url, qrCodeDataUrl, qrCodeUrl }: QRCodeD
         ) : (
           <div className="text-center space-y-4">
             <div className="py-12">
-              <QrCode className="w-16 h-16 mx-auto text-gray-300 mb-4" />
-              <p className="text-gray-500 mb-4">No QR code generated</p>
+              <QrCode className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
+              <p className="text-muted-foreground mb-4">No QR code generated</p>
               <Button
                 onClick={generateQrCode}
                 disabled={isGenerating}

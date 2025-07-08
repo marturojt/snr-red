@@ -137,14 +137,14 @@ export default function EnhancedQRCodeDisplay({ url, qrCodeDataUrl }: Omit<QRCod
       </CardHeader>
       <CardContent className="relative space-y-6">
         {/* URL Display */}
-        <div className="bg-white/70 border border-purple-200 rounded-lg p-4">
+        <div className="bg-background/70 border border-purple-200 rounded-lg p-4">
           <div className="flex items-center gap-2 mb-2">
             <Badge variant="outline" className="text-xs">
               {t('qrDisplay.targetUrl')}
             </Badge>
           </div>
           <div className="flex items-center gap-2">
-            <code className="flex-1 bg-gray-100 px-3 py-2 rounded text-sm font-mono text-purple-700 truncate">
+            <code className="flex-1 bg-muted px-3 py-2 rounded text-sm font-mono text-purple-700 truncate">
               {url}
             </code>
             <Button
@@ -163,7 +163,7 @@ export default function EnhancedQRCodeDisplay({ url, qrCodeDataUrl }: Omit<QRCod
           <div className="text-center space-y-4">
             <div className="relative inline-block">
               <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg blur-xl opacity-20"></div>
-              <div className="relative bg-white p-4 rounded-lg shadow-lg">
+              <div className="relative bg-background p-4 rounded-lg shadow-lg">
                 <Image 
                   src={localQrDataUrl} 
                   alt="QR Code" 
@@ -228,10 +228,10 @@ export default function EnhancedQRCodeDisplay({ url, qrCodeDataUrl }: Omit<QRCod
               <QrCode className="relative w-16 h-16 text-purple-600 mx-auto mb-4" />
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              <h3 className="text-lg font-semibold text-foreground mb-2">
                 {t('qrDisplay.generateTitle')}
               </h3>
-              <p className="text-gray-600 mb-6">
+              <p className="text-muted-foreground mb-6">
                 {t('qrDisplay.generateDescription')}
               </p>
               <Button
@@ -247,7 +247,7 @@ export default function EnhancedQRCodeDisplay({ url, qrCodeDataUrl }: Omit<QRCod
         )}
 
         {/* QR Code Info */}
-        <div className="bg-white/70 border border-purple-200 rounded-lg p-4">
+        <div className="bg-background/70 border border-purple-200 rounded-lg p-4">
           <h4 className="font-semibold text-purple-900 mb-2 flex items-center gap-2">
             <Sparkles className="w-4 h-4" />
             {t('qrDisplay.benefitsTitle')}

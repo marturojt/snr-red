@@ -162,14 +162,14 @@ export default function EnhancedAuthComponent({ user, onAuthChange }: AuthCompon
           <CardContent className="relative space-y-4">
             {/* Account Stats */}
             <div className="grid grid-cols-2 gap-4">
-              <div className="text-center p-3 bg-white/50 rounded-lg">
-                <Calendar className="w-5 h-5 mx-auto mb-1 text-blue-600" />
-                <p className="text-sm text-gray-600">Member since</p>
+              <div className="text-center p-3 bg-background/50 rounded-lg">
+                <Calendar className="w-5 h-5 mx-auto mb-1 text-primary" />
+                <p className="text-sm text-muted-foreground">Member since</p>
                 <p className="font-semibold">{new Date(user.createdAt).toLocaleDateString()}</p>
               </div>
-              <div className="text-center p-3 bg-white/50 rounded-lg">
-                <TrendingUp className="w-5 h-5 mx-auto mb-1 text-green-600" />
-                <p className="text-sm text-gray-600">Last login</p>
+              <div className="text-center p-3 bg-background/50 rounded-lg">
+                <TrendingUp className="w-5 h-5 mx-auto mb-1 text-green-600 dark:text-green-400" />
+                <p className="text-sm text-muted-foreground">Last login</p>
                 <p className="font-semibold">
                   {user.lastLoginAt 
                     ? new Date(user.lastLoginAt).toLocaleDateString()
@@ -180,7 +180,7 @@ export default function EnhancedAuthComponent({ user, onAuthChange }: AuthCompon
             </div>
 
             {/* Current Plan Benefits */}
-            <div className="bg-white/50 rounded-lg p-4">
+            <div className="bg-background/50 rounded-lg p-4">
               <h4 className="font-semibold mb-3 flex items-center gap-2">
                 <Sparkles className="w-4 h-4" />
                 Current Plan Benefits
@@ -263,7 +263,7 @@ export default function EnhancedAuthComponent({ user, onAuthChange }: AuthCompon
               <Button
                 onClick={handleLogout}
                 variant="ghost"
-                className="flex items-center gap-2 text-red-600 hover:text-red-700 hover:bg-red-50"
+                className="flex items-center gap-2 text-red-600 dark:text-red-400 hover:text-red-700 hover:bg-red-50"
               >
                 <LogOut className="w-4 h-4" />
                 Logout
@@ -277,7 +277,7 @@ export default function EnhancedAuthComponent({ user, onAuthChange }: AuthCompon
           <Card className="bg-gradient-to-r from-purple-600 to-pink-600 text-white">
             <CardContent className="p-6">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                <div className="w-12 h-12 bg-background/20 rounded-full flex items-center justify-center">
                   <Gift className="w-6 h-6" />
                 </div>
                 <div className="flex-1">
@@ -290,7 +290,7 @@ export default function EnhancedAuthComponent({ user, onAuthChange }: AuthCompon
                   onClick={handleUpgradePlan}
                   disabled={isLoading}
                   variant="secondary"
-                  className="bg-white text-purple-600 hover:bg-gray-100"
+                  className="bg-background text-purple-600 hover:bg-muted"
                 >
                   <Zap className="w-4 h-4 mr-2" />
                   Upgrade Now
@@ -355,7 +355,7 @@ export default function EnhancedAuthComponent({ user, onAuthChange }: AuthCompon
               <Button 
                 type="submit" 
                 disabled={isLoading}
-                className="w-full h-12 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                className="w-full h-12 bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-500 dark:to-purple-500 hover:from-blue-700 hover:to-purple-700"
               >
                 {isLoading ? 'Logging in...' : 'Login'}
               </Button>
@@ -412,7 +412,7 @@ export default function EnhancedAuthComponent({ user, onAuthChange }: AuthCompon
         </Tabs>
 
         {/* Benefits Preview */}
-        <div className="mt-6 bg-white/50 rounded-lg p-4">
+        <div className="mt-6 bg-background/50 rounded-lg p-4">
           <h4 className="font-semibold mb-3 flex items-center gap-2">
             <Star className="w-4 h-4 text-yellow-500" />
             Why Join SNR.red?

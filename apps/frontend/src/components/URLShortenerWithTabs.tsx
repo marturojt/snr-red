@@ -147,15 +147,15 @@ export default function URLShortenerWithTabs() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50/30 via-background to-purple-50/30 dark:from-blue-950/20 dark:via-background dark:to-purple-950/20">
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-gray-900 mb-2">
+            <h1 className="text-4xl font-bold text-foreground mb-2">
               URL Shortener
             </h1>
-            <p className="text-lg text-gray-600">
+            <p className="text-lg text-muted-foreground">
               Shorten your URLs and generate QR codes with detailed analytics
             </p>
           </div>
@@ -231,7 +231,7 @@ export default function URLShortenerWithTabs() {
 
                     {/* Advanced Options */}
                     {showAdvanced && (
-                      <div className="space-y-4 p-4 bg-gray-50 rounded-lg border">
+                      <div className="space-y-4 p-4 bg-muted rounded-lg border">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           {/* Custom Short Code */}
                           <div className="space-y-2">
@@ -344,9 +344,9 @@ export default function URLShortenerWithTabs() {
                     <CardContent className="space-y-4">
                       {/* Short URL */}
                       <div className="space-y-2">
-                        <Label className="text-sm text-gray-600">Shortened URL:</Label>
-                        <div className="flex items-center gap-2 p-3 bg-white rounded-lg border">
-                          <code className="flex-1 text-blue-600 font-mono text-sm">
+                        <Label className="text-sm text-muted-foreground">Shortened URL:</Label>
+                        <div className="flex items-center gap-2 p-3 bg-background rounded-lg border">
+                          <code className="flex-1 text-primary font-mono text-sm">
                             {shortenedUrl.shortUrl}
                           </code>
                           <Button
@@ -372,9 +372,9 @@ export default function URLShortenerWithTabs() {
 
                       {/* Original URL */}
                       <div className="space-y-2">
-                        <Label className="text-sm text-gray-600">Original URL:</Label>
-                        <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg border">
-                          <code className="flex-1 text-gray-700 font-mono text-sm truncate">
+                        <Label className="text-sm text-muted-foreground">Original URL:</Label>
+                        <div className="flex items-center gap-2 p-3 bg-muted rounded-lg border">
+                          <code className="flex-1 text-foreground font-mono text-sm truncate">
                             {shortenedUrl.originalUrl}
                           </code>
                           <Button
@@ -394,14 +394,14 @@ export default function URLShortenerWithTabs() {
                         <div className="space-y-2">
                           {shortenedUrl.title && (
                             <div>
-                              <Label className="text-sm text-gray-600">Title:</Label>
-                              <p className="text-sm text-gray-800">{shortenedUrl.title}</p>
+                              <Label className="text-sm text-muted-foreground">Title:</Label>
+                              <p className="text-sm text-foreground">{shortenedUrl.title}</p>
                             </div>
                           )}
                           {shortenedUrl.description && (
                             <div>
-                              <Label className="text-sm text-gray-600">Description:</Label>
-                              <p className="text-sm text-gray-800">{shortenedUrl.description}</p>
+                              <Label className="text-sm text-muted-foreground">Description:</Label>
+                              <p className="text-sm text-foreground">{shortenedUrl.description}</p>
                             </div>
                           )}
                         </div>

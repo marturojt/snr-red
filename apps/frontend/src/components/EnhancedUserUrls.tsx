@@ -264,13 +264,13 @@ export default function EnhancedUserUrls({ user }: UserUrlsProps) {
         {[...Array(3)].map((_, i) => (
           <Card key={i} className="animate-pulse">
             <CardHeader>
-              <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-              <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+              <div className="h-4 bg-border rounded w-3/4"></div>
+              <div className="h-3 bg-border rounded w-1/2"></div>
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
-                <div className="h-3 bg-gray-200 rounded"></div>
-                <div className="h-3 bg-gray-200 rounded w-4/5"></div>
+                <div className="h-3 bg-border rounded"></div>
+                <div className="h-3 bg-border rounded w-4/5"></div>
               </div>
             </CardContent>
           </Card>
@@ -285,7 +285,7 @@ export default function EnhancedUserUrls({ user }: UserUrlsProps) {
         <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-purple-50"></div>
         <CardHeader className="relative">
           <CardTitle className="flex items-center gap-2">
-            <Globe className="w-5 h-5 text-blue-600" />
+            <Globe className="w-5 h-5 text-primary" />
             Your URLs
           </CardTitle>
           <CardDescription>
@@ -298,19 +298,19 @@ export default function EnhancedUserUrls({ user }: UserUrlsProps) {
         <CardContent className="relative">
           <div className="text-center py-12">
             <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full blur-xl opacity-20"></div>
-              <Link2 className="relative w-16 h-16 text-blue-600 mx-auto mb-6" />
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-500 dark:to-purple-500 rounded-full blur-xl opacity-20"></div>
+              <Link2 className="relative w-16 h-16 text-primary mx-auto mb-6" />
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            <h3 className="text-lg font-semibold text-foreground mb-2">
               Ready to get started?
             </h3>
-            <p className="text-gray-600 mb-6 max-w-md mx-auto">
+            <p className="text-muted-foreground mb-6 max-w-md mx-auto">
               Create your first shortened URL and start tracking clicks, generating QR codes, and analyzing your links.
             </p>
             {!user && (
               <div className="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-lg p-4 max-w-md mx-auto">
                 <div className="flex items-center gap-2 mb-2">
-                  <Zap className="w-4 h-4 text-blue-600" />
+                  <Zap className="w-4 h-4 text-primary" />
                   <span className="text-sm font-medium text-blue-900">Pro Tip</span>
                 </div>
                 <p className="text-sm text-blue-700">
@@ -335,7 +335,7 @@ export default function EnhancedUserUrls({ user }: UserUrlsProps) {
                 <p className="text-sm font-medium text-blue-700">Total URLs</p>
                 <p className="text-2xl font-bold text-blue-900">{urls.length}</p>
               </div>
-              <Link2 className="w-8 h-8 text-blue-600" />
+              <Link2 className="w-8 h-8 text-primary" />
             </div>
           </CardContent>
         </Card>
@@ -349,7 +349,7 @@ export default function EnhancedUserUrls({ user }: UserUrlsProps) {
                   {urls.filter(url => url.isActive).length}
                 </p>
               </div>
-              <TrendingUp className="w-8 h-8 text-green-600" />
+              <TrendingUp className="w-8 h-8 text-green-600 dark:text-green-400" />
             </div>
           </CardContent>
         </Card>
@@ -383,7 +383,7 @@ export default function EnhancedUserUrls({ user }: UserUrlsProps) {
           <div className="flex flex-col sm:flex-row gap-4 mb-6">
             <div className="flex-1">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
                   placeholder="Search URLs..."
                   value={searchTerm}
@@ -427,12 +427,12 @@ export default function EnhancedUserUrls({ user }: UserUrlsProps) {
                     <div className="flex-1 min-w-0">
                       {/* Title and description */}
                       {url.title && (
-                        <h3 className="font-semibold text-gray-900 mb-1 group-hover:text-blue-600 transition-colors">
+                        <h3 className="font-semibold text-foreground mb-1 group-hover:text-primary transition-colors">
                           {url.title}
                         </h3>
                       )}
                       {url.description && (
-                        <p className="text-sm text-gray-600 mb-2">
+                        <p className="text-sm text-muted-foreground mb-2">
                           {url.description}
                         </p>
                       )}
@@ -443,7 +443,7 @@ export default function EnhancedUserUrls({ user }: UserUrlsProps) {
                           <Badge variant="outline" className="text-xs">
                             SHORT
                           </Badge>
-                          <code className="bg-gray-100 px-2 py-1 rounded text-sm font-mono text-blue-600">
+                          <code className="bg-muted px-2 py-1 rounded text-sm font-mono text-primary">
                             {url.shortUrl}
                           </code>
                         </div>
@@ -452,14 +452,14 @@ export default function EnhancedUserUrls({ user }: UserUrlsProps) {
                           <Badge variant="outline" className="text-xs">
                             ORIGINAL
                           </Badge>
-                          <span className="text-sm text-gray-600 truncate">
+                          <span className="text-sm text-muted-foreground truncate">
                             {url.originalUrl}
                           </span>
                         </div>
                       </div>
                       
                       {/* Metadata */}
-                      <div className="flex items-center gap-4 mt-3 text-xs text-gray-500">
+                      <div className="flex items-center gap-4 mt-3 text-xs text-muted-foreground">
                         <div className="flex items-center gap-1">
                           <Calendar className="w-3 h-3" />
                           {formatDate(url.createdAt)}
@@ -487,7 +487,7 @@ export default function EnhancedUserUrls({ user }: UserUrlsProps) {
                         size="sm"
                         onClick={() => handleCopy(url.shortUrl, 'Short URL')}
                         title="Copy Short URL"
-                        className="hover:bg-blue-50 hover:text-blue-600"
+                        className="hover:bg-blue-50 hover:text-primary"
                       >
                         <Copy className="w-4 h-4" />
                       </Button>
@@ -497,7 +497,7 @@ export default function EnhancedUserUrls({ user }: UserUrlsProps) {
                         size="sm"
                         onClick={() => window.open(url.shortUrl, '_blank')}
                         title="Open URL"
-                        className="hover:bg-green-50 hover:text-green-600"
+                        className="hover:bg-green-50 hover:text-green-600 dark:text-green-400"
                       >
                         <ExternalLink className="w-4 h-4" />
                       </Button>
@@ -528,7 +528,7 @@ export default function EnhancedUserUrls({ user }: UserUrlsProps) {
                         onClick={() => handleDelete(url.id)}
                         disabled={deletingId === url.id}
                         title="Delete URL"
-                        className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                        className="text-red-600 dark:text-red-400 hover:text-red-700 hover:bg-red-50"
                       >
                         <Trash2 className="w-4 h-4" />
                       </Button>
@@ -541,8 +541,8 @@ export default function EnhancedUserUrls({ user }: UserUrlsProps) {
 
           {filteredUrls.length === 0 && urls.length > 0 && (
             <div className="text-center py-8">
-              <Search className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-500">No URLs match your search criteria</p>
+              <Search className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+              <p className="text-muted-foreground">No URLs match your search criteria</p>
               <Button 
                 variant="outline" 
                 onClick={() => {
@@ -607,25 +607,25 @@ export default function EnhancedUserUrls({ user }: UserUrlsProps) {
               
               <div className="space-y-2">
                 <div>
-                  <p className="text-sm font-medium text-gray-700">Created</p>
-                  <p className="text-sm text-gray-600">{formatDate(analyticsUrl.createdAt)}</p>
+                  <p className="text-sm font-medium text-foreground">Created</p>
+                  <p className="text-sm text-muted-foreground">{formatDate(analyticsUrl.createdAt)}</p>
                 </div>
                 
                 {analyticsUrl.title && (
                   <div>
-                    <p className="text-sm font-medium text-gray-700">Title</p>
-                    <p className="text-sm text-gray-600">{analyticsUrl.title}</p>
+                    <p className="text-sm font-medium text-foreground">Title</p>
+                    <p className="text-sm text-muted-foreground">{analyticsUrl.title}</p>
                   </div>
                 )}
                 
                 <div>
-                  <p className="text-sm font-medium text-gray-700">Short URL</p>
-                  <p className="text-sm text-gray-600 break-all">{analyticsUrl.shortUrl}</p>
+                  <p className="text-sm font-medium text-foreground">Short URL</p>
+                  <p className="text-sm text-muted-foreground break-all">{analyticsUrl.shortUrl}</p>
                 </div>
                 
                 <div>
-                  <p className="text-sm font-medium text-gray-700">Original URL</p>
-                  <p className="text-sm text-gray-600 break-all">{analyticsUrl.originalUrl}</p>
+                  <p className="text-sm font-medium text-foreground">Original URL</p>
+                  <p className="text-sm text-muted-foreground break-all">{analyticsUrl.originalUrl}</p>
                 </div>
               </div>
               
@@ -673,7 +673,7 @@ export default function EnhancedUserUrls({ user }: UserUrlsProps) {
                 <h3 className="font-semibold text-lg mb-2">
                   {qrUrl.title || t('qrCode')}
                 </h3>
-                <p className="text-sm text-gray-600 break-all mb-4">
+                <p className="text-sm text-muted-foreground break-all mb-4">
                   {qrUrl.shortUrl}
                 </p>
               </div>
@@ -694,13 +694,13 @@ export default function EnhancedUserUrls({ user }: UserUrlsProps) {
                 {/* Display Tab */}
                 <TabsContent value="display" className="space-y-4">
                   {qrCodeData && (
-                    <div className="bg-gray-50 p-4 rounded-lg">
+                    <div className="bg-muted p-4 rounded-lg">
                       <Image 
                         src={qrCodeData} 
                         alt="QR Code" 
                         width={250}
                         height={250}
-                        className="w-full max-w-[250px] mx-auto border-2 border-gray-200 rounded-lg bg-white p-2"
+                        className="w-full max-w-[250px] mx-auto border-2 border-border rounded-lg bg-background p-2"
                       />
                     </div>
                   )}
@@ -739,7 +739,7 @@ export default function EnhancedUserUrls({ user }: UserUrlsProps) {
                 </TabsContent>
               </Tabs>
 
-              <p className="text-xs text-gray-500 text-center">
+              <p className="text-xs text-muted-foreground text-center">
                 {t('qrCodeInstructions')}
               </p>
             </div>

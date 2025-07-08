@@ -135,8 +135,8 @@ export default function UserUrls({ user }: UserUrlsProps) {
           <div className="space-y-4">
             {[1, 2, 3].map((i) => (
               <div key={i} className="animate-pulse">
-                <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-                <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+                <div className="h-4 bg-border rounded w-3/4 mb-2"></div>
+                <div className="h-3 bg-border rounded w-1/2"></div>
               </div>
             ))}
           </div>
@@ -162,12 +162,12 @@ export default function UserUrls({ user }: UserUrlsProps) {
         </CardHeader>
         <CardContent>
           <div className="text-center py-8">
-            <Globe className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <p className="text-gray-500 mb-4">
+            <Globe className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+            <p className="text-muted-foreground mb-4">
               Start by creating your first shortened URL!
             </p>
             {!user && (
-              <p className="text-sm text-gray-400">
+              <p className="text-sm text-muted-foreground">
                 💡 Tip: Create an account to manage your URLs permanently and get extended storage.
               </p>
             )}
@@ -200,17 +200,17 @@ export default function UserUrls({ user }: UserUrlsProps) {
       <CardContent>
         <div className="space-y-4">
           {urls.map((url) => (
-            <div key={url.id} className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
+            <div key={url.id} className="border rounded-lg p-4 hover:bg-muted transition-colors">
               <div className="flex items-start justify-between">
                 <div className="flex-1 min-w-0">
                   {/* Title and description */}
                   {url.title && (
-                    <h3 className="font-semibold text-gray-900 mb-1">
+                    <h3 className="font-semibold text-foreground mb-1">
                       {url.title}
                     </h3>
                   )}
                   {url.description && (
-                    <p className="text-sm text-gray-600 mb-2">
+                    <p className="text-sm text-muted-foreground mb-2">
                       {url.description}
                     </p>
                   )}
@@ -218,7 +218,7 @@ export default function UserUrls({ user }: UserUrlsProps) {
                   {/* URLs */}
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium text-gray-500">Short:</span>
+                      <span className="text-sm font-medium text-muted-foreground">Short:</span>
                       <code className="text-sm bg-blue-50 text-blue-700 px-2 py-1 rounded">
                         {url.shortUrl}
                       </code>
@@ -241,8 +241,8 @@ export default function UserUrls({ user }: UserUrlsProps) {
                     </div>
                     
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium text-gray-500">Original:</span>
-                      <code className="text-sm bg-gray-50 text-gray-700 px-2 py-1 rounded truncate flex-1">
+                      <span className="text-sm font-medium text-muted-foreground">Original:</span>
+                      <code className="text-sm bg-muted text-foreground px-2 py-1 rounded truncate flex-1">
                         {url.originalUrl}
                       </code>
                       <Button
@@ -257,7 +257,7 @@ export default function UserUrls({ user }: UserUrlsProps) {
                   </div>
 
                   {/* Metadata */}
-                  <div className="flex items-center gap-4 mt-3 text-xs text-gray-500">
+                  <div className="flex items-center gap-4 mt-3 text-xs text-muted-foreground">
                     <div className="flex items-center gap-1">
                       <Calendar className="w-3 h-3" />
                       <span>Created {formatDate(url.createdAt)}</span>
@@ -301,7 +301,7 @@ export default function UserUrls({ user }: UserUrlsProps) {
                     onClick={() => handleDelete(url.id)}
                     disabled={deletingId === url.id}
                     title="Delete URL"
-                    className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                    className="text-red-600 dark:text-red-400 hover:text-red-700 hover:bg-red-50"
                   >
                     <Trash2 className="w-4 h-4" />
                   </Button>

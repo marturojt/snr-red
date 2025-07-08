@@ -218,7 +218,7 @@ export default function QRCustomizer({ url, onGenerate, onClose, embedded = fals
       {embedded && (
         <div className="text-center mb-4">
           <h3 className="text-lg font-semibold mb-2">{t('qrCustomizer.title')}</h3>
-          <p className="text-sm text-gray-600">{t('qrCustomizer.description')}</p>
+          <p className="text-sm text-muted-foreground">{t('qrCustomizer.description')}</p>
         </div>
       )}
 
@@ -244,7 +244,7 @@ export default function QRCustomizer({ url, onGenerate, onClose, embedded = fals
                 className={`cursor-pointer transition-all border-2 rounded-lg p-3 text-center hover:shadow-md ${
                   selectedPreset === key 
                     ? 'border-blue-500 bg-blue-50 shadow-lg ring-2 ring-blue-200' 
-                    : 'border-gray-200 hover:border-gray-300'
+                    : 'border-border hover:border-border'
                 }`}
                 onClick={() => handlePresetChange(key)}
               >
@@ -276,8 +276,8 @@ export default function QRCustomizer({ url, onGenerate, onClose, embedded = fals
           
           {/* Show description for selected preset */}
           {selectedPreset && QR_PRESETS[selectedPreset as keyof typeof QR_PRESETS] && (
-            <div className="bg-gray-50 p-3 rounded-lg">
-              <p className="text-sm text-gray-600 text-center">
+            <div className="bg-muted p-3 rounded-lg">
+              <p className="text-sm text-muted-foreground text-center">
                 {QR_PRESETS[selectedPreset as keyof typeof QR_PRESETS].description}
               </p>
             </div>
@@ -295,13 +295,13 @@ export default function QRCustomizer({ url, onGenerate, onClose, embedded = fals
                   type="color"
                   value={options.color.dark}
                   onChange={(e) => handleCustomColorChange('dark', e.target.value)}
-                  className="w-12 h-10 rounded border border-gray-300 cursor-pointer"
+                  className="w-12 h-10 rounded border border-border cursor-pointer"
                 />
                 <input
                   type="text"
                   value={options.color.dark}
                   onChange={(e) => handleCustomColorChange('dark', e.target.value)}
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="flex-1 px-3 py-2 border border-border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="#000000"
                 />
               </div>
@@ -315,13 +315,13 @@ export default function QRCustomizer({ url, onGenerate, onClose, embedded = fals
                   type="color"
                   value={options.color.light}
                   onChange={(e) => handleCustomColorChange('light', e.target.value)}
-                  className="w-12 h-10 rounded border border-gray-300 cursor-pointer"
+                  className="w-12 h-10 rounded border border-border cursor-pointer"
                 />
                 <input
                   type="text"
                   value={options.color.light}
                   onChange={(e) => handleCustomColorChange('light', e.target.value)}
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="flex-1 px-3 py-2 border border-border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="#FFFFFF"
                 />
               </div>
@@ -357,7 +357,7 @@ export default function QRCustomizer({ url, onGenerate, onClose, embedded = fals
       </Tabs>
 
       {/* Preview */}
-      <Card className="bg-gradient-to-br from-gray-50 to-gray-100 border-2 border-dashed border-gray-300">
+      <Card className="bg-gradient-to-br from-gray-50 to-gray-100 border-2 border-dashed border-border">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-lg">
             <Eye className="w-4 h-4" />
@@ -388,10 +388,10 @@ export default function QRCustomizer({ url, onGenerate, onClose, embedded = fals
             </div>
             
             <div className="mt-4 space-y-2">
-              <p className="text-sm text-gray-600 break-all font-mono bg-gray-100 px-3 py-2 rounded">
+              <p className="text-sm text-muted-foreground break-all font-mono bg-muted px-3 py-2 rounded">
                 {url}
               </p>
-              <div className="flex items-center justify-center gap-4 text-xs text-gray-500">
+              <div className="flex items-center justify-center gap-4 text-xs text-muted-foreground">
                 <span>{options.size}×{options.size}px</span>
                 <span>{options.format.toUpperCase()}</span>
                 <span>Margin: {options.margin}px</span>
@@ -421,7 +421,7 @@ export default function QRCustomizer({ url, onGenerate, onClose, embedded = fals
         )}
         <Button 
           onClick={handleGenerate} 
-          className={`${embedded ? 'w-full' : 'flex-2'} bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700`}
+          className={`${embedded ? 'w-full' : 'flex-2'} bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-500 dark:to-purple-500 hover:from-blue-700 hover:to-purple-700`}
           disabled={isGenerating}
         >
           <Download className="w-4 h-4 mr-2" />

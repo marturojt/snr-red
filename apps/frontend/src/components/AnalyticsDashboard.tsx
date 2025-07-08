@@ -96,8 +96,8 @@ export default function AnalyticsDashboard({ urlId }: AnalyticsDashboardProps) {
         </CardHeader>
         <CardContent>
           <div className="flex items-center justify-center py-8">
-            <RefreshCw className="w-6 h-6 animate-spin text-gray-400" />
-            <span className="ml-2 text-gray-600">Loading analytics...</span>
+            <RefreshCw className="w-6 h-6 animate-spin text-muted-foreground" />
+            <span className="ml-2 text-muted-foreground">Loading analytics...</span>
           </div>
         </CardContent>
       </Card>
@@ -115,8 +115,8 @@ export default function AnalyticsDashboard({ urlId }: AnalyticsDashboardProps) {
         </CardHeader>
         <CardContent>
           <div className="text-center py-8">
-            <BarChart3 className="w-16 h-16 mx-auto text-gray-300 mb-4" />
-            <p className="text-gray-500">No analytics data available</p>
+            <BarChart3 className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
+            <p className="text-muted-foreground">No analytics data available</p>
           </div>
         </CardContent>
       </Card>
@@ -154,20 +154,20 @@ export default function AnalyticsDashboard({ urlId }: AnalyticsDashboardProps) {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             {/* Total Clicks */}
             <div className="text-center p-4 bg-blue-50 rounded-lg">
-              <MousePointer className="w-8 h-8 mx-auto mb-2 text-blue-600" />
+              <MousePointer className="w-8 h-8 mx-auto mb-2 text-primary" />
               <div className="text-2xl font-bold text-blue-700">
                 {formatNumber(stats.totalClicks)}
               </div>
-              <div className="text-sm text-blue-600">Total Clicks</div>
+              <div className="text-sm text-primary">Total Clicks</div>
             </div>
 
             {/* Unique Clicks */}
             <div className="text-center p-4 bg-green-50 rounded-lg">
-              <Users className="w-8 h-8 mx-auto mb-2 text-green-600" />
+              <Users className="w-8 h-8 mx-auto mb-2 text-green-600 dark:text-green-400" />
               <div className="text-2xl font-bold text-green-700">
                 {formatNumber(stats.uniqueClicks)}
               </div>
-              <div className="text-sm text-green-600">Unique Visitors</div>
+              <div className="text-sm text-green-600 dark:text-green-400">Unique Visitors</div>
             </div>
 
             {/* Countries */}
@@ -201,25 +201,25 @@ export default function AnalyticsDashboard({ urlId }: AnalyticsDashboardProps) {
         </CardHeader>
         <CardContent className="space-y-3">
           <div>
-            <span className="text-sm font-medium text-gray-600">Short URL:</span>
-            <p className="text-sm font-mono bg-gray-100 p-2 rounded mt-1 break-all">
+            <span className="text-sm font-medium text-muted-foreground">Short URL:</span>
+            <p className="text-sm font-mono bg-muted p-2 rounded mt-1 break-all">
               {stats.url.shortUrl}
             </p>
           </div>
           <div>
-            <span className="text-sm font-medium text-gray-600">Original URL:</span>
-            <p className="text-sm bg-gray-100 p-2 rounded mt-1 break-all">
+            <span className="text-sm font-medium text-muted-foreground">Original URL:</span>
+            <p className="text-sm bg-muted p-2 rounded mt-1 break-all">
               {stats.url.originalUrl}
             </p>
           </div>
           {stats.url.title && (
             <div>
-              <span className="text-sm font-medium text-gray-600">Title:</span>
+              <span className="text-sm font-medium text-muted-foreground">Title:</span>
               <p className="text-sm mt-1">{stats.url.title}</p>
             </div>
           )}
           <div>
-            <span className="text-sm font-medium text-gray-600">Created:</span>
+            <span className="text-sm font-medium text-muted-foreground">Created:</span>
             <p className="text-sm mt-1">{formatDate(stats.url.createdAt)}</p>
           </div>
         </CardContent>
@@ -260,7 +260,7 @@ export default function AnalyticsDashboard({ urlId }: AnalyticsDashboardProps) {
                 </LineChart>
               </ResponsiveContainer>
             ) : (
-              <div className="h-[300px] flex items-center justify-center text-gray-500">
+              <div className="h-[300px] flex items-center justify-center text-muted-foreground">
                 No click data available
               </div>
             )}
@@ -297,7 +297,7 @@ export default function AnalyticsDashboard({ urlId }: AnalyticsDashboardProps) {
                 </PieChart>
               </ResponsiveContainer>
             ) : (
-              <div className="h-[300px] flex items-center justify-center text-gray-500">
+              <div className="h-[300px] flex items-center justify-center text-muted-foreground">
                 No device data available
               </div>
             )}
@@ -324,7 +324,7 @@ export default function AnalyticsDashboard({ urlId }: AnalyticsDashboardProps) {
                 </BarChart>
               </ResponsiveContainer>
             ) : (
-              <div className="h-[300px] flex items-center justify-center text-gray-500">
+              <div className="h-[300px] flex items-center justify-center text-muted-foreground">
                 No country data available
               </div>
             )}
@@ -351,7 +351,7 @@ export default function AnalyticsDashboard({ urlId }: AnalyticsDashboardProps) {
                 </BarChart>
               </ResponsiveContainer>
             ) : (
-              <div className="h-[300px] flex items-center justify-center text-gray-500">
+              <div className="h-[300px] flex items-center justify-center text-muted-foreground">
                 No browser data available
               </div>
             )}

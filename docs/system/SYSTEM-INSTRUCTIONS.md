@@ -1,8 +1,33 @@
 # SNR.red - System Instructions para AI Assistant
 
-**Versión:** 2.1  
-**Fecha:** 7 de Julio, 2025  
+**Versión:** 2.2  
+**Fecha:** 7 de Enero, 2025  
 **Propósito:** Guías para mantener documentación actualizada y seguimiento consistente del proyecto
+
+---
+
+## 🌙 ÚLTIMO UPDATE - Dark Mode & Header Refactor (Enero 2025)
+
+### ✅ Completado - Dark Mode System
+- **ThemeProvider Context:** Implementado en `/src/context/ThemeContext.tsx`
+- **Theme Toggle Component:** Creado en `/src/components/ThemeToggle.tsx`
+- **Traducciones:** Agregadas en `LanguageContext.tsx` (EN/ES)
+- **CSS Variables:** Implementadas en `globals.css`
+- **Persistencia:** localStorage para preferencias de tema
+- **Compatibilidad:** shadcn/ui dark mode completo
+
+### ✅ Completado - Responsive Header
+- **ResponsiveHeader Component:** Creado en `/src/components/ResponsiveHeader.tsx`
+- **Mobile Menu:** Hamburger menu con animaciones
+- **Logo Clickeable:** Botón funcional para reset/navegación
+- **Sin Overlapping:** Problemas de responsive resueltos
+- **Integración:** Reemplazado header anterior en ModernLandingPage
+
+### 📊 Estado Actual
+- **Frontend:** 100% funcional con dark mode y header responsivo
+- **Backend:** 100% funcional
+- **Documentación:** Actualizada con nuevas features
+- **QA:** Completado - build exitoso, funcionalidad verificada
 
 ---
 
@@ -475,7 +500,7 @@ USER-STORIES.md:
 **Estado del documento:** ✅ Activo  
 **Aplicabilidad:** TODAS las sesiones de desarrollo  
 **Revisión:** Al agregar nuevos tipos de cambios  
-**Versión:** 2.1-estructura-documentacion-completa
+**Versión:** 2.2-dark-mode-header-refactor-completo
 
 ---
 

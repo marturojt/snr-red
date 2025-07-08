@@ -209,6 +209,12 @@ const translations = {
     'user.myUrls': 'My URLs',
     'user.plan': 'Plan',
     'user.hi': 'Hi',
+
+    // Theme
+    'theme.toggle': 'Toggle theme',
+    'theme.light': 'Light',
+    'theme.dark': 'Dark',
+    'theme.system': 'System',
   },
   es: {
     // Navigation
@@ -397,6 +403,12 @@ const translations = {
     'user.myUrls': 'Mis URLs',
     'user.plan': 'Plan',
     'user.hi': 'Hola',
+
+    // Theme
+    'theme.toggle': 'Cambiar tema',
+    'theme.light': 'Claro',
+    'theme.dark': 'Oscuro',
+    'theme.system': 'Sistema',
   }
 };
 

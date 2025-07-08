@@ -116,19 +116,19 @@ function UserDetails({ user, onUpdate, onDelete }: UserDetailsProps) {
     <div className="space-y-4">
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-foreground mb-1">
             Email
           </label>
           <Input value={user.email} disabled />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-foreground mb-1">
             Name
           </label>
           <Input value={user.name} disabled />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-foreground mb-1">
             Plan
           </label>
           <Select value={plan} onValueChange={(value) => setPlan(value as 'free' | 'premium')}>
@@ -142,7 +142,7 @@ function UserDetails({ user, onUpdate, onDelete }: UserDetailsProps) {
           </Select>
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-foreground mb-1">
             Status
           </label>
           <Select value={isActive ? 'active' : 'inactive'} onValueChange={(value) => setIsActive(value === 'active')}>
@@ -159,13 +159,13 @@ function UserDetails({ user, onUpdate, onDelete }: UserDetailsProps) {
 
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-foreground mb-1">
             Created At
           </label>
           <Input value={new Date(user.createdAt).toLocaleDateString()} disabled />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-foreground mb-1">
             Last Login
           </label>
           <Input value={user.lastLoginAt ? new Date(user.lastLoginAt).toLocaleDateString() : 'Never'} disabled />
@@ -264,8 +264,8 @@ export default function UserManagement() {
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
-          <h2 className="text-lg font-semibold text-gray-900 mb-2">Error Loading Users</h2>
-          <p className="text-gray-600 mb-4">{error}</p>
+          <h2 className="text-lg font-semibold text-foreground mb-2">Error Loading Users</h2>
+          <p className="text-muted-foreground mb-4">{error}</p>
           <Button onClick={fetchUsers}>
             <RefreshCw className="h-4 w-4 mr-2" />
             Try Again
@@ -280,8 +280,8 @@ export default function UserManagement() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">User Management</h1>
-          <p className="text-gray-600">Manage users and their accounts</p>
+          <h1 className="text-2xl font-bold text-foreground">User Management</h1>
+          <p className="text-muted-foreground">Manage users and their accounts</p>
         </div>
         <Button onClick={fetchUsers} disabled={loading}>
           <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
@@ -301,7 +301,7 @@ export default function UserManagement() {
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   placeholder="Search by email or name..."
                   value={search}
@@ -351,11 +351,11 @@ export default function UserManagement() {
               </thead>
               <tbody>
                 {users.map((user) => (
-                  <tr key={user._id} className="border-b hover:bg-gray-50">
+                  <tr key={user._id} className="border-b hover:bg-muted">
                     <td className="py-3 px-4">
                       <div>
-                        <div className="font-medium text-gray-900">{user.name}</div>
-                        <div className="text-sm text-gray-500">{user.email}</div>
+                        <div className="font-medium text-foreground">{user.name}</div>
+                        <div className="text-sm text-muted-foreground">{user.email}</div>
                       </div>
                     </td>
                     <td className="py-3 px-4">
@@ -368,10 +368,10 @@ export default function UserManagement() {
                         {user.isActive ? 'Active' : 'Inactive'}
                       </Badge>
                     </td>
-                    <td className="py-3 px-4 text-sm text-gray-600">
+                    <td className="py-3 px-4 text-sm text-muted-foreground">
                       {new Date(user.createdAt).toLocaleDateString()}
                     </td>
-                    <td className="py-3 px-4 text-sm text-gray-600">
+                    <td className="py-3 px-4 text-sm text-muted-foreground">
                       {user.lastLoginAt ? new Date(user.lastLoginAt).toLocaleDateString() : 'Never'}
                     </td>
                     <td className="py-3 px-4">
@@ -403,7 +403,7 @@ export default function UserManagement() {
 
           {/* Pagination */}
           <div className="flex items-center justify-between mt-6">
-            <div className="text-sm text-gray-600">
+            <div className="text-sm text-muted-foreground">
               Page {page} of {totalPages}
             </div>
             <div className="flex items-center space-x-2">

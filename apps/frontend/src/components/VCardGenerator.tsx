@@ -775,7 +775,7 @@ export default function VCardGenerator() {
         return (
           <Card className="max-w-2xl mx-auto">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-green-600">
+              <CardTitle className="flex items-center gap-2 text-primary">
                 <Check className="w-5 h-5" />
                 Your vCard is Ready!
               </CardTitle>
@@ -785,7 +785,7 @@ export default function VCardGenerator() {
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="text-center">
-                <div className="inline-block p-4 bg-white rounded-lg border">
+                <div className="inline-block p-4 bg-background rounded-lg border">
                   <Image 
                     src={vcard.qrCode} 
                     alt="vCard QR Code" 
@@ -797,10 +797,10 @@ export default function VCardGenerator() {
               </div>
 
               <div className="space-y-4">
-                <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
+                <div className="flex items-center gap-3 p-4 bg-muted rounded-lg">
                   <div className="flex-1">
-                    <p className="text-sm text-gray-500 mb-1">vCard URL</p>
-                    <p className="text-lg font-mono text-blue-600">{vcard.shortUrl}</p>
+                    <p className="text-sm text-muted-foreground mb-1">vCard URL</p>
+                    <p className="text-lg font-mono text-primary">{vcard.shortUrl}</p>
                   </div>
                   <Button
                     onClick={() => handleCopy(vcard.shortUrl)}
@@ -838,18 +838,18 @@ export default function VCardGenerator() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 py-8 px-4">
+    <div className="min-h-screen bg-background py-8 px-4">
       <div className="container mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <Badge className="mb-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white">
+          <Badge variant="secondary" className="mb-4">
             <QrCode className="w-3 h-3 mr-1" />
             Digital Business Card
           </Badge>
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+          <h1 className="text-4xl font-bold mb-4">
             Create Your vCard
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Generate a beautiful digital business card with QR code that your contacts can save directly to their phones
           </p>
         </div>
@@ -862,20 +862,20 @@ export default function VCardGenerator() {
                 <div key={step} className="flex items-center">
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${
                     step <= currentStep 
-                      ? 'bg-blue-600 text-white' 
-                      : 'bg-gray-200 text-gray-600'
+                      ? 'bg-primary text-primary-foreground' 
+                      : 'bg-border text-muted-foreground'
                   }`}>
                     {step}
                   </div>
                   {step < 3 && (
                     <div className={`w-16 h-1 mx-2 ${
-                      step < currentStep ? 'bg-blue-600' : 'bg-gray-200'
+                      step < currentStep ? 'bg-primary' : 'bg-border'
                     }`} />
                   )}
                 </div>
               ))}
             </div>
-            <div className="flex justify-between mt-2 text-sm text-gray-600">
+            <div className="flex justify-between mt-2 text-sm text-muted-foreground">
               <span>Personal</span>
               <span>Contact</span>
               <span>Social & Theme</span>

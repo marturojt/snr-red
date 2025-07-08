@@ -1,24 +1,20 @@
 # SNR.red - Estado del Proyecto y Roadmap Técnico
 
-**Versión:** 1.6  
-**Fecha de actualización:** 7 de Julio, 2025  
-**Estado actual:** Entorno de desarrollo local completamente funcional en macOS, UX/UI Enhancement implementado, sistema comercial moderno completado, i18n (EN/ES) imple- **Documentación**: ✅ Completamente reorganizada y limpia (35 archivos organizados)
-- **Entorno Local**: ✅ Completamente funcional en macOS (backend:3001, frontend:3000)
-- **MongoDB**: ✅ Instalado y configurado localmente
-- **Variables de Entorno**: ✅ Configuradas para desarrollo local
-- **Tipos TypeScript**: ✅ Compilados y funcionando
-- **vCard Generator**: ✅ Implementado, validaciones completas, URLs corregidas
-- **vCard Validations**: ✅ Implementadas todas las validaciones con feedback visual
-- **vCard Pages**: ✅ Páginas de visualización funcionando con URLs corregidas
-- **vCard API**: ✅ Todas las rutas API funcionando (verificado con POST /api/vcard/create)
-- **vCard Preview**: ✅ Preview funcionando con URLs corregidas
-- **vCard Download**: ✅ Descarga de archivos .vcf funcionando
-- **Tabbed Interface**: ✅ Integración completa en landing page
-- **i18n for vCard**: ✅ Traducciones completas EN/ES implementadas
-- **Login admin**: Implementado pero necesita validación final
-- **Rutas admin**: Funcionando (verificado con `/api/admin/test`)
-- **Frontend admin**: Implementado, pendiente prueba completa
-- **Modal QR**: Implementado y funcionando anónimas funcionales, generador de vCard integrado, formulario principal optimizado con opciones avanzadas colapsables, modal QR implementado para mejor experiencia de usuario, personalización de QR codes con presets y opciones avanzadas, QR Display completamente internacionalizado
+**Versión:** 1.7  
+**Fecha de actualización:** 7 de Enero, 2025  
+**Estado actual:** Entorno de desarrollo local completamente funcional en macOS, UX/UI Enhancement implementado, sistema comercial moderno completado, i18n (EN/ES) implementado, Dark Mode y Header Responsivo implementados
+
+## 🎯 Último Update - Dark Mode y Header Refactor (Enero 2025)
+- **Dark Mode**: ✅ Implementado con ThemeProvider (light/dark/system)
+- **Theme Toggle**: ✅ Componente con íconos shadcn/ui y traducciones
+- **Header Responsivo**: ✅ ResponsiveHeader con menú móvil y navegación mejorada
+- **Logo Clickable**: ✅ Logo como botón clickeable para resetear formulario/ir a home
+- **Mobile Menu**: ✅ Hamburger menu completamente funcional
+- **Theme Persistence**: ✅ Persistencia del tema seleccionado en localStorage
+- **Traducciones**: ✅ Strings de tema agregados en EN/ES
+- **CSS Variables**: ✅ Variables de tema para colores en modo oscuro
+- **Glass Effects**: ✅ Efectos glass mejorados para dark mode
+- **Responsive Design**: ✅ Header totalmente responsivo sin overlapping
 
 ---
 
@@ -298,6 +294,38 @@ snr-red/
     - Presets para personalización rápida
     - Opciones avanzadas para diseño de QR codes
     - Integración con sistema de temas
+
+13. **Dark Mode y Header Refactor**:
+    - **NUEVO:** Implementado Dark Mode con ThemeProvider
+    - **NUEVO:** Componente de Theme Toggle con íconos shadcn/ui
+    - **NUEVO:** Header responsivo con menú móvil y navegación mejorada
+    - **NUEVO:** Logo como botón clickeable para resetear formulario/ir a home
+    - **NUEVO:** Hamburger menu completamente funcional
+    - **NUEVO:** Persistencia del tema seleccionado en localStorage
+    - **NUEVO:** Traducciones de strings de tema en EN/ES
+    - **NUEVO:** Variables de CSS para colores en modo oscuro
+    - **NUEVO:** Efectos glass mejorados para dark mode
+    - **NUEVO:** Header totalmente responsivo sin overlapping
+
+### 🌙 Dark Mode System (RECIÉN IMPLEMENTADO)
+- [x] **ThemeProvider context** con soporte para light/dark/system
+- [x] **Theme Toggle component** con íconos y animaciones
+- [x] **Persistencia de tema** en localStorage
+- [x] **Variables CSS** para colores dinámicos
+- [x] **Traducciones de tema** en EN/ES
+- [x] **Compatibilidad shadcn/ui** con tema oscuro
+- [x] **Glass effects** optimizados para dark mode
+- [x] **Scrollbar styling** para ambos temas
+
+### 📱 Header Responsivo (RECIÉN IMPLEMENTADO)
+- [x] **ResponsiveHeader component** completamente nuevo
+- [x] **Mobile hamburger menu** con animaciones
+- [x] **Logo clickeable** para resetear formulario/navegar home
+- [x] **Theme toggle** integrado en header
+- [x] **Language selector** mejorado para móviles
+- [x] **Navigation actions** como props para flexibilidad
+- [x] **Breakpoints optimizados** para todas las pantallas
+- [x] **Sin overlapping** en dispositivos móviles
 
 ### 🔄 Estado de Validación Requerida
 - **Documentación**: ✅ Completamente reorganizada y limpia (35 archivos organizados)
@@ -749,7 +777,7 @@ curl -X POST http://localhost:3001/api/auth/login \
 ## 📝 Notas para Futuras Iteraciones
 
 ### Para IA Assistant:
-1. **Estado actual:** UX/UI Enhancement implementado, experiencia comercial completada, i18n completo, QR Display internacionalizado
+1. **Estado actual:** UX/UI Enhancement implementado, experiencia comercial completada, i18n completo, QR Display internacionalizado, Dark Mode y Header Responsivo implementados
 2. **Prioridad inmediata:** Testing de funcionalidad de usuario invitado, validación de flujos completos
 3. **Siguiente fase:** Real-time analytics con gráficos interactivos y metrics avanzadas
 4. **Decisiones técnicas:** Usar Chart.js para gráficos, Redis para caché futuro

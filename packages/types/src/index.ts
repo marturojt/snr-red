@@ -14,6 +14,7 @@ export interface UrlData {
   autoExpiresAt?: Date;
   title?: string;
   description?: string;
+  clicks?: number;
 }
 
 export interface UrlAnalytics {
@@ -76,6 +77,7 @@ export interface QrCodeOptions {
     dark?: string;
     light?: string;
   };
+  style?: 'square' | 'rounded' | 'dots' | 'circles';
 }
 
 export interface ApiResponse<T = any> {

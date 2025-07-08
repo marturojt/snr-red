@@ -20,7 +20,11 @@ import {
   Sparkles,
   Crown,
   Play,
-  User
+  User,
+  RefreshCw,
+  Settings,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
 import { urlApi, qrApi, authApi } from '@/lib/api';
 import { copyToClipboard, isValidUrl } from '@/lib/utils';
@@ -29,6 +33,7 @@ import EnhancedQRCodeDisplay from './EnhancedQRCodeDisplay';
 import AuthComponent from './AuthComponent';
 import ModernDashboard from './ModernDashboard';
 import EnhancedUserUrls from './EnhancedUserUrls';
+import { ErrorBoundary } from './ErrorBoundary';
 import LanguageSelector from './LanguageSelector';
 import VCardGenerator from './VCardGenerator';
 
@@ -60,6 +65,9 @@ interface User {
 export default function ModernLandingPage() {
   const { t } = useLanguage();
   const [originalUrl, setOriginalUrl] = useState('');
+  const [title, setTitle] = useState('');
+  const [customCode, setCustomCode] = useState('');
+  const [showAdvancedOptions, setShowAdvancedOptions] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [shortenedUrl, setShortenedUrl] = useState<UrlData | null>(null);
   const [qrCodeDataUrl, setQrCodeDataUrl] = useState<string | null>(null);
@@ -95,6 +103,8 @@ export default function ModernLandingPage() {
     try {
       const requestData = {
         originalUrl,
+        title: title || undefined,
+        customCode: customCode || undefined,
         generateQr: true,
       };
 
@@ -118,7 +128,7 @@ export default function ModernLandingPage() {
     } finally {
       setIsLoading(false);
     }
-  }, [originalUrl, t]);
+  }, [originalUrl, title, customCode, t]);
 
   const handleCopy = useCallback(async (text: string) => {
     try {
@@ -133,6 +143,17 @@ export default function ModernLandingPage() {
     setShortenedUrl(null);
     setQrCodeDataUrl(null);
     setOriginalUrl('');
+    setTitle('');
+    setCustomCode('');
+  }, []);
+
+  const generateRandomCode = useCallback(() => {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < 8; i++) {
+      result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    setCustomCode(result);
   }, []);
 
   if (showDashboard && user) {
@@ -171,7 +192,9 @@ export default function ModernLandingPage() {
         <div className="container mx-auto px-4 py-8">
           <div className="max-w-4xl mx-auto">
             <h1 className="text-3xl font-bold text-gray-900 mb-6">{t('user.myUrls')}</h1>
-            <EnhancedUserUrls user={null} />
+            <ErrorBoundary>
+              <EnhancedUserUrls user={null} />
+            </ErrorBoundary>
           </div>
         </div>
       </div>
@@ -319,6 +342,59 @@ export default function ModernLandingPage() {
                         </Button>
                       </div>
                       
+                      {/* Advanced Options Toggle */}
+                      <div className="flex justify-center">
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          onClick={() => setShowAdvancedOptions(!showAdvancedOptions)}
+                          className="flex items-center gap-2 text-gray-600 hover:text-gray-900"
+                        >
+                          <Settings className="w-4 h-4" />
+                          {t('hero.advancedOptions')}
+                          {showAdvancedOptions ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                        </Button>
+                      </div>
+
+                      {/* Advanced Options */}
+                      {showAdvancedOptions && (
+                        <div className="space-y-4 p-4 bg-gray-50/50 rounded-xl border border-gray-200">
+                          <div>
+                            <Input
+                              type="text"
+                              placeholder={t('hero.titlePlaceholder')}
+                              value={title}
+                              onChange={(e) => setTitle(e.target.value)}
+                              className="h-12 text-base border-2 border-gray-200 focus:border-blue-500 rounded-xl"
+                              disabled={isLoading}
+                            />
+                          </div>
+                          
+                          <div className="flex gap-2">
+                            <Input
+                              type="text"
+                              placeholder={t('hero.customCodePlaceholder')}
+                              value={customCode}
+                              onChange={(e) => setCustomCode(e.target.value)}
+                              className="h-12 text-base border-2 border-gray-200 focus:border-blue-500 rounded-xl"
+                              disabled={isLoading}
+                              pattern="[a-zA-Z0-9_-]+"
+                              title="Only letters, numbers, hyphens, and underscores allowed"
+                            />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              onClick={generateRandomCode}
+                              className="h-12 px-4 border-2 border-gray-200 hover:border-blue-500 rounded-xl"
+                              disabled={isLoading}
+                              title={t('hero.generateRandom')}
+                            >
+                              <RefreshCw className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      )}
+
                       {!user && (
                         <p className="text-sm text-gray-500 flex items-center justify-center">
                           <Shield className="w-4 h-4 mr-1" />

@@ -1,11 +1,14 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import Image from 'next/image';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
 import { 
   Copy, 
@@ -22,10 +25,14 @@ import {
   TrendingUp,
   Zap,
   Link2,
-  RefreshCw
+  RefreshCw,
+  Download,
+  Palette
 } from 'lucide-react';
-import { urlApi, authApi } from '@/lib/api';
+import { urlApi, authApi, qrApi } from '@/lib/api';
+import { useLanguage } from '@/context/LanguageContext';
 import { getUserId, copyToClipboard, formatDate } from '@/lib/utils';
+import QRCustomizer, { QROptions } from '@/components/QRCustomizer';
 
 interface UrlData {
   id: string;
@@ -57,15 +64,27 @@ interface UserUrlsProps {
 }
 
 export default function EnhancedUserUrls({ user }: UserUrlsProps) {
+  const { t } = useLanguage();
   const [urls, setUrls] = useState<UrlData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [filter, setFilter] = useState<'all' | 'active' | 'expired'>('all');
   const [sortBy, setSortBy] = useState<'newest' | 'oldest' | 'clicks'>('newest');
   const [searchTerm, setSearchTerm] = useState('');
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [analyticsUrl, setAnalyticsUrl] = useState<UrlData | null>(null);
+  const [qrUrl, setQrUrl] = useState<UrlData | null>(null);
+  const [qrCodeData, setQrCodeData] = useState<string | null>(null);
+  const [showQrCustomizer, setShowQrCustomizer] = useState(false);
+  const [qrCustomizerUrl, setQrCustomizerUrl] = useState<UrlData | null>(null);
+  const [qrTabValue, setQrTabValue] = useState<'display' | 'customize'>('display');
+  const loadingRef = useRef(false);
 
   const loadUserUrls = useCallback(async () => {
+    // Prevent multiple simultaneous requests
+    if (loadingRef.current) return;
+    
     try {
+      loadingRef.current = true;
       setIsLoading(true);
       
       if (user) {
@@ -87,6 +106,7 @@ export default function EnhancedUserUrls({ user }: UserUrlsProps) {
       toast.error('Failed to load your URLs');
     } finally {
       setIsLoading(false);
+      loadingRef.current = false;
     }
   }, [user]);
 
@@ -118,8 +138,99 @@ export default function EnhancedUserUrls({ user }: UserUrlsProps) {
     }
   };
 
+  const handleShowQR = async (url: UrlData) => {
+    try {
+      console.log('Generating QR for URL:', url.shortUrl);
+      
+      // Generate basic QR code first (fast)
+      const qrDataUrl = await qrApi.generateDataUrl(url.shortUrl);
+      console.log('QR generated successfully');
+      
+      // Show basic QR in modal
+      setQrUrl(url);
+      setQrCustomizerUrl(url);
+      setQrCodeData(qrDataUrl);
+      setQrTabValue('display'); // Always start with display tab
+    } catch (error) {
+      console.error('Error generating QR code:', error);
+      toast.error('Failed to generate QR code');
+    }
+  };
+
+  const handleQrCustomizerGenerate = async (options: QROptions) => {
+    if (!qrCustomizerUrl) return;
+    
+    try {
+      console.log('Generating customized QR for URL:', qrCustomizerUrl.shortUrl, 'with options:', options);
+      
+      // Import qrApi here to avoid circular dependency
+      const { qrApi } = await import('@/lib/api');
+      
+      // Convert QROptions to QrCodeOptions (backend compatible)
+      const backendOptions = {
+        size: options.size,
+        format: options.format === 'jpeg' || options.format === 'webp' ? 'png' : options.format,
+        errorCorrectionLevel: options.errorCorrectionLevel,
+        margin: options.margin,
+        color: options.color,
+        style: options.style,
+      };
+      
+      // Generate QR code data URL with custom options
+      const qrDataUrl = await qrApi.generateDataUrl(qrCustomizerUrl.shortUrl, backendOptions);
+      console.log('Customized QR generated successfully');
+      
+      // Update QR code data and switch to display tab
+      setQrCodeData(qrDataUrl);
+      setQrTabValue('display');
+      
+      toast.success('Custom QR code generated successfully!');
+    } catch (error) {
+      console.error('Error generating customized QR code:', error);
+      toast.error('Failed to generate customized QR code');
+    }
+  };
+
+  const handleQrCustomizerComplete = () => {
+    // Switch to display tab when customization is complete
+    setQrTabValue('display');
+  };
+
+  const handleDownloadQR = async () => {
+    if (!qrCodeData || !qrUrl) return;
+    
+    try {
+      // Create a temporary anchor element to trigger download
+      const link = document.createElement('a');
+      link.href = qrCodeData;
+      link.download = `qr-code-${qrUrl.shortCode}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      toast.success('QR code downloaded successfully!');
+    } catch (error) {
+      console.error('Error downloading QR code:', error);
+      toast.error('Failed to download QR code');
+    }
+  };
+
+  const handleQrCustomizerClose = () => {
+    setShowQrCustomizer(false);
+    setQrCustomizerUrl(null);
+  };
+
+  const handleShowAnalytics = (url: UrlData) => {
+    setAnalyticsUrl(url);
+  };
+
   useEffect(() => {
-    loadUserUrls();
+    // Add a small delay to prevent multiple calls in development
+    const timer = setTimeout(() => {
+      loadUserUrls();
+    }, 10);
+    
+    return () => clearTimeout(timer);
   }, [loadUserUrls]);
 
   // Filter and sort URLs
@@ -391,21 +502,20 @@ export default function EnhancedUserUrls({ user }: UserUrlsProps) {
                         <ExternalLink className="w-4 h-4" />
                       </Button>
                       
-                      {url.qrCodeUrl && (
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => window.open(url.qrCodeUrl, '_blank')}
-                          title="View QR Code"
-                          className="hover:bg-purple-50 hover:text-purple-600"
-                        >
-                          <QrCode className="w-4 h-4" />
-                        </Button>
-                      )}
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleShowQR(url)}
+                        title="View QR Code"
+                        className="hover:bg-purple-50 hover:text-purple-600"
+                      >
+                        <QrCode className="w-4 h-4" />
+                      </Button>
                       
                       <Button
                         variant="ghost"
                         size="sm"
+                        onClick={() => handleShowAnalytics(url)}
                         title="View Analytics"
                         className="hover:bg-orange-50 hover:text-orange-600"
                       >
@@ -466,6 +576,189 @@ export default function EnhancedUserUrls({ user }: UserUrlsProps) {
           </div>
         </CardContent>
       </Card>
+
+      {/* Analytics Modal */}
+      <Dialog open={!!analyticsUrl} onOpenChange={() => setAnalyticsUrl(null)}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <BarChart3 className="w-5 h-5" />
+              URL Analytics
+            </DialogTitle>
+            <DialogDescription>
+              Analytics data for {analyticsUrl?.title || analyticsUrl?.shortUrl}
+            </DialogDescription>
+          </DialogHeader>
+          
+          {analyticsUrl && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-blue-50 p-3 rounded-lg">
+                  <p className="text-sm font-medium text-blue-700">Total Clicks</p>
+                  <p className="text-2xl font-bold text-blue-900">{analyticsUrl.clicks || 0}</p>
+                </div>
+                <div className="bg-green-50 p-3 rounded-lg">
+                  <p className="text-sm font-medium text-green-700">Status</p>
+                  <p className="text-sm font-bold text-green-900">
+                    {analyticsUrl.isActive ? 'Active' : 'Expired'}
+                  </p>
+                </div>
+              </div>
+              
+              <div className="space-y-2">
+                <div>
+                  <p className="text-sm font-medium text-gray-700">Created</p>
+                  <p className="text-sm text-gray-600">{formatDate(analyticsUrl.createdAt)}</p>
+                </div>
+                
+                {analyticsUrl.title && (
+                  <div>
+                    <p className="text-sm font-medium text-gray-700">Title</p>
+                    <p className="text-sm text-gray-600">{analyticsUrl.title}</p>
+                  </div>
+                )}
+                
+                <div>
+                  <p className="text-sm font-medium text-gray-700">Short URL</p>
+                  <p className="text-sm text-gray-600 break-all">{analyticsUrl.shortUrl}</p>
+                </div>
+                
+                <div>
+                  <p className="text-sm font-medium text-gray-700">Original URL</p>
+                  <p className="text-sm text-gray-600 break-all">{analyticsUrl.originalUrl}</p>
+                </div>
+              </div>
+              
+              <div className="flex gap-2 pt-4">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => handleCopy(analyticsUrl.shortUrl, 'Short URL')}
+                  className="flex-1"
+                >
+                  <Copy className="w-4 h-4 mr-2" />
+                  Copy URL
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => window.open(analyticsUrl.shortUrl, '_blank')}
+                  className="flex-1"
+                >
+                  <ExternalLink className="w-4 h-4 mr-2" />
+                  Open
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* QR Code Modal with Tabs */}
+      <Dialog open={!!qrUrl} onOpenChange={() => { setQrUrl(null); setQrCodeData(null); setQrCustomizerUrl(null); setQrTabValue('display'); }}>
+        <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <QrCode className="w-5 h-5" />
+              {t('qrCode')}
+            </DialogTitle>
+            <DialogDescription>
+              {t('qrCodeDescription')}
+            </DialogDescription>
+          </DialogHeader>
+          
+          {qrUrl && (
+            <div className="space-y-4">
+              <div className="text-center">
+                <h3 className="font-semibold text-lg mb-2">
+                  {qrUrl.title || t('qrCode')}
+                </h3>
+                <p className="text-sm text-gray-600 break-all mb-4">
+                  {qrUrl.shortUrl}
+                </p>
+              </div>
+
+              {/* Tabs for QR Display and Customization */}
+              <Tabs value={qrTabValue} onValueChange={(value) => setQrTabValue(value as 'display' | 'customize')} className="w-full">
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="display" className="flex items-center gap-2">
+                    <Eye className="w-4 h-4" />
+                    {t('qrTabs.display')}
+                  </TabsTrigger>
+                  <TabsTrigger value="customize" className="flex items-center gap-2">
+                    <Palette className="w-4 h-4" />
+                    {t('qrTabs.customize')}
+                  </TabsTrigger>
+                </TabsList>
+
+                {/* Display Tab */}
+                <TabsContent value="display" className="space-y-4">
+                  {qrCodeData && (
+                    <div className="bg-gray-50 p-4 rounded-lg">
+                      <Image 
+                        src={qrCodeData} 
+                        alt="QR Code" 
+                        width={250}
+                        height={250}
+                        className="w-full max-w-[250px] mx-auto border-2 border-gray-200 rounded-lg bg-white p-2"
+                      />
+                    </div>
+                  )}
+                  
+                  <div className="flex gap-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={() => handleCopy(qrUrl.shortUrl, t('shortUrl'))}
+                      className="flex-1"
+                    >
+                      <Copy className="w-4 h-4 mr-2" />
+                      {t('copyUrl')}
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={handleDownloadQR}
+                      className="flex-1"
+                    >
+                      <Download className="w-4 h-4 mr-2" />
+                      {t('download')}
+                    </Button>
+                  </div>
+                </TabsContent>
+
+                {/* Customize Tab */}
+                <TabsContent value="customize" className="space-y-4">
+                  <QRCustomizer
+                    url={qrUrl.shortUrl}
+                    onGenerate={handleQrCustomizerGenerate}
+                    onClose={() => {}}
+                    embedded={true}
+                    onGenerateComplete={handleQrCustomizerComplete}
+                  />
+                </TabsContent>
+              </Tabs>
+
+              <p className="text-xs text-gray-500 text-center">
+                {t('qrCodeInstructions')}
+              </p>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* QR Customizer */}
+      {showQrCustomizer && qrCustomizerUrl && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <QRCustomizer
+              url={qrCustomizerUrl.shortUrl}
+              onGenerate={handleQrCustomizerGenerate}
+              onClose={handleQrCustomizerClose}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

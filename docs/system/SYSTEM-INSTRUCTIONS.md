@@ -1,8 +1,38 @@
 # SNR.red - System Instructions para AI Assistant
 
-**Versión:** 1.0  
-**Fecha:** 7 de Enero, 2025  
+**Versión:** 2.1  
+**Fecha:** 7 de Julio, 2025  
 **Propósito:** Guías para mantener documentación actualizada y seguimiento consistente del proyecto
+
+---
+
+## 📁 ORGANIZACIÓN DE DOCUMENTACIÓN
+
+### Estructura de Carpetas
+
+**📂 /docs/system/** - Documentación del sistema y instrucciones
+- `SYSTEM-INSTRUCTIONS.md` - Este archivo (instrucciones para AI)
+- `PROJECT-STATUS.md` - Estado actual del proyecto
+- `TECHNICAL-TRACKING-GUIDE.md` - Guía de seguimiento técnico
+- `DATA-MODEL.md` - Modelos de datos y esquemas
+- `USER-STORIES.md` - Historias de usuario y requerimientos
+
+**📂 /docs/development/** - Documentación de desarrollo y cambios
+- `CHANGELOG-*.md` - Logs de cambios específicos
+- `QR-*.md` - Documentación de funcionalidades QR
+- `*-IMPLEMENTATION*.md` - Guías de implementación
+- `*-ENHANCEMENT*.md` - Mejoras y optimizaciones
+- `QA-*.md` - Documentación de quality assurance
+- `*-FEATURE*.md` - Documentación de nuevas funcionalidades
+
+**📂 /docs/deployment/** - Documentación de deployment y producción
+- `DEPLOYMENT*.md` - Guías de deployment
+- `PRODUCTION.md` - Configuración de producción
+- `LINUX-DEPLOYMENT.md` - Deployment en Linux
+
+**📂 /docs/config/** - Archivos de configuración
+- `apache-*.conf` - Configuraciones de Apache
+- `mongod.conf` - Configuración de MongoDB
 
 ---
 
@@ -17,11 +47,11 @@
 #### Verificación de Estado Actual
 ```bash
 # SIEMPRE revisar estos archivos primero:
-1. docs/PROJECT-STATUS.md
-2. docs/TECHNICAL-TRACKING-GUIDE.md
-3. docs/DATA-MODEL.md
-4. docs/USER-STORIES.md
-5. docs/SYSTEM-INSTRUCTIONS.md (este archivo)
+1. docs/system/PROJECT-STATUS.md
+2. docs/system/TECHNICAL-TRACKING-GUIDE.md
+3. docs/system/DATA-MODEL.md
+4. docs/system/USER-STORIES.md
+5. docs/system/SYSTEM-INSTRUCTIONS.md (este archivo)
 ```
 
 #### Preguntas Obligatorias
@@ -98,6 +128,17 @@ Respeta SIEMPRE estos patrones:
 - Criterios de aceptación modificados
 - Estimaciones actualizadas
 - Prioridades cambiadas
+```
+
+**E. Crear documentación en /docs/development/ (si aplica)**
+```markdown
+# Crear archivos específicos para:
+- Nuevas funcionalidades implementadas
+- Cambios significativos en UX/UI
+- Fixes importantes de bugs
+- Implementaciones técnicas complejas
+- Mejoras de rendimiento
+- Actualizaciones de QA
 ```
 
 ### 4. 🎯 REGLAS DE CONSISTENCIA
@@ -298,23 +339,32 @@ npm run build:frontend       # Solo frontend
 #### Documentos por Tipo de Cambio
 ```yaml
 Backend_Changes:
-  - PROJECT-STATUS.md (siempre)
-  - TECHNICAL-TRACKING-GUIDE.md (siempre)
-  - DATA-MODEL.md (si hay cambios en DB)
+  - docs/system/PROJECT-STATUS.md (siempre)
+  - docs/system/TECHNICAL-TRACKING-GUIDE.md (siempre)
+  - docs/system/DATA-MODEL.md (si hay cambios en DB)
+  - docs/development/CHANGELOG-*.md (crear si es cambio significativo)
 
 Frontend_Changes:
-  - PROJECT-STATUS.md (siempre)
-  - TECHNICAL-TRACKING-GUIDE.md (siempre)
-  - USER-STORIES.md (si se completan historias)
+  - docs/system/PROJECT-STATUS.md (siempre)
+  - docs/system/TECHNICAL-TRACKING-GUIDE.md (siempre)
+  - docs/system/USER-STORIES.md (si se completan historias)
+  - docs/development/*-ENHANCEMENT*.md (si es mejora UX/UI)
 
 New_Features:
-  - Todos los documentos
+  - Todos los documentos de /docs/system/
+  - Crear documentación específica en /docs/development/
   - Verificar que la funcionalidad esté en USER-STORIES.md
   - Actualizar roadmap y métricas
 
 Bug_Fixes:
-  - PROJECT-STATUS.md (issues conocidos)
-  - TECHNICAL-TRACKING-GUIDE.md (issues conocidos)
+  - docs/system/PROJECT-STATUS.md (issues conocidos)
+  - docs/system/TECHNICAL-TRACKING-GUIDE.md (issues conocidos)
+  - docs/development/CHANGELOG-*.md (si es fix crítico)
+
+Deployment_Changes:
+  - docs/deployment/DEPLOYMENT*.md (actualizar guías)
+  - docs/deployment/PRODUCTION.md (si afecta producción)
+  - docs/config/*.conf (si cambian configuraciones)
 ```
 
 #### Secciones Clave por Documento
@@ -351,11 +401,11 @@ USER-STORIES.md:
 
 #### Al Retomar el Proyecto
 1. **Leer SIEMPRE estos archivos en orden:**
-   - PROJECT-STATUS.md (estado actual)
-   - TECHNICAL-TRACKING-GUIDE.md (roadmap técnico)
-   - USER-STORIES.md (funcionalidades)
-   - DATA-MODEL.md (arquitectura de datos)
-   - SYSTEM-INSTRUCTIONS.md (este archivo)
+   - docs/system/PROJECT-STATUS.md (estado actual)
+   - docs/system/TECHNICAL-TRACKING-GUIDE.md (roadmap técnico)
+   - docs/system/USER-STORIES.md (funcionalidades)
+   - docs/system/DATA-MODEL.md (arquitectura de datos)
+   - docs/system/SYSTEM-INSTRUCTIONS.md (este archivo)
 
 2. **Verificar Estado del Sistema:**
    - Ejecutar `npm run dev` para verificar que todo funciona
@@ -392,10 +442,13 @@ USER-STORIES.md:
 ### ✅ Checklist Post-Cambio (OBLIGATORIO)
 
 **Documentación:**
-- [ ] PROJECT-STATUS.md actualizado
-- [ ] TECHNICAL-TRACKING-GUIDE.md actualizado
-- [ ] DATA-MODEL.md actualizado (si aplica)
-- [ ] USER-STORIES.md actualizado (si aplica)
+- [ ] docs/system/PROJECT-STATUS.md actualizado
+- [ ] docs/system/TECHNICAL-TRACKING-GUIDE.md actualizado
+- [ ] docs/system/DATA-MODEL.md actualizado (si aplica)
+- [ ] docs/system/USER-STORIES.md actualizado (si aplica)
+- [ ] docs/development/ - Crear documentación específica (si aplica)
+- [ ] docs/deployment/ - Actualizar guías de deployment (si aplica)
+- [ ] docs/config/ - Actualizar configuraciones (si aplica)
 - [ ] Fechas actualizadas en todos los documentos
 - [ ] Versiones de documentos incrementadas
 
@@ -422,7 +475,7 @@ USER-STORIES.md:
 **Estado del documento:** ✅ Activo  
 **Aplicabilidad:** TODAS las sesiones de desarrollo  
 **Revisión:** Al agregar nuevos tipos de cambios  
-**Versión:** 1.0-sistema-completo-tracking
+**Versión:** 2.1-estructura-documentacion-completa
 
 ---
 

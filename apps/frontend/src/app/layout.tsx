@@ -19,8 +19,6 @@ export const metadata: Metadata = {
   description: "The most powerful URL shortening platform. Create short links, generate QR codes, track analytics, and grow your reach with enterprise-grade features.",
   keywords: "URL shortener, short links, QR codes, analytics, link tracking, digital marketing",
   authors: [{ name: "SNR.red" }],
-  viewport: "width=device-width, initial-scale=1",
-  themeColor: "#3b82f6",
   openGraph: {
     title: "SNR.red - Advanced URL Shortener",
     description: "Create powerful short links with advanced analytics and QR code generation",
@@ -33,6 +31,10 @@ export const metadata: Metadata = {
     description: "Create powerful short links with advanced analytics and QR code generation",
   },
 };
+
+export const viewport = "width=device-width, initial-scale=1";
+
+export const themeColor = "#3b82f6";
 
 export default function RootLayout({
   children,

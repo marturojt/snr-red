@@ -1,10 +1,35 @@
 import { nanoid } from 'nanoid';
 import { Url, IUrl } from '../models/Url';
+import { Analytics } from '../models/Analytics';
 import { CreateUrlRequest, UrlData } from '@url-shortener/types';
 import { QrService } from './qrService';
 import { CleanupService } from './cleanupService';
 
 export class UrlService {
+  // Helper method to enrich URLs with analytics data
+  private static async enrichUrlsWithAnalytics(urls: IUrl[]): Promise<UrlData[]> {
+    const urlIds = urls.map(url => url._id.toString());
+    
+    // Get click counts for all URLs in one query
+    const clickCounts = await Analytics.aggregate([
+      { $match: { urlId: { $in: urlIds } } },
+      { $group: { _id: '$urlId', clicks: { $sum: 1 } } }
+    ]);
+    
+    // Create a map for quick lookup
+    const clickMap = new Map<string, number>();
+    clickCounts.forEach(item => {
+      clickMap.set(item._id, item.clicks);
+    });
+    
+    // Enrich URLs with click data
+    return urls.map(url => {
+      const urlData = url.toJSON() as UrlData & { clicks?: number };
+      urlData.clicks = clickMap.get(url._id.toString()) || 0;
+      return urlData as UrlData;
+    });
+  }
+
   static async create(
     data: CreateUrlRequest, 
     userId?: string, 
@@ -82,13 +107,13 @@ export class UrlService {
   static async getAllByUser(userId: string): Promise<UrlData[]> {
     const urls = await Url.find({ userId, isActive: true })
       .sort({ createdAt: -1 });
-    return urls.map(url => url.toJSON() as UrlData);
+    return await this.enrichUrlsWithAnalytics(urls);
   }
 
   static async getAllByRegisteredUser(registeredUserId: string): Promise<UrlData[]> {
     const urls = await Url.find({ registeredUserId, isActive: true })
       .sort({ createdAt: -1 });
-    return urls.map(url => url.toJSON() as UrlData);
+    return await this.enrichUrlsWithAnalytics(urls);
   }
 
   static async getByShortCodeAndUpdateAccess(shortCode: string): Promise<UrlData | null> {

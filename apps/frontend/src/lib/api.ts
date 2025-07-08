@@ -1,8 +1,29 @@
 import axios from 'axios';
-import { CreateUrlRequest, UrlData, UrlStatsResponse, ApiResponse } from '@url-shortener/types';
+import { CreateUrlRequest, UrlData, UrlStatsResponse, ApiResponse, QrCodeOptions } from '@url-shortener/types';
 import { getUserId } from './utils';
 
-// vCard interfaces (temporary until types package is updated)
+// vCard interfaces (temporary u// QR Code options interface
+
+export const qrApi = {
+  // Generate QR code
+  generate: async (data: string, options?: QrCodeOptions): Promise<string> => {
+    const response: ApiResponse<{ qrCodeUrl: string }> = await api.post('/qr/generate', { data, options });
+    return response.data!.qrCodeUrl;
+  },
+
+  // Generate QR code as data URL
+  generateDataUrl: async (data: string, options?: QrCodeOptions): Promise<string> => {
+    const response: ApiResponse<{ dataUrl: string }> = await api.post('/qr/generate/dataurl', { data, options });
+    return response.data!.dataUrl;
+  },
+
+  // Delete QR code
+  delete: async (filename: string): Promise<void> => {
+    await api.delete(`/qr/${filename}`);
+  }
+};
+
+// vCard interfaces (temporary until types package
 interface VCardData {
   id: string;
   userId?: string;
@@ -189,25 +210,6 @@ export const analyticsApi = {
   deleteAnalytics: async (urlId: string): Promise<number> => {
     const response: ApiResponse<{ deletedCount: number }> = await api.delete(`/analytics/${urlId}`);
     return response.data!.deletedCount;
-  },
-};
-
-export const qrApi = {
-  // Generate QR code
-  generate: async (data: string, options?: Record<string, unknown>): Promise<string> => {
-    const response: ApiResponse<{ qrCodeUrl: string }> = await api.post('/qr/generate', { data, options });
-    return response.data!.qrCodeUrl;
-  },
-
-  // Generate QR code as data URL
-  generateDataUrl: async (data: string, options?: Record<string, unknown>): Promise<string> => {
-    const response: ApiResponse<{ dataUrl: string }> = await api.post('/qr/generate/dataurl', { data, options });
-    return response.data!.dataUrl;
-  },
-
-  // Delete QR code
-  delete: async (filename: string): Promise<void> => {
-    await api.delete(`/qr/${filename}`);
   },
 };
 

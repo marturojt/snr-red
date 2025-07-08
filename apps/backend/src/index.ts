@@ -33,8 +33,16 @@ app.use(cors({
 // Rate limiting
 const limiter = rateLimit({
   windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '900000'), // 15 minutes
-  max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || '100'),
-  message: 'Too many requests from this IP, please try again later.'
+  max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || (process.env.NODE_ENV === 'development' ? '1000' : '100')),
+  message: 'Too many requests from this IP, please try again later.',
+  skip: (req) => {
+    // Skip rate limiting for development if on localhost
+    if (process.env.NODE_ENV === 'development' && 
+        (req.ip === '127.0.0.1' || req.ip === '::1' || req.ip?.includes('localhost'))) {
+      return true;
+    }
+    return false;
+  }
 });
 app.use('/api/', limiter);
 

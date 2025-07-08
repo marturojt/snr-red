@@ -9,6 +9,11 @@ import { errorHandler } from './middleware/errorHandler';
 import urlRoutes from './routes/urls';
 import analyticsRoutes from './routes/analytics';
 import qrRoutes from './routes/qr';
+import authRoutes from './routes/auth';
+import adminRoutes from './routes/admin';
+import adminTestRoutes from './routes/admin-test';
+import vcardRoutes from './routes/vcard';
+import { CleanupService } from './services/cleanupService';
 
 dotenv.config();
 
@@ -28,8 +33,16 @@ app.use(cors({
 // Rate limiting
 const limiter = rateLimit({
   windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '900000'), // 15 minutes
-  max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || '100'),
-  message: 'Too many requests from this IP, please try again later.'
+  max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || (process.env.NODE_ENV === 'development' ? '1000' : '100')),
+  message: 'Too many requests from this IP, please try again later.',
+  skip: (req) => {
+    // Skip rate limiting for development if on localhost
+    if (process.env.NODE_ENV === 'development' && 
+        (req.ip === '127.0.0.1' || req.ip === '::1' || req.ip?.includes('localhost'))) {
+      return true;
+    }
+    return false;
+  }
 });
 app.use('/api/', limiter);
 
@@ -41,13 +54,53 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
 // Routes
+app.use('/api/auth', authRoutes);
 app.use('/api/urls', urlRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/qr', qrRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/admin-test', adminTestRoutes);
+app.use('/api/vcard', vcardRoutes);
 
 // Health check
 app.get('/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
+});
+
+// vCard page handler (before URL redirect to avoid conflicts)
+app.get('/v/:shortCode', async (req, res) => {
+  try {
+    const { shortCode } = req.params;
+    
+    // Import here to avoid circular dependency
+    const { vcardService } = await import('./services/vcardService');
+    
+    const vcard = await vcardService.getVCardByShortCode(shortCode);
+    
+    if (!vcard || !vcard.isActive) {
+      return res.status(404).send(`
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>vCard Not Found</title>
+        </head>
+        <body>
+          <h1>vCard Not Found</h1>
+          <p>The requested vCard could not be found.</p>
+        </body>
+        </html>
+      `);
+    }
+
+    // Redirect to frontend vCard page
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+    res.redirect(`${frontendUrl}/vcard/${shortCode}`);
+  } catch (error) {
+    console.error('Error serving vCard:', error);
+    res.status(500).send('Internal Server Error');
+  }
 });
 
 // URL redirect handler
@@ -155,10 +208,43 @@ async function startServer() {
       console.log(`📊 Environment: ${process.env.NODE_ENV}`);
       console.log(`🌐 Frontend URL: ${process.env.FRONTEND_URL}`);
     });
+
+    // Start cleanup service
+    startCleanupService();
   } catch (error) {
     console.error('Failed to start server:', error);
     process.exit(1);
   }
+}
+
+// Cleanup service
+function startCleanupService() {
+  // Run cleanup every 24 hours
+  const cleanupInterval = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+  
+  setInterval(async () => {
+    try {
+      console.log('🧹 Starting URL cleanup...');
+      const result = await CleanupService.cleanupExpiredUrls();
+      console.log(`✅ Cleanup completed: ${result.deletedCount} URLs deleted`);
+      console.log(`   - Anonymous: ${result.anonymousDeleted}`);
+      console.log(`   - Free: ${result.freeDeleted}`);
+      console.log(`   - Premium: ${result.premiumDeleted}`);
+    } catch (error) {
+      console.error('❌ Cleanup failed:', error);
+    }
+  }, cleanupInterval);
+
+  // Run initial cleanup after 5 minutes
+  setTimeout(async () => {
+    try {
+      console.log('🧹 Running initial cleanup...');
+      const result = await CleanupService.cleanupExpiredUrls();
+      console.log(`✅ Initial cleanup completed: ${result.deletedCount} URLs deleted`);
+    } catch (error) {
+      console.error('❌ Initial cleanup failed:', error);
+    }
+  }, 5 * 60 * 1000); // 5 minutes
 }
 
 startServer();

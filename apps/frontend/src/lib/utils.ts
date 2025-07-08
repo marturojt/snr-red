@@ -48,7 +48,7 @@ export function isValidUrl(string: string): boolean {
   try {
     new URL(string)
     return true
-  } catch (_) {
+  } catch {
     return false
   }
 }
@@ -67,4 +67,21 @@ export function generateRandomString(length: number = 8): string {
     result += chars.charAt(Math.floor(Math.random() * chars.length))
   }
   return result
+}
+
+// User ID management functions
+export function getUserId(): string {
+  if (typeof window === 'undefined') return ''
+  
+  let userId = localStorage.getItem('user_id')
+  if (!userId) {
+    userId = generateRandomString(16)
+    localStorage.setItem('user_id', userId)
+  }
+  return userId
+}
+
+export function clearUserId(): void {
+  if (typeof window === 'undefined') return
+  localStorage.removeItem('user_id')
 }

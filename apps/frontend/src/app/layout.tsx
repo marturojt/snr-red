@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
+import { LanguageProvider } from "@/context/LanguageContext";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -14,9 +15,26 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "URL Shortener - Shorten URLs and Generate QR Codes",
-  description: "Create short URLs and QR codes with detailed analytics tracking. Free URL shortener with custom domains and comprehensive click statistics.",
+  title: "SNR.red - Advanced URL Shortener with Analytics",
+  description: "The most powerful URL shortening platform. Create short links, generate QR codes, track analytics, and grow your reach with enterprise-grade features.",
+  keywords: "URL shortener, short links, QR codes, analytics, link tracking, digital marketing",
+  authors: [{ name: "SNR.red" }],
+  openGraph: {
+    title: "SNR.red - Advanced URL Shortener",
+    description: "Create powerful short links with advanced analytics and QR code generation",
+    type: "website",
+    url: "https://snr.red",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "SNR.red - Advanced URL Shortener",
+    description: "Create powerful short links with advanced analytics and QR code generation",
+  },
 };
+
+export const viewport = "width=device-width, initial-scale=1";
+
+export const themeColor = "#3b82f6";
 
 export default function RootLayout({
   children,
@@ -28,8 +46,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
-        <Toaster position="top-right" />
+        <LanguageProvider>
+          {children}
+          <Toaster position="top-right" />
+        </LanguageProvider>
       </body>
     </html>
   );

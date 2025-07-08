@@ -1,5 +1,5 @@
-import URLShortener from '@/components/URLShortener';
+import ModernLandingPage from '@/components/ModernLandingPage';
 
 export default function Home() {
-  return <URLShortener />;
+  return <ModernLandingPage />;
 }

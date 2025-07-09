@@ -1,0 +1,41 @@
+
+> frontend@0.1.0 build
+> next build
+
+   ▲ Next.js 15.3.4
+   - Environments: .env.local
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 0ms
+   Linting and checking validity of types ...
+ ⨯ ESLint: context.getScope is not a function Occurred while linting /Users/marturojt/Developer/snr-red/apps/frontend/src/app/vcard/[id]/page.tsx:30 Rule: "@typescript-eslint/no-unsafe-declaration-merging"
+   Collecting page data ...
+   Generating static pages (0/12) ...
+   Generating static pages (3/12) 
+   Generating static pages (6/12) 
+   Generating static pages (9/12) 
+ ✓ Generating static pages (12/12)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                 Size  First Load JS
+┌ ○ /                                      32 kB         216 kB
+├ ○ /_not-found                            976 B         102 kB
+├ ○ /admin                               6.12 kB         115 kB
+├ ○ /admin/analytics                      6.4 kB         115 kB
+├ ○ /admin/security                       4.2 kB         113 kB
+├ ○ /admin/settings                      7.52 kB         126 kB
+├ ○ /admin/urls                          4.22 kB         145 kB
+├ ○ /admin/users                         3.87 kB         145 kB
+├ ○ /test-dark-mode                      1.42 kB         110 kB
+├ ƒ /v/[id]                                530 B         102 kB
+└ ƒ /vcard/[id]                          8.74 kB         154 kB
++ First Load JS shared by all             101 kB
+  ├ chunks/315-74a3b0a64443f432.js       46.3 kB
+  ├ chunks/87c73c54-24a4074729309aab.js  53.2 kB
+  └ other shared chunks (total)          1.92 kB
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

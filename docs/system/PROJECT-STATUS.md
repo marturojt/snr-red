@@ -1,20 +1,19 @@
 # SNR.red - Estado del Proyecto y Roadmap Técnico
 
-**Versión:** 1.7  
-**Fecha de actualización:** 7 de Enero, 2025  
-**Estado actual:** Entorno de desarrollo local completamente funcional en macOS, UX/UI Enhancement implementado, sistema comercial moderno completado, i18n (EN/ES) implementado, Dark Mode y Header Responsivo implementados
+**Versión:** 1.8  
+**Fecha de actualización:** 8 de Enero, 2025  
+**Estado actual:** Entorno de desarrollo local completamente funcional en macOS, UX/UI Enhancement implementado, sistema comercial moderno completado, i18n (EN/ES) implementado, Dark Mode por defecto implementado, VCard UI completamente internacionalizada
 
-## 🎯 Último Update - Dark Mode y Header Refactor (Enero 2025)
-- **Dark Mode**: ✅ Implementado con ThemeProvider (light/dark/system)
-- **Theme Toggle**: ✅ Componente con íconos shadcn/ui y traducciones
-- **Header Responsivo**: ✅ ResponsiveHeader con menú móvil y navegación mejorada
-- **Logo Clickable**: ✅ Logo como botón clickeable para resetear formulario/ir a home
-- **Mobile Menu**: ✅ Hamburger menu completamente funcional
-- **Theme Persistence**: ✅ Persistencia del tema seleccionado en localStorage
-- **Traducciones**: ✅ Strings de tema agregados en EN/ES
-- **CSS Variables**: ✅ Variables de tema para colores en modo oscuro
-- **Glass Effects**: ✅ Efectos glass mejorados para dark mode
-- **Responsive Design**: ✅ Header totalmente responsivo sin overlapping
+## 🎯 Último Update - Dark Mode por Defecto y VCard I18n (Enero 2025)
+- **Dark Mode por Defecto**: ✅ Implementado con tema oscuro como predeterminado
+- **VCard I18n**: ✅ Internacionalización completa del generador de vCard
+- **Sin Flash Inicial**: ✅ Script inline para evitar flash de tema claro
+- **ThemeProvider Robusto**: ✅ Inicialización optimizada sin useEffects redundantes
+- **VCard Traducciones**: ✅ 50+ claves de traducción EN/ES para toda la UI
+- **Validaciones I18n**: ✅ Todos los mensajes de error y validaciones traducidos
+- **Build Estricto**: ✅ Compilación exitosa sin errores de tipos ni ESLint
+- **Tipos Centralizados**: ✅ Uso exclusivo de @url-shortener/types
+- **Documentación**: ✅ Actualizada con nuevas implementaciones
 
 ---
 
@@ -175,7 +174,30 @@ snr-red/
 ## 🏃‍♂️ Estado Actual de la Implementación
 
 ### ✅ Completado Recientemente (Sesión actual)
-1. **Entorno de Desarrollo Local - macOS Setup Completo**:
+1. **Dark Mode por Defecto Implementado**:
+   - **NUEVO:** Tema oscuro establecido como predeterminado en ThemeProvider
+   - **NUEVO:** Script inline en layout.tsx para evitar flash inicial de tema claro
+   - **NUEVO:** Inicialización robusta sin useEffects redundantes
+   - **NUEVO:** Resolución de tema optimizada para mejor rendimiento
+   - **NUEVO:** Documentación completa en DARK-THEME-DEFAULT-HOTFIX.md
+
+2. **VCard UI Completamente Internacionalizada**:
+   - **NUEVO:** 50+ claves de traducción agregadas para toda la UI de vCard
+   - **NUEVO:** Generador de vCard completamente traducido (EN/ES)
+   - **NUEVO:** Validaciones y mensajes de error traducidos
+   - **NUEVO:** Placeholders y botones internacionalizados
+   - **NUEVO:** Toasts y notificaciones traducidas
+   - **NUEVO:** Páginas de visualización de vCard traducidas
+   - **NUEVO:** Documentación completa en VCARD-I18N-IMPLEMENTATION.md
+
+3. **Build Estricto y Limpieza de Código**:
+   - **NUEVO:** Eliminación de interfaces duplicadas en página de vCard
+   - **NUEVO:** Uso exclusivo de tipos centralizados @url-shortener/types
+   - **NUEVO:** Corrección de errores de ESLint y TypeScript
+   - **NUEVO:** Optimización de componentes Image de Next.js
+   - **NUEVO:** Build exitoso sin errores de compilación
+
+4. **Entorno de Desarrollo Local - macOS Setup Completo**:
    - **NUEVO:** Configuración completa del entorno de desarrollo en macOS
    - **NUEVO:** Instalación y configuración de MongoDB Community Edition vía Homebrew
    - **NUEVO:** Compilación exitosa de tipos compartidos (@url-shortener/types)
@@ -307,7 +329,7 @@ snr-red/
     - **NUEVO:** Efectos glass mejorados para dark mode
     - **NUEVO:** Header totalmente responsivo sin overlapping
 
-### 🌙 Dark Mode System (RECIÉN IMPLEMENTADO)
+### 🌙 Dark Mode System (IMPLEMENTADO)
 - [x] **ThemeProvider context** con soporte para light/dark/system
 - [x] **Theme Toggle component** con íconos y animaciones
 - [x] **Persistencia de tema** en localStorage
@@ -316,6 +338,21 @@ snr-red/
 - [x] **Compatibilidad shadcn/ui** con tema oscuro
 - [x] **Glass effects** optimizados para dark mode
 - [x] **Scrollbar styling** para ambos temas
+- [x] **Dark mode por defecto** sin flash inicial de tema claro
+- [x] **Script inline** para aplicación de tema antes de hidratación
+- [x] **Inicialización optimizada** sin useEffects redundantes
+
+### 🎴 Generador de vCard - Internacionalización Completa (IMPLEMENTADO)
+- [x] **VCardGenerator completamente traducido** (EN/ES)
+- [x] **50+ claves de traducción** para toda la UI
+- [x] **Validaciones internacionalizadas** con mensajes de error traducidos
+- [x] **Placeholders traducidos** para todos los campos del formulario
+- [x] **Botones y acciones traducidas** (guardar, cancelar, descargar, etc.)
+- [x] **Toasts y notificaciones** traducidas para todas las acciones
+- [x] **Páginas de visualización** de vCard traducidas
+- [x] **Experiencia de usuario consistente** en ambos idiomas
+- [x] **Uso de tipos centralizados** @url-shortener/types
+- [x] **Build estricto exitoso** sin errores de compilación
 
 ### 📱 Header Responsivo (RECIÉN IMPLEMENTADO)
 - [x] **ResponsiveHeader component** completamente nuevo

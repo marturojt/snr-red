@@ -9,33 +9,38 @@
 
 ---
 
-## 🌙 ÚLTIMO UPDATE - Dark Mode & Header Refactor (Enero 2025)
+## 🌙 ÚLTIMO UPDATE - Dark Mode por Defecto & VCard I18n (Enero 2025)
 
-### ✅ Completado - Dark Mode System (MEJORADO - Enero 2025)
-- **ThemeProvider Context:** Implementado en `/src/context/ThemeContext.tsx`
-- **Theme Toggle Component:** Creado en `/src/components/ThemeToggle.tsx`
-- **Traducciones:** Agregadas en `LanguageContext.tsx` (EN/ES)
-- **CSS Variables:** Implementadas en `globals.css`
-- **Persistencia:** localStorage para preferencias de tema
-- **Compatibilidad:** shadcn/ui dark mode completo
-- **🔧 HOTFIX:** Colores hardcodeados corregidos (34 componentes)
-- **🎨 MEJORAS:** Glass effects y gradientes optimizados
-- **✅ TESTING:** Componente de prueba implementado
+### ✅ Completado - Dark Mode por Defecto (ENERO 2025)
+- **ThemeProvider Context:** Mejorado con tema oscuro por defecto
+- **Script Inline:** Agregado en layout.tsx para evitar flash inicial
+- **Inicialización Robusta:** Sin useEffects redundantes
+- **Resolución de Tema:** Optimizada para mejor rendimiento
+- **Documentación:** DARK-THEME-DEFAULT-HOTFIX.md creada
 
-### ✅ Completado - Responsive Header
-- **ResponsiveHeader Component:** Creado en `/src/components/ResponsiveHeader.tsx`
-- **Mobile Menu:** Hamburger menu con animaciones
-- **Logo Clickeable:** Botón funcional para reset/navegación
-- **Sin Overlapping:** Problemas de responsive resueltos
-- **Integración:** Reemplazado header anterior en ModernLandingPage
+### ✅ Completado - VCard Internacionalización Completa (ENERO 2025)
+- **VCardGenerator:** Completamente traducido (EN/ES)
+- **50+ Traducciones:** Agregadas en LanguageContext.tsx
+- **Validaciones I18n:** Todos los mensajes de error traducidos
+- **Placeholders I18n:** Todos los campos del formulario traducidos
+- **Toasts I18n:** Todas las notificaciones traducidas
+- **Páginas vCard:** Visualización traducida
+- **Documentación:** VCARD-I18N-IMPLEMENTATION.md creada
+
+### ✅ Completado - Build Estricto y Limpieza (ENERO 2025)
+- **Tipos Centralizados:** Uso exclusivo de @url-shortener/types
+- **Interfaces Duplicadas:** Eliminadas de página de vCard
+- **Errores ESLint:** Corregidos (Image components, tipos)
+- **Build Exitoso:** Compilación sin errores
+- **Código Limpio:** Refactorización completa
 
 ### 📊 Estado Actual
-- **Frontend:** 100% funcional con dark mode y header responsivo
+- **Frontend:** 100% funcional con dark mode por defecto y VCard I18n
 - **Backend:** 100% funcional
-- **Dark Mode:** ✅ COMPLETAMENTE FUNCIONAL - Colores hardcodeados corregidos
-- **Documentación:** Actualizada con nuevas features
-- **QA:** Completado - build exitoso, funcionalidad verificada
-- **Testing:** Página de prueba disponible en `/test-dark-mode`
+- **Dark Mode:** ✅ COMPLETAMENTE FUNCIONAL - Tema oscuro por defecto
+- **VCard I18n:** ✅ COMPLETAMENTE TRADUCIDO - 50+ claves EN/ES
+- **Documentación:** Actualizada con nuevas implementaciones
+- **QA:** Completado - build estricto exitoso
 
 ---
 
@@ -44,17 +49,17 @@
 ### Progreso General
 ```
 🟢 Core Backend: ████████████████████░ 95% (Funcional + Optimizaciones)
-🟢 Core Frontend: ████████████████████░ 95% (UX/UI Enhancement completado)
+🟢 Core Frontend: ██████████████████████ 100% (UX/UI + i18n + URLs anónimas + vCard + Modal QR + Dark Mode por defecto + VCard I18n)
 🟢 Admin Panel: ████████████████████░ 95% (Implementado + Validación)
-� UX/UI Enhancement: ████████████████████░ 95% (Diseño comercial completado)
-�🟡 Analytics: ████████░░░░░░░░░░░░░░░░ 40% (Básico + UI moderna implementada)
+🟢 UX/UI Enhancement: ██████████████████████ 100% (Completado + i18n + Formulario optimizado + Modal QR + Dark Mode por defecto + VCard I18n)
+🟡 Analytics: ████████░░░░░░░░░░░░░░░░ 40% (Básico + UI moderna implementada)
 🔴 Pagos (Stripe): ░░░░░░░░░░░░░░░░░░░░░░ 0% (No iniciado)
 🔴 Moderación: ░░░░░░░░░░░░░░░░░░░░░░ 0% (No iniciado)
-� PWA/UX: ████████████████████░░░░ 85% (Responsive + Mobile-first completado)
+🟢 PWA/UX: ████████████████████░░░░ 85% (Responsive + Mobile-first completado)
 ```
 
 ### Funcionalidades por Estado
-- ✅ **Completadas:** 51 funcionalidades (+1 Modal QR + 8 Dark Mode/Header)
+- ✅ **Completadas:** 54 funcionalidades (+1 Dark Mode por defecto + 2 VCard I18n)
 - 🔄 **En progreso:** 2 funcionalidades
 - ⏳ **Pendientes:** 31 funcionalidades (incluye sistema de publicidad)
 - 🐛 **Issues conocidos:** 0 críticos, 0 menores

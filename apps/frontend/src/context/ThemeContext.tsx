@@ -17,27 +17,48 @@ interface ThemeProviderState {
 }
 
 const initialState: ThemeProviderState = {
-  theme: 'system',
+  theme: 'dark',
   setTheme: () => null,
-  resolvedTheme: 'light',
+  resolvedTheme: 'dark',
 };
 
 const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
 
 export function ThemeProvider({
   children,
-  defaultTheme = 'system',
+  defaultTheme = 'dark',
   storageKey = 'snr-red-theme',
   ...props
 }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(defaultTheme);
-  const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('light');
+  // Initialize theme from localStorage or use default
+  const [theme, setTheme] = useState<Theme>(() => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem(storageKey) as Theme;
+      if (stored && ['light', 'dark', 'system'].includes(stored)) {
+        return stored;
+      }
+    }
+    return defaultTheme;
+  });
+  
+  const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>(() => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem(storageKey) as Theme;
+      if (stored && ['light', 'dark', 'system'].includes(stored)) {
+        if (stored === 'system') {
+          return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        return stored;
+      }
+    }
+    return 'dark';
+  });
 
   useEffect(() => {
     const root = window.document.documentElement;
     root.classList.remove('light', 'dark');
 
-    let resolvedThemeValue: 'light' | 'dark' = 'light';
+    let resolvedThemeValue: 'light' | 'dark' = 'dark';
 
     if (theme === 'system') {
       const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
@@ -53,15 +74,11 @@ export function ThemeProvider({
     setResolvedTheme(resolvedThemeValue);
   }, [theme]);
 
+  // Update localStorage when theme changes
   useEffect(() => {
-    const stored = localStorage.getItem(storageKey) as Theme;
-    if (stored && ['light', 'dark', 'system'].includes(stored)) {
-      setTheme(stored);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(storageKey, theme);
     }
-  }, [storageKey]);
-
-  useEffect(() => {
-    localStorage.setItem(storageKey, theme);
   }, [theme, storageKey]);
 
   const value = {

@@ -179,7 +179,7 @@ export default function ModernDashboard({ user, onBack, onUserUpdate }: Dashboar
                     <p className="text-primary-foreground/80 text-sm font-medium">QR Codes</p>
                     <p className="text-2xl font-bold">18</p>
                   </div>
-                  <div className="w-12 h-12 bg-purple-400 rounded-lg flex items-center justify-center">
+                  <div className="w-12 h-12 bg-purple-400 dark:bg-purple-500 rounded-lg flex items-center justify-center">
                     <QrCode className="w-6 h-6 text-white" />
                   </div>
                 </div>
@@ -260,7 +260,7 @@ export default function ModernDashboard({ user, onBack, onUserUpdate }: Dashboar
                       </div>
                       <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
                         <div className="flex items-center space-x-3">
-                          <div className="w-8 h-8 bg-purple-500 rounded-lg flex items-center justify-center">
+                          <div className="w-8 h-8 bg-purple-500 dark:bg-purple-400 rounded-lg flex items-center justify-center">
                             <BarChart3 className="w-4 h-4 text-white" />
                           </div>
                           <div>

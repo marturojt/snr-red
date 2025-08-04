@@ -2,7 +2,7 @@
 
 **Versión:** 1.8  
 **Fecha de actualización:** 8 de Enero, 2025  
-**Estado actual:** Entorno de desarrollo local completamente funcional en macOS, UX/UI Enhancement implementado, sistema comercial moderno completado, i18n (EN/ES) implementado, Dark Mode por defecto implementado, VCard UI completamente internacionalizada
+**Estado actual:** 5. **Entorno de Desarrollo Local - macOS Setup Completo**:, UX/UI Enhancement implementado, sistema comercial moderno completado, i18n (EN/ES) implementado, Dark Mode por defecto implementado, VCard UI completamente internacionalizada
 
 ## 🎯 Último Update - Dark Mode por Defecto y VCard I18n (Enero 2025)
 - **Dark Mode por Defecto**: ✅ Implementado con tema oscuro como predeterminado
@@ -13,6 +13,7 @@
 - **Validaciones I18n**: ✅ Todos los mensajes de error y validaciones traducidos
 - **Build Estricto**: ✅ Compilación exitosa sin errores de tipos ni ESLint
 - **Tipos Centralizados**: ✅ Uso exclusivo de @url-shortener/types
+- **Deployment Funcional**: ✅ Script `deploy-to-server.sh` probado y exitoso
 - **Documentación**: ✅ Actualizada con nuevas implementaciones
 
 ---
@@ -165,9 +166,12 @@ snr-red/
 
 ### 🚀 Despliegue
 - [x] **Scripts de deployment** automatizados
+- [x] **Script deploy-to-server.sh** probado y funcional
 - [x] **Configuración PM2** para producción
 - [x] **Gestión de entornos** (.env para dev/prod)
 - [x] **Configuración Apache** para proxy reverso
+- [x] **MongoDB sin autenticación** configurado para producción
+- [x] **Health checks** post-deployment implementados
 
 ---
 
@@ -197,7 +201,13 @@ snr-red/
    - **NUEVO:** Optimización de componentes Image de Next.js
    - **NUEVO:** Build exitoso sin errores de compilación
 
-4. **Entorno de Desarrollo Local - macOS Setup Completo**:
+4. **Deployment Script Funcional y Probado**:
+   - **NUEVO:** Script `deploy-to-server.sh` exitosamente probado en servidor
+   - **NUEVO:** Comando confirmado: `./scripts/deploy-to-server.sh freejolitos`
+   - **NUEVO:** Deployment automático con PM2 funcionando
+   - **NUEVO:** Configuración de MongoDB sin autenticación para producción
+   - **NUEVO:** Gestión automática de permisos y directorios
+   - **NUEVO:** Health checks post-deployment exitosos
    - **NUEVO:** Configuración completa del entorno de desarrollo en macOS
    - **NUEVO:** Instalación y configuración de MongoDB Community Edition vía Homebrew
    - **NUEVO:** Compilación exitosa de tipos compartidos (@url-shortener/types)

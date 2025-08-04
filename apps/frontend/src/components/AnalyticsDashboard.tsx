@@ -171,12 +171,12 @@ export default function AnalyticsDashboard({ urlId }: AnalyticsDashboardProps) {
             </div>
 
             {/* Countries */}
-            <div className="text-center p-4 bg-purple-50 rounded-lg">
-              <Globe className="w-8 h-8 mx-auto mb-2 text-purple-600" />
-              <div className="text-2xl font-bold text-purple-700">
+            <div className="text-center p-4 bg-purple-50 dark:bg-purple-950/30 rounded-lg">
+              <Globe className="w-8 h-8 mx-auto mb-2 text-purple-600 dark:text-purple-400" />
+              <div className="text-2xl font-bold text-purple-700 dark:text-purple-300">
                 {stats.clicksByCountry.length}
               </div>
-              <div className="text-sm text-purple-600">Countries</div>
+              <div className="text-sm text-purple-600 dark:text-purple-400">Countries</div>
             </div>
 
             {/* Devices */}

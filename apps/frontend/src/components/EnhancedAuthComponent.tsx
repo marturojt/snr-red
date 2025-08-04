@@ -132,11 +132,11 @@ export default function EnhancedAuthComponent({ user, onAuthChange }: AuthCompon
       <div className="space-y-6">
         {/* User Profile Card */}
         <Card className="relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-purple-50"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-950/20 dark:to-purple-950/20"></div>
           <CardHeader className="relative">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center">
+                <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-purple-600 dark:from-blue-500 dark:to-purple-500 rounded-full flex items-center justify-center">
                   <User className="w-6 h-6 text-white" />
                 </div>
                 <div>
@@ -146,7 +146,7 @@ export default function EnhancedAuthComponent({ user, onAuthChange }: AuthCompon
               </div>
               <Badge 
                 variant={user.plan === 'premium' ? 'default' : 'secondary'}
-                className={user.plan === 'premium' ? 'bg-gradient-to-r from-purple-600 to-pink-600' : ''}
+                className={user.plan === 'premium' ? 'bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-500 dark:to-pink-500' : ''}
               >
                 {user.plan === 'premium' ? (
                   <div className="flex items-center gap-1">
@@ -204,23 +204,23 @@ export default function EnhancedAuthComponent({ user, onAuthChange }: AuthCompon
                 ) : (
                   <>
                     <div className="flex items-center gap-2 text-sm">
-                      <CheckCircle className="w-4 h-4 text-purple-500" />
+                      <CheckCircle className="w-4 h-4 text-purple-500 dark:text-purple-400" />
                       <span>Unlimited URL shortening</span>
                     </div>
                     <div className="flex items-center gap-2 text-sm">
-                      <CheckCircle className="w-4 h-4 text-purple-500" />
+                      <CheckCircle className="w-4 h-4 text-purple-500 dark:text-purple-400" />
                       <span>Advanced analytics & insights</span>
                     </div>
                     <div className="flex items-center gap-2 text-sm">
-                      <CheckCircle className="w-4 h-4 text-purple-500" />
+                      <CheckCircle className="w-4 h-4 text-purple-500 dark:text-purple-400" />
                       <span>Permanent URL storage</span>
                     </div>
                     <div className="flex items-center gap-2 text-sm">
-                      <CheckCircle className="w-4 h-4 text-purple-500" />
+                      <CheckCircle className="w-4 h-4 text-purple-500 dark:text-purple-400" />
                       <span>Custom domains (coming soon)</span>
                     </div>
                     <div className="flex items-center gap-2 text-sm">
-                      <CheckCircle className="w-4 h-4 text-purple-500" />
+                      <CheckCircle className="w-4 h-4 text-purple-500 dark:text-purple-400" />
                       <span>Priority support</span>
                     </div>
                   </>
@@ -234,7 +234,7 @@ export default function EnhancedAuthComponent({ user, onAuthChange }: AuthCompon
                 <Button
                   onClick={handleUpgradePlan}
                   disabled={isLoading}
-                  className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 flex items-center gap-2"
+                  className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 dark:from-purple-500 dark:to-pink-500 dark:hover:from-purple-600 dark:hover:to-pink-600 flex items-center gap-2"
                 >
                   <Crown className="w-4 h-4" />
                   Upgrade to Premium
@@ -274,7 +274,7 @@ export default function EnhancedAuthComponent({ user, onAuthChange }: AuthCompon
 
         {/* Premium Upgrade CTA for Free Users */}
         {user.plan === 'free' && (
-          <Card className="bg-gradient-to-r from-purple-600 to-pink-600 text-white">
+          <Card className="bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-500 dark:to-pink-500 text-white">
             <CardContent className="p-6">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 bg-background/20 rounded-full flex items-center justify-center">
@@ -282,7 +282,7 @@ export default function EnhancedAuthComponent({ user, onAuthChange }: AuthCompon
                 </div>
                 <div className="flex-1">
                   <h3 className="font-semibold text-lg mb-1">Unlock Premium Features</h3>
-                  <p className="text-purple-100 text-sm">
+                  <p className="text-purple-100 dark:text-purple-200 text-sm">
                     Get unlimited URLs, advanced analytics, and priority support for just $9.99/month
                   </p>
                 </div>
@@ -290,7 +290,7 @@ export default function EnhancedAuthComponent({ user, onAuthChange }: AuthCompon
                   onClick={handleUpgradePlan}
                   disabled={isLoading}
                   variant="secondary"
-                  className="bg-background text-purple-600 hover:bg-muted"
+                  className="bg-background text-purple-600 dark:text-purple-500 hover:bg-muted"
                 >
                   <Zap className="w-4 h-4 mr-2" />
                   Upgrade Now
@@ -306,7 +306,7 @@ export default function EnhancedAuthComponent({ user, onAuthChange }: AuthCompon
   // User is not logged in - show enhanced login/register form
   return (
     <Card className="relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-purple-50"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-950/20 dark:to-purple-950/20"></div>
       <CardHeader className="relative">
         <CardTitle className="text-center">Join SNR.red</CardTitle>
         <CardDescription className="text-center">
@@ -403,7 +403,7 @@ export default function EnhancedAuthComponent({ user, onAuthChange }: AuthCompon
               <Button 
                 type="submit" 
                 disabled={isLoading}
-                className="w-full h-12 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+                className="w-full h-12 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 dark:from-purple-500 dark:to-pink-500 dark:hover:from-purple-600 dark:hover:to-pink-600"
               >
                 {isLoading ? 'Creating Account...' : 'Create Account'}
               </Button>

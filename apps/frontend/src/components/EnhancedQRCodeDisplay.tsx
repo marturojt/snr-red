@@ -121,10 +121,10 @@ export default function EnhancedQRCodeDisplay({ url, qrCodeDataUrl }: Omit<QRCod
 
   return (
     <Card className="relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-50 to-pink-50"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-purple-50/50 to-pink-50/50 dark:from-purple-950/20 dark:to-pink-950/20"></div>
       <CardHeader className="relative">
         <CardTitle className="flex items-center gap-2">
-          <QrCode className="w-5 h-5 text-purple-600" />
+          <QrCode className="w-5 h-5 text-purple-600 dark:text-purple-400" />
           {t('qrDisplay.title')}
           <Badge variant="secondary" className="ml-auto">
             <Sparkles className="w-3 h-3 mr-1" />
@@ -137,21 +137,21 @@ export default function EnhancedQRCodeDisplay({ url, qrCodeDataUrl }: Omit<QRCod
       </CardHeader>
       <CardContent className="relative space-y-6">
         {/* URL Display */}
-        <div className="bg-background/70 border border-purple-200 rounded-lg p-4">
+        <div className="bg-background/70 border border-purple-200 dark:border-purple-800 rounded-lg p-4">
           <div className="flex items-center gap-2 mb-2">
             <Badge variant="outline" className="text-xs">
               {t('qrDisplay.targetUrl')}
             </Badge>
           </div>
           <div className="flex items-center gap-2">
-            <code className="flex-1 bg-muted px-3 py-2 rounded text-sm font-mono text-purple-700 truncate">
+            <code className="flex-1 bg-muted px-3 py-2 rounded text-sm font-mono text-purple-700 dark:text-purple-300 truncate">
               {url}
             </code>
             <Button
               variant="ghost"
               size="sm"
               onClick={() => window.open(url, '_blank')}
-              className="hover:bg-purple-50 hover:text-purple-600"
+              className="hover:bg-purple-50 hover:text-purple-600 dark:hover:bg-purple-950/30 dark:hover:text-purple-400"
             >
               <ExternalLink className="w-4 h-4" />
             </Button>
@@ -177,7 +177,7 @@ export default function EnhancedQRCodeDisplay({ url, qrCodeDataUrl }: Omit<QRCod
             <div className="flex justify-center gap-2 flex-wrap">
               <Button
                 onClick={downloadQrCode}
-                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 flex items-center gap-2"
+                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 dark:from-purple-500 dark:to-pink-500 dark:hover:from-purple-600 dark:hover:to-pink-600 flex items-center gap-2"
               >
                 <Download className="w-4 h-4" />
                 {t('qrDisplay.download')}
@@ -186,7 +186,7 @@ export default function EnhancedQRCodeDisplay({ url, qrCodeDataUrl }: Omit<QRCod
               <Button
                 onClick={handleCopy}
                 variant="outline"
-                className="hover:bg-purple-50 hover:text-purple-600 flex items-center gap-2"
+                className="hover:bg-purple-50 hover:text-purple-600 dark:hover:bg-purple-950/30 dark:hover:text-purple-400 flex items-center gap-2"
               >
                 {copied ? (
                   <>
@@ -204,7 +204,7 @@ export default function EnhancedQRCodeDisplay({ url, qrCodeDataUrl }: Omit<QRCod
               <Button
                 onClick={shareQrCode}
                 variant="outline"
-                className="hover:bg-purple-50 hover:text-purple-600 flex items-center gap-2"
+                className="hover:bg-purple-50 hover:text-purple-600 dark:hover:bg-purple-950/30 dark:hover:text-purple-400 flex items-center gap-2"
               >
                 <Share2 className="w-4 h-4" />
                 {t('qrDisplay.share')}
@@ -214,7 +214,7 @@ export default function EnhancedQRCodeDisplay({ url, qrCodeDataUrl }: Omit<QRCod
                 onClick={generateQrCode}
                 disabled={isGenerating}
                 variant="ghost"
-                className="hover:bg-purple-50 hover:text-purple-600 flex items-center gap-2"
+                className="hover:bg-purple-50 hover:text-purple-600 dark:hover:bg-purple-950/30 dark:hover:text-purple-400 flex items-center gap-2"
               >
                 <RefreshCw className={`w-4 h-4 ${isGenerating ? 'animate-spin' : ''}`} />
                 {t('qrDisplay.regenerate')}
@@ -225,7 +225,7 @@ export default function EnhancedQRCodeDisplay({ url, qrCodeDataUrl }: Omit<QRCod
           <div className="text-center py-8 space-y-4">
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full blur-xl opacity-20"></div>
-              <QrCode className="relative w-16 h-16 text-purple-600 mx-auto mb-4" />
+              <QrCode className="relative w-16 h-16 text-purple-600 dark:text-purple-400 mx-auto mb-4" />
             </div>
             <div>
               <h3 className="text-lg font-semibold text-foreground mb-2">
@@ -237,7 +237,7 @@ export default function EnhancedQRCodeDisplay({ url, qrCodeDataUrl }: Omit<QRCod
               <Button
                 onClick={generateQrCode}
                 disabled={isGenerating}
-                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 flex items-center gap-2"
+                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 dark:from-purple-500 dark:to-pink-500 dark:hover:from-purple-600 dark:hover:to-pink-600 flex items-center gap-2"
               >
                 <Zap className="w-4 h-4" />
                 {isGenerating ? t('qrDisplay.generating') : t('qrDisplay.generateButton')}
@@ -247,12 +247,12 @@ export default function EnhancedQRCodeDisplay({ url, qrCodeDataUrl }: Omit<QRCod
         )}
 
         {/* QR Code Info */}
-        <div className="bg-background/70 border border-purple-200 rounded-lg p-4">
-          <h4 className="font-semibold text-purple-900 mb-2 flex items-center gap-2">
+        <div className="bg-background/70 border border-purple-200 dark:border-purple-800 rounded-lg p-4">
+          <h4 className="font-semibold text-purple-900 dark:text-purple-100 mb-2 flex items-center gap-2">
             <Sparkles className="w-4 h-4" />
             {t('qrDisplay.benefitsTitle')}
           </h4>
-          <ul className="text-sm text-purple-700 space-y-1">
+          <ul className="text-sm text-purple-700 dark:text-purple-300 space-y-1">
             <li>• {t('qrDisplay.benefit1')}</li>
             <li>• {t('qrDisplay.benefit2')}</li>
             <li>• {t('qrDisplay.benefit3')}</li>

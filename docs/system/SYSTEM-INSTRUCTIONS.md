@@ -1,33 +1,43 @@
 # SNR.red - System Instructions para AI Assistant
 
-**Versión:** 2.2  
-**Fecha:** 7 de Enero, 2025  
+**Versión:** 2.3  
+**Fecha:** 8 de Enero, 2025  
 **Propósito:** Guías para mantener documentación actualizada y seguimiento consistente del proyecto
 
 ---
 
-## 🌙 ÚLTIMO UPDATE - Dark Mode & Header Refactor (Enero 2025)
+## 🌙 ÚLTIMO UPDATE - Dark Mode por Defecto & VCard I18n (Enero 2025)
 
-### ✅ Completado - Dark Mode System
-- **ThemeProvider Context:** Implementado en `/src/context/ThemeContext.tsx`
-- **Theme Toggle Component:** Creado en `/src/components/ThemeToggle.tsx`
-- **Traducciones:** Agregadas en `LanguageContext.tsx` (EN/ES)
-- **CSS Variables:** Implementadas en `globals.css`
-- **Persistencia:** localStorage para preferencias de tema
-- **Compatibilidad:** shadcn/ui dark mode completo
+### ✅ Completado - Dark Mode por Defecto
+- **ThemeProvider Context:** Mejorado con tema oscuro por defecto
+- **Script Inline:** Agregado en layout.tsx para evitar flash inicial
+- **Inicialización Robusta:** Sin useEffects redundantes
+- **Resolución de Tema:** Optimizada para mejor rendimiento
+- **Documentación:** DARK-THEME-DEFAULT-HOTFIX.md creada
 
-### ✅ Completado - Responsive Header
-- **ResponsiveHeader Component:** Creado en `/src/components/ResponsiveHeader.tsx`
-- **Mobile Menu:** Hamburger menu con animaciones
-- **Logo Clickeable:** Botón funcional para reset/navegación
-- **Sin Overlapping:** Problemas de responsive resueltos
-- **Integración:** Reemplazado header anterior en ModernLandingPage
+### ✅ Completado - VCard Internacionalización Completa
+- **VCardGenerator:** Completamente traducido (EN/ES)
+- **50+ Traducciones:** Agregadas en LanguageContext.tsx
+- **Validaciones I18n:** Todos los mensajes de error traducidos
+- **Placeholders I18n:** Todos los campos del formulario traducidos
+- **Toasts I18n:** Todas las notificaciones traducidas
+- **Páginas vCard:** Visualización traducida
+- **Documentación:** VCARD-I18N-IMPLEMENTATION.md creada
+
+### ✅ Completado - Build Estricto y Limpieza
+- **Tipos Centralizados:** Uso exclusivo de @url-shortener/types
+- **Interfaces Duplicadas:** Eliminadas de página de vCard
+- **Errores ESLint:** Corregidos (Image components, tipos)
+- **Build Exitoso:** Compilación sin errores
+- **Código Limpio:** Refactorización completa
 
 ### 📊 Estado Actual
-- **Frontend:** 100% funcional con dark mode y header responsivo
+- **Frontend:** 100% funcional con dark mode por defecto y VCard I18n
 - **Backend:** 100% funcional
-- **Documentación:** Actualizada con nuevas features
-- **QA:** Completado - build exitoso, funcionalidad verificada
+- **Dark Mode:** ✅ COMPLETAMENTE FUNCIONAL - Tema oscuro por defecto
+- **VCard I18n:** ✅ COMPLETAMENTE TRADUCIDO - 50+ claves EN/ES
+- **Documentación:** Actualizada con nuevas implementaciones
+- **QA:** Completado - build estricto exitoso
 
 ---
 
@@ -500,7 +510,7 @@ USER-STORIES.md:
 **Estado del documento:** ✅ Activo  
 **Aplicabilidad:** TODAS las sesiones de desarrollo  
 **Revisión:** Al agregar nuevos tipos de cambios  
-**Versión:** 2.2-dark-mode-header-refactor-completo
+**Versión:** 2.3-dark-mode-default-vcard-i18n-completo
 
 ---
 

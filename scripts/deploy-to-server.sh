@@ -18,38 +18,7 @@
 # =============================================================================
 
 # Script para deployar backend a servidor Linux con PM2
-# Usage: ./scripts/deploy-to-serve    # Restaurar .env si había backup
-    if [ -f "/tmp/snr-red-backend-env-backup" ]; then
-        sudo cp /tmp/snr-red-backend-env-backup apps/backend/.env
-echo "📋 Comandos útiles para el servidor:"
-if [[ "$SERVER_HOST" =~ ^[a-zA-Z] ]] && ! [[ "$SERVER_HOST" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-    echo "   ssh $SERVER_HOST 'pm2 status'"
-    echo "   ssh $SERVER_HOST 'pm2 logs'"
-    echo "   ssh $SERVER_HOST 'pm2 restart snr-red-api'"
-    echo "   ssh $SERVER_HOST 'pm2 restart snr-red-frontend'"
-    echo "   ssh $SERVER_HOST 'pm2 monit'"
-else
-    echo "   ssh $SSH_OPTIONS $SSH_HOST 'pm2 status'"
-    echo "   ssh $SSH_OPTIONS $SSH_HOST 'pm2 logs'"
-    echo "   ssh $SSH_OPTIONS $SSH_HOST 'pm2 restart snr-red-api'"
-    echo "   ssh $SSH_OPTIONS $SSH_HOST 'pm2 restart snr-red-frontend'"
-    echo "   ssh $SSH_OPTIONS $SSH_HOST 'pm2 monit'"
-fi
-echo ""
-echo "🌐 URLs de prueba:"
-echo "   Frontend: http://$HEALTH_CHECK_HOST:3000"
-echo "   Backend: http://$HEALTH_CHECK_HOST:3001/health"
-echo "   API: http://$HEALTH_CHECK_HOST:3001/api/urls/shorten"/tmp/snr-red-backend-env-backup
-        echo "🔒 .env backend restaurado"
-    fi
-    
-    if [ -f "/tmp/snr-red-frontend-env-backup" ]; then
-        sudo cp /tmp/snr-red-frontend-env-backup apps/frontend/.env.local
-        sudo rm /tmp/snr-red-frontend-env-backup
-        echo "🔒 .env frontend restaurado"
-    fi
-
-server-ip-or-host] [user] [port] [git-repo-url]
+# Usage: ./scripts/deploy-to-server.sh [server-ip-or-host] [user] [port] [git-repo-url]
 
 set -e
 
@@ -173,7 +142,10 @@ fi
 echo "📦 Instalando dependencias..."
 # Instalar dependencias del monorepo
 if [ -f "package-lock.json" ]; then
-    npm ci
+    if ! npm ci; then
+        echo "npm ci falló, intentando con npm install..."
+        npm install
+    fi
 else
     npm install
 fi

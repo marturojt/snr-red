@@ -92,8 +92,8 @@ export default function AdminAnalytics() {
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
-          <h2 className="text-lg font-semibold text-gray-900 mb-2">Error Loading Analytics</h2>
-          <p className="text-gray-600 mb-4">{error}</p>
+          <h2 className="text-lg font-semibold text-foreground mb-2">Error Loading Analytics</h2>
+          <p className="text-muted-foreground mb-4">{error}</p>
           <Button onClick={handleRefresh}>
             <RefreshCw className="h-4 w-4 mr-2" />
             Try Again
@@ -122,8 +122,8 @@ export default function AdminAnalytics() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Advanced Analytics</h1>
-          <p className="text-gray-600">Detailed insights and performance metrics</p>
+          <h1 className="text-2xl font-bold text-foreground">Advanced Analytics</h1>
+          <p className="text-muted-foreground">Detailed insights and performance metrics</p>
         </div>
         <Button onClick={handleRefresh} disabled={refreshing}>
           <RefreshCw className={`h-4 w-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
@@ -283,16 +283,16 @@ export default function AdminAnalytics() {
           <div className="space-y-4">
             {analytics.topUrls.length > 0 ? (
               analytics.topUrls.map((url, index) => (
-                <div key={url._id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                <div key={url._id} className="flex items-center justify-between p-4 bg-muted rounded-lg">
                   <div className="flex items-center space-x-3">
                     <div className="flex-shrink-0 w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
                       <span className="text-sm font-bold text-blue-800">#{index + 1}</span>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="text-sm font-medium text-gray-900 truncate">
+                      <div className="text-sm font-medium text-foreground truncate">
                         {url.originalUrl}
                       </div>
-                      <div className="text-xs text-gray-500">
+                      <div className="text-xs text-muted-foreground">
                         /{url.shortCode}
                         {url.registeredUserId && (
                           <span className="ml-2">• {url.registeredUserId.name}</span>
@@ -308,7 +308,7 @@ export default function AdminAnalytics() {
                 </div>
               ))
             ) : (
-              <div className="text-center py-8 text-gray-500">
+              <div className="text-center py-8 text-muted-foreground">
                 No URLs with clicks yet
               </div>
             )}
@@ -327,22 +327,22 @@ export default function AdminAnalytics() {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="text-center">
-              <div className="text-2xl font-bold text-green-600">
+              <div className="text-2xl font-bold text-green-600 dark:text-green-400">
                 {((analytics.activeUrls / analytics.totalUrls) * 100).toFixed(1)}%
               </div>
-              <div className="text-sm text-gray-600">URL Active Rate</div>
+              <div className="text-sm text-muted-foreground">URL Active Rate</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-blue-600">
+              <div className="text-2xl font-bold text-primary">
                 {((analytics.activeUsers / analytics.totalUsers) * 100).toFixed(1)}%
               </div>
-              <div className="text-sm text-gray-600">User Active Rate</div>
+              <div className="text-sm text-muted-foreground">User Active Rate</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-purple-600">
                 {analytics.totalUrls > 0 ? (analytics.totalClicks / analytics.totalUrls).toFixed(1) : 0}
               </div>
-              <div className="text-sm text-gray-600">Avg Clicks per URL</div>
+              <div className="text-sm text-muted-foreground">Avg Clicks per URL</div>
             </div>
           </div>
         </CardContent>

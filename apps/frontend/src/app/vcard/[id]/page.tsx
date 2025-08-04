@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
+import { VCardData } from '@url-shortener/types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -25,46 +26,6 @@ import { vcardApi } from '@/lib/api';
 import Link from 'next/link';
 import Image from 'next/image';
 import { toast } from 'sonner';
-
-// vCard interfaces (temporary until types package is updated)
-interface VCardData {
-  id: string;
-  userId?: string;
-  personalInfo: {
-    firstName: string;
-    lastName: string;
-    company?: string;
-    title?: string;
-    photo?: string;
-  };
-  contact: {
-    phone?: string;
-    email?: string;
-    website?: string;
-  };
-  social: {
-    linkedin?: string;
-    whatsapp?: string;
-    instagram?: string;
-    twitter?: string;
-  };
-  address?: {
-    street?: string;
-    city?: string;
-    state?: string;
-    country?: string;
-    zipCode?: string;
-  };
-  theme: 'professional' | 'creative' | 'minimal';
-  qrCode: string;
-  shortUrl: string;
-  shortCode: string;
-  views: number;
-  saves: number;
-  createdAt: Date;
-  updatedAt: Date;
-  qrCodeUrl?: string;
-}
 
 export default function VCardPage() {
   const { id } = useParams();
@@ -190,9 +151,11 @@ export default function VCardPage() {
           <div className="text-center mb-8">
             <div className="relative inline-block mb-6">
               {vcard.personalInfo.photo ? (
-                <img
+                <Image
                   src={vcard.personalInfo.photo}
                   alt={`${vcard.personalInfo.firstName} ${vcard.personalInfo.lastName}`}
+                  width={128}
+                  height={128}
                   className="w-32 h-32 rounded-full object-cover shadow-xl border-4 border-white"
                 />
               ) : (
@@ -320,7 +283,7 @@ export default function VCardPage() {
           </div>
 
           {/* QR Code */}
-          {vcard.qrCodeUrl && (
+          {vcard.qrCode && (
             <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-md">
               <CardHeader>
                 <CardTitle className="flex items-center justify-center">
@@ -331,7 +294,7 @@ export default function VCardPage() {
               <CardContent className="text-center">
                 <div className="inline-block p-4 bg-white rounded-lg shadow-md">
                   <Image 
-                    src={vcard.qrCodeUrl} 
+                    src={vcard.qrCode} 
                     alt="vCard QR Code" 
                     width={192}
                     height={192}

@@ -1,8 +1,7 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -17,10 +16,24 @@ import {
   Copy,
   ArrowRight,
   Check,
-  Linkedin
+  Linkedin,
+  AlertCircle,
+  Mail,
+  Building,
+  Briefcase,
+  Instagram,
+  Twitter,
+  MessageCircle,
+  MapPin,
+  Palette
 } from 'lucide-react';
 import { vcardApi } from '@/lib/api';
 import { copyToClipboard } from '@/lib/utils';
+import { ProgressStepper } from '@/components/ProgressStepper';
+import { EnhancedInput } from '@/components/EnhancedInput';
+import { PhoneInput } from '@/components/PhoneInput';
+import { countries, defaultCountry, type Country } from '@/lib/countries';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface VCardFormData {
   personalInfo: {
@@ -34,6 +47,7 @@ interface VCardFormData {
     phone: string;
     email: string;
     website: string;
+    phoneCountry: Country;
   };
   social: {
     linkedin: string;
@@ -51,6 +65,40 @@ interface VCardFormData {
   theme: 'professional' | 'creative' | 'minimal';
 }
 
+interface ValidationState {
+  isValid: boolean;
+  isValidating: boolean;
+  message?: string;
+}
+
+interface VCardErrors {
+  personalInfo: {
+    firstName: ValidationState;
+    lastName: ValidationState;
+    company: ValidationState;
+    title: ValidationState;
+    photo: ValidationState;
+  };
+  contact: {
+    phone: ValidationState;
+    email: ValidationState;
+    website: ValidationState;
+  };
+  social: {
+    linkedin: ValidationState;
+    whatsapp: ValidationState;
+    instagram: ValidationState;
+    twitter: ValidationState;
+  };
+  address: {
+    street: ValidationState;
+    city: ValidationState;
+    state: ValidationState;
+    country: ValidationState;
+    zipCode: ValidationState;
+  };
+}
+
 interface VCardResult {
   id: string;
   shortUrl: string;
@@ -63,9 +111,45 @@ interface VCardResult {
 }
 
 export default function VCardGenerator() {
+  const { t } = useLanguage();
   const [currentStep, setCurrentStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [vcard, setVCard] = useState<VCardResult | null>(null);
+  
+  const createValidationState = (isValid = true, message = ''): ValidationState => ({
+    isValid,
+    isValidating: false,
+    message
+  });
+
+  const [errors, setErrors] = useState<VCardErrors>({
+    personalInfo: { 
+      firstName: createValidationState(), 
+      lastName: createValidationState(), 
+      company: createValidationState(), 
+      title: createValidationState(), 
+      photo: createValidationState() 
+    },
+    contact: { 
+      phone: createValidationState(), 
+      email: createValidationState(), 
+      website: createValidationState() 
+    },
+    social: { 
+      linkedin: createValidationState(), 
+      whatsapp: createValidationState(), 
+      instagram: createValidationState(), 
+      twitter: createValidationState() 
+    },
+    address: { 
+      street: createValidationState(), 
+      city: createValidationState(), 
+      state: createValidationState(), 
+      country: createValidationState(), 
+      zipCode: createValidationState() 
+    }
+  });
+
   const [formData, setFormData] = useState<VCardFormData>({
     personalInfo: {
       firstName: '',
@@ -77,7 +161,8 @@ export default function VCardGenerator() {
     contact: {
       phone: '',
       email: '',
-      website: ''
+      website: '',
+      phoneCountry: defaultCountry
     },
     social: {
       linkedin: '',
@@ -95,80 +180,292 @@ export default function VCardGenerator() {
     theme: 'professional'
   });
 
-  const updatePersonalInfo = useCallback((field: keyof VCardFormData['personalInfo'], value: string) => {
+  // Enhanced validation functions with ValidationState
+  const validateEmail = useCallback((email: string): ValidationState => {
+    if (!email) return createValidationState(true, '');
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const isValid = emailRegex.test(email);
+    return createValidationState(isValid, isValid ? '' : t('vcard.validation.emailInvalid'));
+  }, [t]);
+
+  const validatePhone = useCallback((phone: string, country: Country): ValidationState => {
+    if (!phone) return createValidationState(true, '');
+    const cleaned = phone.replace(/[\s\-\(\)]/g, '');
+    const phoneRegex = /^[\+]?[1-9][\d]{7,15}$/;
+    const isValid = phoneRegex.test(cleaned);
+    return createValidationState(isValid, isValid ? '' : t('vcard.validation.phoneInvalid'));
+  }, [t]);
+
+  const validateWebsite = useCallback((website: string): ValidationState => {
+    if (!website) return createValidationState(true, '');
+    const urlRegex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
+    const isValid = urlRegex.test(website);
+    return createValidationState(isValid, isValid ? '' : t('vcard.validation.websiteInvalid'));
+  }, [t]);
+
+  const validateLinkedIn = useCallback((linkedin: string): ValidationState => {
+    if (!linkedin) return createValidationState(true, '');
+    const linkedinRegex = /^(https?:\/\/)?(www\.)?(linkedin\.com\/(in|pub|public-profile)\/[a-zA-Z0-9-]+)\/?$/;
+    const isValid = linkedinRegex.test(linkedin);
+    return createValidationState(isValid, isValid ? '' : t('vcard.validation.linkedinInvalid'));
+  }, [t]);
+
+  const validateInstagram = useCallback((instagram: string): ValidationState => {
+    if (!instagram) return createValidationState(true, '');
+    const instagramRegex = /^(https?:\/\/)?(www\.)?(instagram\.com\/[a-zA-Z0-9_.]+)\/?$/;
+    const isValid = instagramRegex.test(instagram);
+    return createValidationState(isValid, isValid ? '' : t('vcard.validation.instagramInvalid'));
+  }, [t]);
+
+  const validateTwitter = useCallback((twitter: string): ValidationState => {
+    if (!twitter) return createValidationState(true, '');
+    const twitterRegex = /^(https?:\/\/)?(www\.)?(twitter\.com\/[a-zA-Z0-9_]+|x\.com\/[a-zA-Z0-9_]+)\/?$/;
+    const isValid = twitterRegex.test(twitter);
+    return createValidationState(isValid, isValid ? '' : t('vcard.validation.twitterInvalid'));
+  }, [t]);
+
+  const validateWhatsApp = useCallback((whatsapp: string): ValidationState => {
+    if (!whatsapp) return createValidationState(true, '');
+    const cleanWhatsApp = whatsapp.replace(/[\s\-\(\)]/g, '');
+    const whatsappRegex = /^[\+]?[1-9][\d]{7,15}$/;
+    const isValid = whatsappRegex.test(cleanWhatsApp);
+    return createValidationState(isValid, isValid ? '' : t('vcard.validation.whatsappInvalid'));
+  }, [t]);
+
+  const validateRequired = useCallback((value: string, fieldName: string, minLength = 2): ValidationState => {
+    if (!value.trim()) {
+      return createValidationState(false, `${fieldName} ${t('vcard.validation.required')}`);
+    }
+    if (value.length < minLength) {
+      return createValidationState(false, `${fieldName} must be at least ${minLength} characters`);
+    }
+    return createValidationState(true, '');
+  }, [t]);
+
+  const validateOptional = useCallback((value: string, fieldName: string, minLength = 2): ValidationState => {
+    if (!value.trim()) return createValidationState(true, '');
+    if (value.length < minLength) {
+      return createValidationState(false, `${fieldName} must be at least ${minLength} characters`);
+    }
+    return createValidationState(true, '');
+  }, []);
+
+  // Auto-format website to include https://
+  const formatWebsite = useCallback((website: string): string => {
+    if (!website) return '';
+    if (website.startsWith('http://') || website.startsWith('https://')) {
+      return website;
+    }
+    return `https://${website}`;
+  }, []);
+
+  // Real-time validation with debouncing
+  const validateField = useCallback((section: keyof VCardErrors, field: string, value: string) => {
+    let validation: ValidationState;
+    
+    switch (section) {
+      case 'personalInfo':
+        if (field === 'firstName') {
+          validation = validateRequired(value, t('vcard.firstName'));
+        } else if (field === 'lastName') {
+          validation = validateRequired(value, t('vcard.lastName'));
+        } else if (field === 'company') {
+          validation = validateOptional(value, t('vcard.company'));
+        } else {
+          validation = validateOptional(value, t('vcard.jobTitle'));
+        }
+        break;
+      case 'contact':
+        if (field === 'email') {
+          validation = validateEmail(value);
+        } else if (field === 'phone') {
+          validation = validatePhone(value, formData.contact.phoneCountry);
+        } else if (field === 'website') {
+          validation = validateWebsite(value);
+        } else {
+          validation = createValidationState(true, '');
+        }
+        break;
+      case 'social':
+        if (field === 'linkedin') {
+          validation = validateLinkedIn(value);
+        } else if (field === 'instagram') {
+          validation = validateInstagram(value);
+        } else if (field === 'twitter') {
+          validation = validateTwitter(value);
+        } else if (field === 'whatsapp') {
+          validation = validateWhatsApp(value);
+        } else {
+          validation = createValidationState(true, '');
+        }
+        break;
+      default:
+        validation = createValidationState(true, '');
+    }
+
+    setErrors(prev => ({
+      ...prev,
+      [section]: {
+        ...prev[section],
+        [field]: validation
+      }
+    }));
+  }, [formData.contact.phoneCountry, validateRequired, validateOptional, validateEmail, validatePhone, validateWebsite, validateLinkedIn, validateInstagram, validateTwitter, validateWhatsApp, t]);
+
+  // Update form data handlers
+  const updatePersonalInfo = useCallback((field: string, value: string) => {
     setFormData(prev => ({
       ...prev,
-      personalInfo: {
-        ...prev.personalInfo,
-        [field]: value
-      }
+      personalInfo: { ...prev.personalInfo, [field]: value }
+    }));
+    validateField('personalInfo', field, value);
+  }, [validateField]);
+
+  const updateContact = useCallback((field: string, value: string) => {
+    const finalValue = field === 'website' ? formatWebsite(value) : value;
+    setFormData(prev => ({
+      ...prev,
+      contact: { ...prev.contact, [field]: finalValue }
+    }));
+    validateField('contact', field, finalValue);
+  }, [formatWebsite, validateField]);
+
+  const updateSocial = useCallback((field: string, value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      social: { ...prev.social, [field]: value }
+    }));
+    validateField('social', field, value);
+  }, [validateField]);
+
+  const updateAddress = useCallback((field: string, value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      address: { ...prev.address, [field]: value }
     }));
   }, []);
 
-  const updateContact = useCallback((field: keyof VCardFormData['contact'], value: string) => {
+  const updatePhoneCountry = useCallback((country: Country) => {
     setFormData(prev => ({
       ...prev,
-      contact: {
-        ...prev.contact,
-        [field]: value
-      }
+      contact: { ...prev.contact, phoneCountry: country }
     }));
+    // Re-validate phone number with new country
+    if (formData.contact.phone) {
+      validateField('contact', 'phone', formData.contact.phone);
+    }
+  }, [formData.contact.phone, validateField]);
+
+  // Step validation
+  const validateStep = useCallback((step: number): boolean => {
+    let isValid = true;
+
+    if (step === 1) {
+      const firstNameValidation = validateRequired(formData.personalInfo.firstName, t('vcard.firstName'));
+      const lastNameValidation = validateRequired(formData.personalInfo.lastName, t('vcard.lastName'));
+      const companyValidation = validateOptional(formData.personalInfo.company, t('vcard.company'));
+      const titleValidation = validateOptional(formData.personalInfo.title, t('vcard.jobTitle'));
+
+      setErrors(prev => ({
+        ...prev,
+        personalInfo: {
+          firstName: firstNameValidation,
+          lastName: lastNameValidation,
+          company: companyValidation,
+          title: titleValidation,
+          photo: createValidationState(true, '')
+        }
+      }));
+
+      isValid = firstNameValidation.isValid && lastNameValidation.isValid && 
+                companyValidation.isValid && titleValidation.isValid;
+    }
+
+    if (step === 2) {
+      const emailValidation = validateEmail(formData.contact.email);
+      const phoneValidation = validatePhone(formData.contact.phone, formData.contact.phoneCountry);
+      const websiteValidation = validateWebsite(formData.contact.website);
+
+      setErrors(prev => ({
+        ...prev,
+        contact: {
+          email: emailValidation,
+          phone: phoneValidation,
+          website: websiteValidation
+        }
+      }));
+
+      isValid = emailValidation.isValid && phoneValidation.isValid && websiteValidation.isValid;
+    }
+
+    if (step === 3) {
+      const linkedinValidation = validateLinkedIn(formData.social.linkedin);
+      const instagramValidation = validateInstagram(formData.social.instagram);
+      const twitterValidation = validateTwitter(formData.social.twitter);
+      const whatsappValidation = validateWhatsApp(formData.social.whatsapp);
+
+      setErrors(prev => ({
+        ...prev,
+        social: {
+          linkedin: linkedinValidation,
+          instagram: instagramValidation,
+          twitter: twitterValidation,
+          whatsapp: whatsappValidation
+        }
+      }));
+
+      isValid = linkedinValidation.isValid && instagramValidation.isValid && 
+                twitterValidation.isValid && whatsappValidation.isValid;
+    }
+
+    return isValid;
+  }, [formData, validateRequired, validateOptional, validateEmail, validatePhone, validateWebsite, validateLinkedIn, validateInstagram, validateTwitter, validateWhatsApp, t]);
+
+  // Navigation handlers
+  const handleNext = useCallback(() => {
+    if (validateStep(currentStep)) {
+      setCurrentStep(prev => Math.min(prev + 1, 3));
+    }
+  }, [currentStep, validateStep]);
+
+  const handleBack = useCallback(() => {
+    setCurrentStep(prev => Math.max(prev - 1, 1));
   }, []);
 
-  const updateSocial = useCallback((field: keyof VCardFormData['social'], value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      social: {
-        ...prev.social,
-        [field]: value
-      }
-    }));
-  }, []);
-
+  // Form submission
   const handleSubmit = useCallback(async () => {
-    if (!formData.personalInfo.firstName || !formData.personalInfo.lastName) {
-      toast.error('First name and last name are required');
+    const isStep1Valid = validateStep(1);
+    const isStep2Valid = validateStep(2);
+    const isStep3Valid = validateStep(3);
+
+    if (!isStep1Valid || !isStep2Valid || !isStep3Valid) {
+      toast.error('Please fix the errors before submitting');
       return;
     }
 
     setIsLoading(true);
     try {
-      const result = await vcardApi.create(formData);
-      setVCard(result);
-      setCurrentStep(4); // Show result
-      toast.success('vCard created successfully!');
+      const response = await vcardApi.create({
+        ...formData,
+        contact: {
+          ...formData.contact,
+          phone: formData.contact.phone ? `${formData.contact.phoneCountry.dialCode} ${formData.contact.phone}` : ''
+        }
+      });
+      
+      setVCard(response);
+      setCurrentStep(4);
+      toast.success(t('vcard.success.created'));
     } catch (error) {
       console.error('Error creating vCard:', error);
-      toast.error(error instanceof Error ? error.message : 'Failed to create vCard');
+      toast.error(t('vcard.error.createFailed'));
     } finally {
       setIsLoading(false);
     }
-  }, [formData]);
+  }, [formData, validateStep, t]);
 
-  const handleCopy = useCallback(async (text: string) => {
-    try {
-      await copyToClipboard(text);
-      toast.success('Copied to clipboard!');
-    } catch {
-      toast.error('Failed to copy to clipboard');
-    }
-  }, []);
-
-  const handleDownload = useCallback(async () => {
-    if (!vcard) return;
-    
-    try {
-      await vcardApi.download(vcard.shortCode);
-      toast.success('vCard downloaded!');
-    } catch (error) {
-      console.error('Error downloading vCard:', error);
-      toast.error('Failed to download vCard');
-    }
-  }, [vcard]);
-
+  // Reset form
   const resetForm = useCallback(() => {
-    setVCard(null);
-    setCurrentStep(1);
     setFormData({
       personalInfo: {
         firstName: '',
@@ -180,7 +477,8 @@ export default function VCardGenerator() {
       contact: {
         phone: '',
         email: '',
-        website: ''
+        website: '',
+        phoneCountry: defaultCountry
       },
       social: {
         linkedin: '',
@@ -197,9 +495,65 @@ export default function VCardGenerator() {
       },
       theme: 'professional'
     });
+
+    setErrors({
+      personalInfo: { 
+        firstName: createValidationState(), 
+        lastName: createValidationState(), 
+        company: createValidationState(), 
+        title: createValidationState(), 
+        photo: createValidationState() 
+      },
+      contact: { 
+        phone: createValidationState(), 
+        email: createValidationState(), 
+        website: createValidationState() 
+      },
+      social: { 
+        linkedin: createValidationState(), 
+        whatsapp: createValidationState(), 
+        instagram: createValidationState(), 
+        twitter: createValidationState() 
+      },
+      address: { 
+        street: createValidationState(), 
+        city: createValidationState(), 
+        state: createValidationState(), 
+        country: createValidationState(), 
+        zipCode: createValidationState() 
+      }
+    });
+
+    setCurrentStep(1);
+    setVCard(null);
   }, []);
 
-  const renderStep = () => {
+  // Copy functions
+  const copyUrl = useCallback(async () => {
+    if (vcard?.shortUrl) {
+      try {
+        await copyToClipboard(vcard.shortUrl);
+        toast.success(t('vcard.success.urlCopied'));
+      } catch (error) {
+        toast.error(t('vcard.error.shareFailed'));
+      }
+    }
+  }, [vcard, t]);
+
+  const downloadQR = useCallback(() => {
+    if (vcard?.qrCode) {
+      const link = document.createElement('a');
+      link.href = vcard.qrCode;
+      link.download = `${vcard.personalInfo.firstName}-${vcard.personalInfo.lastName}-qr.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      toast.success(t('vcard.success.downloaded'));
+    }
+  }, [vcard, t]);
+
+  // Render step content
+  const renderStepContent = () => {
     switch (currentStep) {
       case 1:
         return (
@@ -207,55 +561,58 @@ export default function VCardGenerator() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <User className="w-5 h-5" />
-                Personal Information
+                {t('vcard.step1.title')}
               </CardTitle>
               <CardDescription>
-                Tell us about yourself
+                {t('vcard.step1.description')}
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-6">
               <div className="grid md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium mb-1">First Name *</label>
-                  <Input
-                    value={formData.personalInfo.firstName}
-                    onChange={(e) => updatePersonalInfo('firstName', e.target.value)}
-                    placeholder="John"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Last Name *</label>
-                  <Input
-                    value={formData.personalInfo.lastName}
-                    onChange={(e) => updatePersonalInfo('lastName', e.target.value)}
-                    placeholder="Doe"
-                    required
-                  />
-                </div>
+                <EnhancedInput
+                  label={t('vcard.firstName')}
+                  required
+                  value={formData.personalInfo.firstName}
+                  onChange={(e) => updatePersonalInfo('firstName', e.target.value)}
+                  placeholder={t('vcard.placeholder.firstName')}
+                  validation={errors.personalInfo.firstName}
+                  icon={<User className="w-4 h-4" />}
+                />
+                <EnhancedInput
+                  label={t('vcard.lastName')}
+                  required
+                  value={formData.personalInfo.lastName}
+                  onChange={(e) => updatePersonalInfo('lastName', e.target.value)}
+                  placeholder={t('vcard.placeholder.lastName')}
+                  validation={errors.personalInfo.lastName}
+                  icon={<User className="w-4 h-4" />}
+                />
               </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">Company</label>
-                <Input
+              
+              <div className="grid md:grid-cols-2 gap-4">
+                <EnhancedInput
+                  label={t('vcard.company')}
                   value={formData.personalInfo.company}
                   onChange={(e) => updatePersonalInfo('company', e.target.value)}
-                  placeholder="Your Company Inc."
+                  placeholder={t('vcard.placeholder.company')}
+                  validation={errors.personalInfo.company}
+                  icon={<Building className="w-4 h-4" />}
+                  helperText={t('vcard.helper.company')}
                 />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">Job Title</label>
-                <Input
+                <EnhancedInput
+                  label={t('vcard.jobTitle')}
                   value={formData.personalInfo.title}
                   onChange={(e) => updatePersonalInfo('title', e.target.value)}
-                  placeholder="Software Engineer"
+                  placeholder={t('vcard.placeholder.jobTitle')}
+                  validation={errors.personalInfo.title}
+                  icon={<Briefcase className="w-4 h-4" />}
+                  helperText={t('vcard.helper.jobTitle')}
                 />
               </div>
+
               <div className="flex justify-end">
-                <Button 
-                  onClick={() => setCurrentStep(2)}
-                  disabled={!formData.personalInfo.firstName || !formData.personalInfo.lastName}
-                >
-                  Next: Contact Info
+                <Button onClick={handleNext} className="min-w-[120px]">
+                  {t('vcard.button.next')}
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </div>
@@ -269,46 +626,57 @@ export default function VCardGenerator() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Phone className="w-5 h-5" />
-                Contact Information
+                {t('vcard.step2.title')}
               </CardTitle>
               <CardDescription>
-                How can people reach you?
+                {t('vcard.step2.description')}
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-6">
+              <EnhancedInput
+                label={t('vcard.email')}
+                type="email"
+                value={formData.contact.email}
+                onChange={(e) => updateContact('email', e.target.value)}
+                placeholder={t('vcard.placeholder.email')}
+                validation={errors.contact.email}
+                icon={<Mail className="w-4 h-4" />}
+              />
+
               <div>
-                <label className="block text-sm font-medium mb-1">Email</label>
-                <Input
-                  type="email"
-                  value={formData.contact.email}
-                  onChange={(e) => updateContact('email', e.target.value)}
-                  placeholder="john@example.com"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">Phone</label>
-                <Input
-                  type="tel"
+                <label className="text-sm font-medium leading-none mb-2 block">
+                  {t('vcard.phone')}
+                </label>
+                <PhoneInput
                   value={formData.contact.phone}
-                  onChange={(e) => updateContact('phone', e.target.value)}
-                  placeholder="+1 234 567 8900"
+                  onChange={(value) => updateContact('phone', value)}
+                  country={formData.contact.phoneCountry}
+                  onCountryChange={updatePhoneCountry}
+                  placeholder={t('vcard.placeholder.phone')}
+                  error={errors.contact.phone.message}
                 />
+                <p className="text-sm text-muted-foreground mt-1">
+                  {t('vcard.helper.phone')}
+                </p>
               </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">Website</label>
-                <Input
-                  type="url"
-                  value={formData.contact.website}
-                  onChange={(e) => updateContact('website', e.target.value)}
-                  placeholder="https://yourwebsite.com"
-                />
-              </div>
-              <div className="flex justify-between">
-                <Button variant="outline" onClick={() => setCurrentStep(1)}>
-                  Back
+
+              <EnhancedInput
+                label={t('vcard.website')}
+                type="url"
+                value={formData.contact.website}
+                onChange={(e) => updateContact('website', e.target.value)}
+                placeholder={t('vcard.placeholder.website')}
+                validation={errors.contact.website}
+                icon={<Globe className="w-4 h-4" />}
+                helperText={t('vcard.helper.website')}
+              />
+
+              <div className="flex gap-3">
+                <Button variant="outline" onClick={handleBack} className="min-w-[120px]">
+                  {t('vcard.button.previous')}
                 </Button>
-                <Button onClick={() => setCurrentStep(3)}>
-                  Next: Social Media
+                <Button onClick={handleNext} className="min-w-[120px]">
+                  {t('vcard.button.next')}
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </div>
@@ -321,75 +689,111 @@ export default function VCardGenerator() {
           <Card className="max-w-2xl mx-auto">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Linkedin className="w-5 h-5" />
-                Social Media & Theme
+                <Instagram className="w-5 h-5" />
+                {t('vcard.step3.title')}
               </CardTitle>
               <CardDescription>
-                Connect your social profiles and choose a style
+                {t('vcard.step3.description')}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="space-y-4">
-                <h3 className="font-semibold">Social Media</h3>
-                <div>
-                  <label className="block text-sm font-medium mb-1">LinkedIn</label>
-                  <Input
-                    value={formData.social.linkedin}
-                    onChange={(e) => updateSocial('linkedin', e.target.value)}
-                    placeholder="https://linkedin.com/in/johndoe"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">WhatsApp</label>
-                  <Input
-                    value={formData.social.whatsapp}
-                    onChange={(e) => updateSocial('whatsapp', e.target.value)}
-                    placeholder="+1234567890"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Instagram</label>
-                  <Input
-                    value={formData.social.instagram}
-                    onChange={(e) => updateSocial('instagram', e.target.value)}
-                    placeholder="https://instagram.com/johndoe"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Twitter</label>
-                  <Input
-                    value={formData.social.twitter}
-                    onChange={(e) => updateSocial('twitter', e.target.value)}
-                    placeholder="https://twitter.com/johndoe"
-                  />
-                </div>
+              <div className="grid md:grid-cols-2 gap-4">
+                <EnhancedInput
+                  label={t('vcard.linkedin')}
+                  value={formData.social.linkedin}
+                  onChange={(e) => updateSocial('linkedin', e.target.value)}
+                  placeholder={t('vcard.placeholder.linkedin')}
+                  validation={errors.social.linkedin}
+                  icon={<Linkedin className="w-4 h-4" />}
+                />
+                <EnhancedInput
+                  label={t('vcard.instagram')}
+                  value={formData.social.instagram}
+                  onChange={(e) => updateSocial('instagram', e.target.value)}
+                  placeholder={t('vcard.placeholder.instagram')}
+                  validation={errors.social.instagram}
+                  icon={<Instagram className="w-4 h-4" />}
+                />
               </div>
 
-              <div className="space-y-4">
-                <h3 className="font-semibold">Choose Theme</h3>
-                <Select value={formData.theme} onValueChange={(value: 'professional' | 'creative' | 'minimal') => setFormData(prev => ({ ...prev, theme: value }))}>
+              <div className="grid md:grid-cols-2 gap-4">
+                <EnhancedInput
+                  label={t('vcard.twitter')}
+                  value={formData.social.twitter}
+                  onChange={(e) => updateSocial('twitter', e.target.value)}
+                  placeholder={t('vcard.placeholder.twitter')}
+                  validation={errors.social.twitter}
+                  icon={<Twitter className="w-4 h-4" />}
+                />
+                <EnhancedInput
+                  label={t('vcard.whatsapp')}
+                  value={formData.social.whatsapp}
+                  onChange={(e) => updateSocial('whatsapp', e.target.value)}
+                  placeholder={t('vcard.placeholder.whatsapp')}
+                  validation={errors.social.whatsapp}
+                  icon={<MessageCircle className="w-4 h-4" />}
+                />
+              </div>
+
+              <div>
+                <label className="text-sm font-medium leading-none mb-2 block">
+                  {t('vcard.theme.title')}
+                </label>
+                <Select
+                  value={formData.theme}
+                  onValueChange={(value: 'professional' | 'creative' | 'minimal') => 
+                    setFormData(prev => ({ ...prev, theme: value }))
+                  }
+                >
                   <SelectTrigger>
-                    <SelectValue />
+                    <SelectValue placeholder={t('vcard.theme.placeholder')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="professional">Professional</SelectItem>
-                    <SelectItem value="creative">Creative</SelectItem>
-                    <SelectItem value="minimal">Minimal</SelectItem>
+                    <SelectItem value="professional">
+                      <div className="flex items-center gap-2">
+                        <Briefcase className="w-4 h-4" />
+                        {t('vcard.theme.professional')}
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="creative">
+                      <div className="flex items-center gap-2">
+                        <Palette className="w-4 h-4" />
+                        {t('vcard.theme.creative')}
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="minimal">
+                      <div className="flex items-center gap-2">
+                        <User className="w-4 h-4" />
+                        {t('vcard.theme.minimal')}
+                      </div>
+                    </SelectItem>
                   </SelectContent>
                 </Select>
+                <p className="text-sm text-muted-foreground mt-1">
+                  {t('vcard.helper.theme')}
+                </p>
               </div>
 
-              <div className="flex justify-between">
-                <Button variant="outline" onClick={() => setCurrentStep(2)}>
-                  Back
+              <div className="flex gap-3">
+                <Button variant="outline" onClick={handleBack} className="min-w-[120px]">
+                  {t('vcard.button.previous')}
                 </Button>
-                <Button onClick={handleSubmit} disabled={isLoading}>
+                <Button 
+                  onClick={handleSubmit} 
+                  disabled={isLoading}
+                  className="min-w-[120px]"
+                >
                   {isLoading ? (
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                    <>
+                      {t('vcard.button.creating')}
+                      <div className="ml-2 w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    </>
                   ) : (
-                    <QrCode className="w-4 h-4 mr-2" />
+                    <>
+                      {t('vcard.button.create')}
+                      <Check className="w-4 h-4 ml-2" />
+                    </>
                   )}
-                  Create vCard
                 </Button>
               </div>
             </CardContent>
@@ -401,59 +805,48 @@ export default function VCardGenerator() {
         
         return (
           <Card className="max-w-2xl mx-auto">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-green-600">
-                <Check className="w-5 h-5" />
-                Your vCard is Ready!
+            <CardHeader className="text-center">
+              <CardTitle className="flex items-center justify-center gap-2 text-2xl">
+                <Check className="w-6 h-6 text-green-500" />
+                {t('vcard.step4.title')}
               </CardTitle>
               <CardDescription>
-                Share your digital business card with the world
+                {t('vcard.step4.description')}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="text-center">
-                <div className="inline-block p-4 bg-white rounded-lg border">
-                  <Image 
-                    src={vcard.qrCode} 
-                    alt="vCard QR Code" 
-                    width={192}
-                    height={192}
-                    className="mx-auto"
+              <div className="text-center space-y-4">
+                <div className="relative mx-auto w-48 h-48 bg-white rounded-lg border-2 border-border p-4">
+                  <Image
+                    src={vcard.qrCode}
+                    alt="vCard QR Code"
+                    fill
+                    className="object-contain"
                   />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-lg">
+                    {vcard.personalInfo.firstName} {vcard.personalInfo.lastName}
+                  </h3>
+                  <p className="text-muted-foreground">{vcard.shortUrl}</p>
                 </div>
               </div>
 
-              <div className="space-y-4">
-                <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
-                  <div className="flex-1">
-                    <p className="text-sm text-gray-500 mb-1">vCard URL</p>
-                    <p className="text-lg font-mono text-blue-600">{vcard.shortUrl}</p>
-                  </div>
-                  <Button
-                    onClick={() => handleCopy(vcard.shortUrl)}
-                    size="sm"
-                    variant="outline"
-                  >
-                    <Copy className="w-4 h-4" />
-                  </Button>
-                </div>
+              <div className="grid md:grid-cols-2 gap-3">
+                <Button onClick={copyUrl} variant="outline" className="w-full">
+                  <Copy className="w-4 h-4 mr-2" />
+                  {t('vcard.button.copyUrl')}
+                </Button>
+                <Button onClick={downloadQR} variant="outline" className="w-full">
+                  <Download className="w-4 h-4 mr-2" />
+                  {t('vcard.button.viewQr')}
+                </Button>
+              </div>
 
-                <div className="grid gap-3">
-                  <Button onClick={handleDownload} className="w-full">
-                    <Download className="w-4 h-4 mr-2" />
-                    Download Contact Card
-                  </Button>
-                  <Button onClick={() => window.open(vcard.shortUrl, '_blank')} variant="outline" className="w-full">
-                    <Globe className="w-4 h-4 mr-2" />
-                    Preview vCard
-                  </Button>
-                </div>
-
-                <div className="flex justify-center">
-                  <Button onClick={resetForm} variant="outline">
-                    Create Another vCard
-                  </Button>
-                </div>
+              <div className="text-center">
+                <Button onClick={resetForm} variant="ghost">
+                  {t('vcard.button.backToForm')}
+                </Button>
               </div>
             </CardContent>
           </Card>
@@ -465,53 +858,27 @@ export default function VCardGenerator() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 py-8 px-4">
-      <div className="container mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5 py-12">
+      <div className="container mx-auto px-4">
         {/* Header */}
-        <div className="text-center mb-8">
-          <Badge className="mb-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white">
-            <QrCode className="w-3 h-3 mr-1" />
-            Digital Business Card
-          </Badge>
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Create Your vCard
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-bold text-foreground mb-4">
+            {t('vcard.title')}
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Generate a beautiful digital business card with QR code that your contacts can save directly to their phones
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            {t('vcard.description')}
           </p>
         </div>
 
-        {/* Progress Steps */}
+        {/* Progress Stepper */}
         {currentStep < 4 && (
-          <div className="max-w-2xl mx-auto mb-8">
-            <div className="flex items-center justify-between">
-              {[1, 2, 3].map((step) => (
-                <div key={step} className="flex items-center">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${
-                    step <= currentStep 
-                      ? 'bg-blue-600 text-white' 
-                      : 'bg-gray-200 text-gray-600'
-                  }`}>
-                    {step}
-                  </div>
-                  {step < 3 && (
-                    <div className={`w-16 h-1 mx-2 ${
-                      step < currentStep ? 'bg-blue-600' : 'bg-gray-200'
-                    }`} />
-                  )}
-                </div>
-              ))}
-            </div>
-            <div className="flex justify-between mt-2 text-sm text-gray-600">
-              <span>Personal</span>
-              <span>Contact</span>
-              <span>Social & Theme</span>
-            </div>
+          <div className="mb-12">
+            <ProgressStepper currentStep={currentStep} />
           </div>
         )}
 
         {/* Form Steps */}
-        {renderStep()}
+        {renderStepContent()}
       </div>
     </div>
   );

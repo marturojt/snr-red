@@ -1,8 +1,43 @@
 # SNR.red - System Instructions para AI Assistant
 
-**Versión:** 2.1  
-**Fecha:** 7 de Julio, 2025  
+**Versión:** 2.3  
+**Fecha:** 8 de Enero, 2025  
 **Propósito:** Guías para mantener documentación actualizada y seguimiento consistente del proyecto
+
+---
+
+## 🌙 ÚLTIMO UPDATE - Dark Mode por Defecto & VCard I18n (Enero 2025)
+
+### ✅ Completado - Dark Mode por Defecto
+- **ThemeProvider Context:** Mejorado con tema oscuro por defecto
+- **Script Inline:** Agregado en layout.tsx para evitar flash inicial
+- **Inicialización Robusta:** Sin useEffects redundantes
+- **Resolución de Tema:** Optimizada para mejor rendimiento
+- **Documentación:** DARK-THEME-DEFAULT-HOTFIX.md creada
+
+### ✅ Completado - VCard Internacionalización Completa
+- **VCardGenerator:** Completamente traducido (EN/ES)
+- **50+ Traducciones:** Agregadas en LanguageContext.tsx
+- **Validaciones I18n:** Todos los mensajes de error traducidos
+- **Placeholders I18n:** Todos los campos del formulario traducidos
+- **Toasts I18n:** Todas las notificaciones traducidas
+- **Páginas vCard:** Visualización traducida
+- **Documentación:** VCARD-I18N-IMPLEMENTATION.md creada
+
+### ✅ Completado - Build Estricto y Limpieza
+- **Tipos Centralizados:** Uso exclusivo de @url-shortener/types
+- **Interfaces Duplicadas:** Eliminadas de página de vCard
+- **Errores ESLint:** Corregidos (Image components, tipos)
+- **Build Exitoso:** Compilación sin errores
+- **Código Limpio:** Refactorización completa
+
+### 📊 Estado Actual
+- **Frontend:** 100% funcional con dark mode por defecto y VCard I18n
+- **Backend:** 100% funcional
+- **Dark Mode:** ✅ COMPLETAMENTE FUNCIONAL - Tema oscuro por defecto
+- **VCard I18n:** ✅ COMPLETAMENTE TRADUCIDO - 50+ claves EN/ES
+- **Documentación:** Actualizada con nuevas implementaciones
+- **QA:** Completado - build estricto exitoso
 
 ---
 
@@ -475,7 +510,7 @@ USER-STORIES.md:
 **Estado del documento:** ✅ Activo  
 **Aplicabilidad:** TODAS las sesiones de desarrollo  
 **Revisión:** Al agregar nuevos tipos de cambios  
-**Versión:** 2.1-estructura-documentacion-completa
+**Versión:** 2.3-dark-mode-default-vcard-i18n-completo
 
 ---
 

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import { LanguageProvider } from "@/context/LanguageContext";
+import { ThemeProvider } from "@/context/ThemeContext";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -34,8 +35,6 @@ export const metadata: Metadata = {
 
 export const viewport = "width=device-width, initial-scale=1";
 
-export const themeColor = "#3b82f6";
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -43,13 +42,38 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var theme = localStorage.getItem('snr-red-theme') || 'dark';
+                  var resolvedTheme = theme;
+                  
+                  if (theme === 'system') {
+                    resolvedTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                  }
+                  
+                  document.documentElement.classList.remove('light', 'dark');
+                  document.documentElement.classList.add(resolvedTheme);
+                } catch (e) {
+                  document.documentElement.classList.add('dark');
+                }
+              })();
+            `,
+          }}
+        />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <LanguageProvider>
-          {children}
-          <Toaster position="top-right" />
-        </LanguageProvider>
+        <ThemeProvider defaultTheme="dark" storageKey="snr-red-theme">
+          <LanguageProvider>
+            {children}
+            <Toaster position="top-right" />
+          </LanguageProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

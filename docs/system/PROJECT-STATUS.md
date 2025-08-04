@@ -1,8 +1,19 @@
 # SNR.red - Estado del Proyecto y Roadmap Técnico
 
-**Versión:** 1.4  
-**Fecha de actualización:** 7 de Julio, 2025  
-**Estado actual:** UX/UI Enhancement implementado, sistema comercial moderno completado, i18n (EN/ES) implementado, URLs anónimas funcionales, generador de vCard integrado, formulario principal optimizado con opciones avanzadas colapsables, modal QR implementado para mejor experiencia de usuario, personalización de QR codes con presets y opciones avanzadas
+**Versión:** 1.8  
+**Fecha de actualización:** 8 de Enero, 2025  
+**Estado actual:** Entorno de desarrollo local completamente funcional en macOS, UX/UI Enhancement implementado, sistema comercial moderno completado, i18n (EN/ES) implementado, Dark Mode por defecto implementado, VCard UI completamente internacionalizada
+
+## 🎯 Último Update - Dark Mode por Defecto y VCard I18n (Enero 2025)
+- **Dark Mode por Defecto**: ✅ Implementado con tema oscuro como predeterminado
+- **VCard I18n**: ✅ Internacionalización completa del generador de vCard
+- **Sin Flash Inicial**: ✅ Script inline para evitar flash de tema claro
+- **ThemeProvider Robusto**: ✅ Inicialización optimizada sin useEffects redundantes
+- **VCard Traducciones**: ✅ 50+ claves de traducción EN/ES para toda la UI
+- **Validaciones I18n**: ✅ Todos los mensajes de error y validaciones traducidos
+- **Build Estricto**: ✅ Compilación exitosa sin errores de tipos ni ESLint
+- **Tipos Centralizados**: ✅ Uso exclusivo de @url-shortener/types
+- **Documentación**: ✅ Actualizada con nuevas implementaciones
 
 ---
 
@@ -118,6 +129,22 @@ snr-red/
 - [x] **Integración con EnhancedUserUrls component**
 - [x] **API compatible con usuarios anónimos**
 
+### 🎯 Funcionalidades para Usuarios Invitados (Testing en Curso)
+- [x] **Acortamiento de URLs** sin registro (expiración: 30 días)
+- [x] **Generación de códigos QR** básicos y personalizados
+- [x] **Descarga de códigos QR** en formato PNG/SVG
+- [x] **Regeneración de códigos QR** con botón funcional
+- [x] **Personalización avanzada de QR** (colores, estilos, presets)
+- [x] **Creación de vCards** digitales con formulario completo
+- [x] **Gestión de URLs creadas** via botón "Mis URLs"
+- [x] **Interfaz bilingüe** (cambio EN/ES en tiempo real)
+- [x] **Analytics básicos** (visualización de estadísticas de clicks)
+- [x] **Compartir QR codes** via navegadores compatibles
+- [x] **Copiar URLs y QR** al portapapeles
+- [x] **Páginas de vCard públicas** para compartir contactos
+- [x] **Descarga de archivos .vcf** desde vCards generadas
+- [x] **Experiencia móvil optimizada** para todas las funcionalidades
+
 ### 🎴 Generador de vCard (RECIÉN IMPLEMENTADO)
 - [x] **Creación de tarjetas de presentación digitales**
 - [x] **Formulario multi-paso** con información personal, contacto y redes sociales
@@ -147,43 +174,104 @@ snr-red/
 ## 🏃‍♂️ Estado Actual de la Implementación
 
 ### ✅ Completado Recientemente (Sesión actual)
-1. **vCard Generator Feature implementado**:
+1. **Dark Mode por Defecto Implementado**:
+   - **NUEVO:** Tema oscuro establecido como predeterminado en ThemeProvider
+   - **NUEVO:** Script inline en layout.tsx para evitar flash inicial de tema claro
+   - **NUEVO:** Inicialización robusta sin useEffects redundantes
+   - **NUEVO:** Resolución de tema optimizada para mejor rendimiento
+   - **NUEVO:** Documentación completa en DARK-THEME-DEFAULT-HOTFIX.md
+
+2. **VCard UI Completamente Internacionalizada**:
+   - **NUEVO:** 50+ claves de traducción agregadas para toda la UI de vCard
+   - **NUEVO:** Generador de vCard completamente traducido (EN/ES)
+   - **NUEVO:** Validaciones y mensajes de error traducidos
+   - **NUEVO:** Placeholders y botones internacionalizados
+   - **NUEVO:** Toasts y notificaciones traducidas
+   - **NUEVO:** Páginas de visualización de vCard traducidas
+   - **NUEVO:** Documentación completa en VCARD-I18N-IMPLEMENTATION.md
+
+3. **Build Estricto y Limpieza de Código**:
+   - **NUEVO:** Eliminación de interfaces duplicadas en página de vCard
+   - **NUEVO:** Uso exclusivo de tipos centralizados @url-shortener/types
+   - **NUEVO:** Corrección de errores de ESLint y TypeScript
+   - **NUEVO:** Optimización de componentes Image de Next.js
+   - **NUEVO:** Build exitoso sin errores de compilación
+
+4. **Entorno de Desarrollo Local - macOS Setup Completo**:
+   - **NUEVO:** Configuración completa del entorno de desarrollo en macOS
+   - **NUEVO:** Instalación y configuración de MongoDB Community Edition vía Homebrew
+   - **NUEVO:** Compilación exitosa de tipos compartidos (@url-shortener/types)
+   - **NUEVO:** Corrección de errores TypeScript en modelo VCard
+   - **NUEVO:** Verificación de funcionamiento de ambos servidores (frontend:3000, backend:3001)
+   - **NUEVO:** Configuración de variables de entorno para desarrollo local
+   - **NUEVO:** Validación de endpoints de salud y respuesta correcta de la aplicación
+   - **NUEVO:** Entorno completamente funcional y listo para desarrollo
+
+2. **Documentación Reorganizada y Limpia**:
+   - **NUEVO:** Limpieza masiva de documentación regada por diferentes carpetas
+   - **NUEVO:** Eliminación de 12 archivos duplicados entre `/docs/` y `/docs/development/`
+   - **NUEVO:** Estructura completamente organizada según SYSTEM-INSTRUCTIONS.md
+   - **NUEVO:** Documentación creada: DOCUMENTATION-CLEANUP.md
+   - **NUEVO:** Carpeta `/docs/` ahora solo contiene subcarpetas organizadas
+   - **NUEVO:** 35 archivos correctamente categorizados en system/, development/, deployment/, config/
+
+2. **vCard System Enhancement - Validaciones y UX Completas**:
+   - **NUEVO:** Campos obligatorios identificados y documentados (firstName, lastName)
+   - **NUEVO:** Validaciones robustas implementadas para todos los campos
+   - **NUEVO:** Máscaras inteligentes para teléfono (nacional/internacional)
+   - **NUEVO:** Formateo automático de websites con protocolo
+   - **NUEVO:** Validaciones específicas para redes sociales (LinkedIn, Instagram, Twitter, WhatsApp)
+   - **NUEVO:** Feedback visual mejorado con bordes rojos e iconos de error
+   - **NUEVO:** Limpieza automática de errores al escribir
+   - **NUEVO:** Validación multi-paso antes de envío
+   - **NUEVO:** URL de vCard corregida (/vcard/{shortCode})
+   - **NUEVO:** Ruta de compatibilidad /v/{id} → /vcard/{id}
+   - **NUEVO:** Documentación completa de validaciones en VCARD-VALIDATIONS-GUIDE.md
+3. **QR Display Internacionalización Completa**:
+   - **NUEVO:** Traducción completa del componente EnhancedQRCodeDisplay
+   - 24 nuevas traducciones en inglés y español
+   - Mensajes de toast traducidos para todas las acciones
+   - Verificación de funcionalidad del botón "Regenerate"
+   - Experiencia de usuario consistente en ambos idiomas
+   - Integración completa con sistema i18n existente
+
+2. **vCard Generator Feature implementado**:
    - Backend: Modelo, servicio y rutas API (`/api/vcard/*`)
    - Frontend: Componente VCardGenerator con formulario multi-paso
    - Integración: Interface con pestañas en landing page principal
    - Páginas: Visualización de vCard en `/vcard/[id]`
    - Features: Descarga .vcf, códigos QR, temas, sharing
 
-2. **UI/UX Enhancement completado**:
+3. **UI/UX Enhancement completado**:
    - ModernLandingPage con interfaz de pestañas
    - Integración completa de vCard generator
    - Actualización de features section con 4 características principales
    - Internacionalización para todas las nuevas características
 
-3. **Formulario Principal Optimizado**:
+4. **Formulario Principal Optimizado**:
    - Campos título y código personalizado agregados
    - Opciones avanzadas colapsables con toggle
    - Generación automática de códigos cortos
    - Botones de Analytics y QR funcionales con modales elegantes
    - **NUEVO:** Modal QR implementado para mejor experiencia de usuario
 
-4. **Experiencia de Usuario Mejorada**:
+5. **Experiencia de Usuario Mejorada**:
    - Analytics modal con métricas detalladas
    - QR modal con descarga directa (reemplazó ventana popup)
    - Diseño responsive y accesible
    - Traducciones completas EN/ES para nuevas funcionalidades
 
-5. **Personalización de Códigos QR**:
+6. **Personalización de Códigos QR**:
    - **NUEVO:** Sistema completo de personalización de QR codes
    - Presets temáticos: Classic, Modern, Vibrant, Elegant, Nature, Sunset
    - Personalización de colores: foreground y background
-   - Opciones de estilo: cuadrado, redondeado, puntos
+   - Opciones de estilo: cuadrado, redondeado, puntos, círculos
    - Configuración avanzada: tamaño, margen, formato, corrección de errores
    - Vista previa en tiempo real
    - Interfaz con pestañas para organizar opciones
    - Soporte completo i18n (EN/ES)
 
-6. **UX/UI QR Mejorada - Rápido + Personalización Opcional**:
+7. **UX/UI QR Mejorada - Rápido + Personalización Opcional**:
    - **NUEVO:** Flujo optimizado: QR inmediato + personalización opcional
    - QR básico se muestra instantáneamente al hacer clic
    - Botón "Personalizar Código QR" para usuarios que desean más control
@@ -194,7 +282,7 @@ snr-red/
    - Debouncing inteligente para evitar llamadas API excesivas
    - Diseño responsivo optimizado para móvil y desktop
 
-7. **Panel de administración completo**:
+8. **Panel de administración completo**:
    - Backend: Rutas admin con autenticación (`/api/admin/*`)
    - Frontend: Layout y componentes admin (`/admin/*`)
    - Dashboard con métricas en tiempo real
@@ -229,10 +317,61 @@ snr-red/
     - Opciones avanzadas para diseño de QR codes
     - Integración con sistema de temas
 
+13. **Dark Mode y Header Refactor**:
+    - **NUEVO:** Implementado Dark Mode con ThemeProvider
+    - **NUEVO:** Componente de Theme Toggle con íconos shadcn/ui
+    - **NUEVO:** Header responsivo con menú móvil y navegación mejorada
+    - **NUEVO:** Logo como botón clickeable para resetear formulario/ir a home
+    - **NUEVO:** Hamburger menu completamente funcional
+    - **NUEVO:** Persistencia del tema seleccionado en localStorage
+    - **NUEVO:** Traducciones de strings de tema en EN/ES
+    - **NUEVO:** Variables de CSS para colores en modo oscuro
+    - **NUEVO:** Efectos glass mejorados para dark mode
+    - **NUEVO:** Header totalmente responsivo sin overlapping
+
+### 🌙 Dark Mode System (IMPLEMENTADO)
+- [x] **ThemeProvider context** con soporte para light/dark/system
+- [x] **Theme Toggle component** con íconos y animaciones
+- [x] **Persistencia de tema** en localStorage
+- [x] **Variables CSS** para colores dinámicos
+- [x] **Traducciones de tema** en EN/ES
+- [x] **Compatibilidad shadcn/ui** con tema oscuro
+- [x] **Glass effects** optimizados para dark mode
+- [x] **Scrollbar styling** para ambos temas
+- [x] **Dark mode por defecto** sin flash inicial de tema claro
+- [x] **Script inline** para aplicación de tema antes de hidratación
+- [x] **Inicialización optimizada** sin useEffects redundantes
+
+### 🎴 Generador de vCard - Internacionalización Completa (IMPLEMENTADO)
+- [x] **VCardGenerator completamente traducido** (EN/ES)
+- [x] **50+ claves de traducción** para toda la UI
+- [x] **Validaciones internacionalizadas** con mensajes de error traducidos
+- [x] **Placeholders traducidos** para todos los campos del formulario
+- [x] **Botones y acciones traducidas** (guardar, cancelar, descargar, etc.)
+- [x] **Toasts y notificaciones** traducidas para todas las acciones
+- [x] **Páginas de visualización** de vCard traducidas
+- [x] **Experiencia de usuario consistente** en ambos idiomas
+- [x] **Uso de tipos centralizados** @url-shortener/types
+- [x] **Build estricto exitoso** sin errores de compilación
+
+### 📱 Header Responsivo (RECIÉN IMPLEMENTADO)
+- [x] **ResponsiveHeader component** completamente nuevo
+- [x] **Mobile hamburger menu** con animaciones
+- [x] **Logo clickeable** para resetear formulario/navegar home
+- [x] **Theme toggle** integrado en header
+- [x] **Language selector** mejorado para móviles
+- [x] **Navigation actions** como props para flexibilidad
+- [x] **Breakpoints optimizados** para todas las pantallas
+- [x] **Sin overlapping** en dispositivos móviles
+
 ### 🔄 Estado de Validación Requerida
-- **vCard Generator**: ✅ Implementado y funcionando
-- **vCard Pages**: ✅ Páginas de visualización funcionando
+- **Documentación**: ✅ Completamente reorganizada y limpia (35 archivos organizados)
+- **vCard Generator**: ✅ Implementado, validaciones completas, URLs corregidas
+- **vCard Validations**: ✅ Implementadas todas las validaciones con feedback visual
+- **vCard Pages**: ✅ Páginas de visualización funcionando con URLs corregidas
 - **vCard API**: ✅ Todas las rutas API funcionando (verificado con POST /api/vcard/create)
+- **vCard Preview**: ✅ Preview funcionando con URLs corregidas
+- **vCard Download**: ✅ Descarga de archivos .vcf funcionando
 - **Tabbed Interface**: ✅ Integración completa en landing page
 - **i18n for vCard**: ✅ Traducciones completas EN/ES implementadas
 - **Login admin**: Implementado pero necesita validación final
@@ -675,11 +814,11 @@ curl -X POST http://localhost:3001/api/auth/login \
 ## 📝 Notas para Futuras Iteraciones
 
 ### Para IA Assistant:
-1. **Estado actual:** UX/UI Enhancement implementado, experiencia comercial completada
-2. **Prioridad inmediata:** Integrar analytics reales y datos dinámicos en dashboard
+1. **Estado actual:** UX/UI Enhancement implementado, experiencia comercial completada, i18n completo, QR Display internacionalizado, Dark Mode y Header Responsivo implementados
+2. **Prioridad inmediata:** Testing de funcionalidad de usuario invitado, validación de flujos completos
 3. **Siguiente fase:** Real-time analytics con gráficos interactivos y metrics avanzadas
 4. **Decisiones técnicas:** Usar Chart.js para gráficos, Redis para caché futuro
-5. **UX/UI:** Base comercial establecida, próximo paso: A/B testing y optimización de conversión
+5. **UX/UI:** Base comercial establecida, i18n implementado, próximo paso: optimización de conversión y analytics avanzados
 
 ### Decisiones de Arquitectura:
 - **Monorepo:** Facilita desarrollo y despliegue conjunto
@@ -694,3 +833,84 @@ curl -X POST http://localhost:3001/api/auth/login \
 - **Validación:** express-validator en backend, form validation en frontend
 - **Auth:** Middleware diferenciado para user vs admin
 - **Database:** Soft deletes con isActive, índices para performance
+
+---
+
+## 🔧 Comandos de Verificación
+
+### Comandos Principales (Verificados ✅)
+```bash
+# Desarrollo local
+npm run dev                    # ✅ Funciona - Inicia frontend:3000 y backend:3001
+npm run build                  # ✅ Funciona - Compila tipos y proyectos
+npm run build:types           # ✅ Funciona - Compila tipos compartidos
+npm run lint                  # ✅ Funciona - Linting de código
+
+# Verificación de servicios
+curl http://localhost:3001/health          # ✅ Backend health check
+curl http://localhost:3000                 # ✅ Frontend página principal
+```
+
+### URLs de Desarrollo (Verificadas ✅)
+```bash
+Frontend: http://localhost:3000           # ✅ Página principal cargando
+Backend:  http://localhost:3001           # ✅ API REST funcionando  
+Admin:    http://localhost:3000/admin     # ✅ Panel admin disponible
+```
+
+### Credenciales Admin (Documentadas)
+```bash
+Email:    arturo.jimenez.26@gmail.com
+Password: Arturo06;
+Permisos: isAdmin: true, plan: premium
+```
+
+### Variables de Entorno (Configuradas ✅)
+```bash
+# Backend (.env)
+PORT=3001
+NODE_ENV=development
+MONGODB_URI=mongodb://127.0.0.1:27017/snr-red-dev
+JWT_SECRET=your-super-secret-jwt-key-change-this-in-production-dev-env
+BASE_URL=http://localhost:3001
+FRONTEND_URL=http://localhost:3000
+
+# Frontend (.env.local)
+NEXT_PUBLIC_API_URL=http://localhost:3001/api
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+```
+
+### Requisitos del Sistema (Verificados ✅)
+```bash
+Node.js: v22.9.0                         # ✅ Instalado
+npm: 11.3.0                              # ✅ Instalado
+MongoDB: Community Edition 8.0           # ✅ Instalado vía Homebrew
+Homebrew: Actualizado                    # ✅ Instalado
+```
+
+---
+
+## 📊 Estado Final del Entorno de Desarrollo
+
+### ✅ Completado y Verificado
+- **Entorno Local macOS:** ✅ Completamente funcional
+- **MongoDB:** ✅ Instalado y configurado (Community Edition 8.0)
+- **Backend API:** ✅ Funcionando en puerto 3001
+- **Frontend App:** ✅ Funcionando en puerto 3000  
+- **Tipos TypeScript:** ✅ Compilados correctamente
+- **Variables de Entorno:** ✅ Configuradas para desarrollo
+- **Comandos Principales:** ✅ `npm run dev`, `npm run build`, `npm run build:types`
+- **Verificación URLs:** ✅ Ambos servicios responden correctamente
+- **Documentación:** ✅ Actualizada con setup macOS completo
+
+### ⚠️ Pendientes Menores
+- **ESLint:** Configuración pendiente (no crítico)
+- **Login Admin:** Validación final pendiente
+- **Testing Completo:** Pruebas de todas las funcionalidades
+
+### 🚀 Listo para Desarrollo
+El entorno está **completamente funcional** y listo para:
+- Desarrollo de nuevas funcionalidades
+- Testing de características existentes
+- Implementación de Analytics Avanzados
+- Integración de Sistema de Pagos

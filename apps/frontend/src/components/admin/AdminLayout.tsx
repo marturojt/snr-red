@@ -39,13 +39,13 @@ export default function AdminLayout({ children, currentPage }: AdminLayoutProps)
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-muted">
       {/* Mobile sidebar */}
       <div className={`fixed inset-0 z-50 lg:hidden ${sidebarOpen ? 'block' : 'hidden'}`}>
         <div className="fixed inset-0 bg-gray-900/50" onClick={() => setSidebarOpen(false)} />
-        <div className="fixed inset-y-0 left-0 w-64 bg-white shadow-xl">
+        <div className="fixed inset-y-0 left-0 w-64 bg-background shadow-xl">
           <div className="flex h-16 items-center justify-between px-4">
-            <h1 className="text-xl font-bold text-gray-900">SNR.red Admin</h1>
+            <h1 className="text-xl font-bold text-foreground">SNR.red Admin</h1>
             <Button variant="ghost" size="sm" onClick={() => setSidebarOpen(false)}>
               <X className="h-4 w-4" />
             </Button>
@@ -58,7 +58,7 @@ export default function AdminLayout({ children, currentPage }: AdminLayoutProps)
                 className={`flex items-center px-4 py-3 text-sm font-medium ${
                   currentPage === item.name
                     ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-600'
-                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                    : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                 }`}
               >
                 <item.icon className="mr-3 h-5 w-5" />
@@ -71,9 +71,9 @@ export default function AdminLayout({ children, currentPage }: AdminLayoutProps)
 
       {/* Desktop sidebar */}
       <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-64 lg:flex-col">
-        <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-4 shadow-xl">
+        <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-background px-6 pb-4 shadow-xl">
           <div className="flex h-16 shrink-0 items-center">
-            <h1 className="text-xl font-bold text-gray-900">SNR.red Admin</h1>
+            <h1 className="text-xl font-bold text-foreground">SNR.red Admin</h1>
           </div>
           <nav className="flex flex-1 flex-col">
             <ul role="list" className="flex flex-1 flex-col gap-y-7">
@@ -86,7 +86,7 @@ export default function AdminLayout({ children, currentPage }: AdminLayoutProps)
                         className={`group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 ${
                           currentPage === item.name
                             ? 'bg-blue-50 text-blue-700'
-                            : 'text-gray-700 hover:bg-gray-50 hover:text-blue-700'
+                            : 'text-foreground hover:bg-muted hover:text-blue-700'
                         }`}
                       >
                         <item.icon className="h-5 w-5 shrink-0" />
@@ -100,7 +100,7 @@ export default function AdminLayout({ children, currentPage }: AdminLayoutProps)
                 <Button
                   variant="ghost"
                   onClick={handleLogout}
-                  className="flex w-full items-center gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-red-700"
+                  className="flex w-full items-center gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-foreground hover:bg-muted hover:text-red-700"
                 >
                   <LogOut className="h-5 w-5 shrink-0" />
                   Logout
@@ -114,7 +114,7 @@ export default function AdminLayout({ children, currentPage }: AdminLayoutProps)
       {/* Main content */}
       <div className="lg:pl-64">
         {/* Top bar */}
-        <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
+        <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-border bg-background px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
           <Button
             variant="ghost"
             size="sm"
@@ -126,11 +126,11 @@ export default function AdminLayout({ children, currentPage }: AdminLayoutProps)
 
           <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
             <div className="flex items-center gap-x-4 lg:gap-x-6">
-              <div className="hidden lg:block lg:h-6 lg:w-px lg:bg-gray-200" />
+              <div className="hidden lg:block lg:h-6 lg:w-px lg:bg-border" />
               <div className="flex items-center gap-x-2">
-                <div className="text-sm font-medium text-gray-900">Admin Panel</div>
-                <div className="text-sm text-gray-500">•</div>
-                <div className="text-sm text-gray-500">{currentPage}</div>
+                <div className="text-sm font-medium text-foreground">Admin Panel</div>
+                <div className="text-sm text-muted-foreground">•</div>
+                <div className="text-sm text-muted-foreground">{currentPage}</div>
               </div>
             </div>
           </div>

@@ -92,6 +92,31 @@ const translations = {
     'generating': 'Generating...',
     'qrCustomizer.previewDescription': 'See how your QR code will look in real-time',
 
+    // Enhanced QR Code Display
+    'qrDisplay.title': 'QR Code Generator',
+    'qrDisplay.premium': 'Premium',
+    'qrDisplay.description': 'Generate a QR code for your shortened URL to share easily',
+    'qrDisplay.targetUrl': 'TARGET URL',
+    'qrDisplay.download': 'Download',
+    'qrDisplay.copy': 'Copy',
+    'qrDisplay.copied': 'Copied!',
+    'qrDisplay.share': 'Share',
+    'qrDisplay.regenerate': 'Regenerate',
+    'qrDisplay.generateTitle': 'Generate QR Code',
+    'qrDisplay.generateDescription': 'Create a scannable QR code for your shortened URL',
+    'qrDisplay.generateButton': 'Generate QR Code',
+    'qrDisplay.generating': 'Generating...',
+    'qrDisplay.benefitsTitle': 'QR Code Benefits',
+    'qrDisplay.benefit1': 'Scan with any smartphone camera',
+    'qrDisplay.benefit2': 'Perfect for print materials and presentations',
+    'qrDisplay.benefit3': 'High-quality PNG format',
+    'qrDisplay.benefit4': 'Error correction for reliable scanning',
+    'qrDisplay.benefit5': 'Customizable size and format',
+    'qrDisplay.downloadSuccess': 'QR code downloaded!',
+    'qrDisplay.copySuccess': 'QR code copied to clipboard!',
+    'qrDisplay.shareSuccess': 'QR code shared!',
+    'qrDisplay.generateSuccess': '🎉 QR code generated successfully!',
+
     // Features
     'features.title': 'Why Choose SNR.red?',
     'features.subtitle': 'We provide the most advanced URL shortening platform with enterprise-grade features',
@@ -113,6 +138,107 @@ const translations = {
     // vCard
     'vcard.title': 'Create Digital Business Cards',
     'vcard.description': 'Generate professional vCards with QR codes for easy sharing',
+    
+    // vCard Steps
+    'vcard.step1.title': 'Personal Information',
+    'vcard.step1.description': 'Tell us about yourself. Fields marked with * are required.',
+    'vcard.step2.title': 'Contact Information',
+    'vcard.step2.description': 'Add your contact details. All fields are optional.',
+    'vcard.step3.title': 'Social & Customization',
+    'vcard.step3.description': 'Add social profiles and choose your card style.',
+    'vcard.step4.title': 'Your Digital Business Card',
+    'vcard.step4.description': 'Your vCard is ready! Download or share it with others.',
+    
+    // vCard Fields
+    'vcard.firstName': 'First Name',
+    'vcard.lastName': 'Last Name',
+    'vcard.company': 'Company',
+    'vcard.jobTitle': 'Job Title',
+    'vcard.email': 'Email Address',
+    'vcard.phone': 'Phone Number',
+    'vcard.website': 'Website',
+    'vcard.linkedin': 'LinkedIn Profile',
+    'vcard.instagram': 'Instagram Profile',
+    'vcard.twitter': 'Twitter/X Profile',
+    'vcard.whatsapp': 'WhatsApp Number',
+    'vcard.address.street': 'Street Address',
+    'vcard.address.city': 'City',
+    'vcard.address.state': 'State/Province',
+    'vcard.address.country': 'Country',
+    'vcard.address.zipCode': 'ZIP/Postal Code',
+    
+    // vCard Placeholders
+    'vcard.placeholder.firstName': 'John',
+    'vcard.placeholder.lastName': 'Doe',
+    'vcard.placeholder.company': 'Acme Corp',
+    'vcard.placeholder.jobTitle': 'Software Engineer',
+    'vcard.placeholder.email': 'john@example.com',
+    'vcard.placeholder.phone': '+1 234 567 8900',
+    'vcard.placeholder.website': 'https://johndoe.com',
+    'vcard.placeholder.linkedin': 'linkedin.com/in/johndoe',
+    'vcard.placeholder.instagram': 'instagram.com/johndoe',
+    'vcard.placeholder.twitter': 'twitter.com/johndoe',
+    'vcard.placeholder.whatsapp': '+1 234 567 8900',
+    'vcard.placeholder.street': '123 Main Street',
+    'vcard.placeholder.city': 'New York',
+    'vcard.placeholder.state': 'NY',
+    'vcard.placeholder.country': 'United States',
+    'vcard.placeholder.zipCode': '10001',
+    
+    // vCard Helper Text
+    'vcard.helper.company': 'Optional - Your company or organization',
+    'vcard.helper.jobTitle': 'Optional - Your role or position',
+    'vcard.helper.phone': 'Select your country and enter your phone number',
+    'vcard.helper.website': 'Optional - Your personal or company website',
+    'vcard.helper.linkedin': 'Optional - Your LinkedIn profile URL',
+    'vcard.helper.instagram': 'Optional - Your Instagram profile URL',
+    'vcard.helper.twitter': 'Optional - Your Twitter/X profile URL',
+    'vcard.helper.whatsapp': 'Optional - Your WhatsApp number for messaging',
+    'vcard.helper.address': 'Optional - Your business or home address',
+    'vcard.helper.theme': 'Choose the style that best represents you',
+    
+    // vCard Theme
+    'vcard.theme.title': 'Theme Style',
+    'vcard.theme.placeholder': 'Choose a theme',
+    'vcard.theme.professional': 'Professional',
+    'vcard.theme.creative': 'Creative',
+    'vcard.theme.minimal': 'Minimal',
+    
+    // vCard Buttons
+    'vcard.button.next': 'Next',
+    'vcard.button.previous': 'Previous',
+    'vcard.button.create': 'Create vCard',
+    'vcard.button.creating': 'Creating...',
+    'vcard.button.download': 'Download vCard',
+    'vcard.button.viewQr': 'View QR Code',
+    'vcard.button.share': 'Share',
+    'vcard.button.copyUrl': 'Copy URL',
+    'vcard.button.backToForm': 'Create Another',
+    
+    // vCard Validation Messages
+    'vcard.validation.emailInvalid': 'Please enter a valid email address',
+    'vcard.validation.phoneInvalid': 'Please enter a valid phone number',
+    'vcard.validation.websiteInvalid': 'Please enter a valid website URL',
+    'vcard.validation.linkedinInvalid': 'Please enter a valid LinkedIn profile URL',
+    'vcard.validation.instagramInvalid': 'Please enter a valid Instagram profile URL',
+    'vcard.validation.twitterInvalid': 'Please enter a valid Twitter/X profile URL',
+    'vcard.validation.whatsappInvalid': 'Please enter a valid WhatsApp number',
+    'vcard.validation.required': 'is required',
+    
+    // vCard Success Messages
+    'vcard.success.created': '🎉 vCard created successfully!',
+    'vcard.success.downloaded': 'vCard downloaded successfully!',
+    'vcard.success.urlCopied': 'vCard URL copied to clipboard!',
+    'vcard.success.shared': 'vCard shared successfully!',
+    
+    // vCard Error Messages
+    'vcard.error.createFailed': 'Failed to create vCard. Please try again.',
+    'vcard.error.downloadFailed': 'Failed to download vCard. Please try again.',
+    'vcard.error.shareFailed': 'Failed to share vCard. Please try again.',
+    
+    // vCard Address Section
+    'vcard.address.title': 'Address (Optional)',
+    'vcard.address.description': 'Add your business or home address',
 
     // Stats
     'stats.urls': 'URLs Shortened',
@@ -184,6 +310,12 @@ const translations = {
     'user.myUrls': 'My URLs',
     'user.plan': 'Plan',
     'user.hi': 'Hi',
+
+    // Theme
+    'theme.toggle': 'Toggle theme',
+    'theme.light': 'Light',
+    'theme.dark': 'Dark',
+    'theme.system': 'System',
   },
   es: {
     // Navigation
@@ -255,6 +387,31 @@ const translations = {
     'generating': 'Generando...',
     'qrCustomizer.previewDescription': 'Ve cómo se verá tu código QR en tiempo real',
 
+    // Enhanced QR Code Display
+    'qrDisplay.title': 'Generador de Código QR',
+    'qrDisplay.premium': 'Premium',
+    'qrDisplay.description': 'Genera un código QR para tu URL acortada y compártela fácilmente',
+    'qrDisplay.targetUrl': 'URL DESTINO',
+    'qrDisplay.download': 'Descargar',
+    'qrDisplay.copy': 'Copiar',
+    'qrDisplay.copied': '¡Copiado!',
+    'qrDisplay.share': 'Compartir',
+    'qrDisplay.regenerate': 'Regenerar',
+    'qrDisplay.generateTitle': 'Generar Código QR',
+    'qrDisplay.generateDescription': 'Crea un código QR escaneable para tu URL acortada',
+    'qrDisplay.generateButton': 'Generar Código QR',
+    'qrDisplay.generating': 'Generando...',
+    'qrDisplay.benefitsTitle': 'Beneficios del Código QR',
+    'qrDisplay.benefit1': 'Escanea con cualquier cámara de smartphone',
+    'qrDisplay.benefit2': 'Perfecto para materiales impresos y presentaciones',
+    'qrDisplay.benefit3': 'Formato PNG de alta calidad',
+    'qrDisplay.benefit4': 'Corrección de errores para escaneo confiable',
+    'qrDisplay.benefit5': 'Tamaño y formato personalizable',
+    'qrDisplay.downloadSuccess': '¡Código QR descargado!',
+    'qrDisplay.copySuccess': '¡Código QR copiado al portapapeles!',
+    'qrDisplay.shareSuccess': '¡Código QR compartido!',
+    'qrDisplay.generateSuccess': '🎉 ¡Código QR generado exitosamente!',
+
     // Features
     'features.title': '¿Por qué elegir SNR.red?',
     'features.subtitle': 'Proporcionamos la plataforma de acortamiento de URLs más avanzada con características de nivel empresarial',
@@ -276,6 +433,82 @@ const translations = {
     // vCard
     'vcard.title': 'Crear Tarjetas de Presentación Digitales',
     'vcard.description': 'Genera vCards profesionales con códigos QR para compartir fácilmente',
+    
+    // vCard Steps
+    'vcard.step1.title': 'Información Personal',
+    'vcard.step1.description': 'Cuéntanos sobre ti. Los campos marcados con * son obligatorios.',
+    'vcard.step2.title': 'Información de Contacto',
+    'vcard.step2.description': 'Agrega tus datos de contacto. Todos los campos son opcionales.',
+    'vcard.step3.title': 'Redes Sociales y Personalización',
+    'vcard.step3.description': 'Agrega perfiles sociales y elige el estilo de tu tarjeta.',
+    'vcard.step4.title': '¡Tu Tarjeta de Presentación Digital está Lista!',
+    'vcard.step4.description': '¡Tu vCard está lista! Descárgala o compártela con otros.',
+    
+    // vCard Fields
+    'vcard.firstName': 'Nombre',
+    'vcard.lastName': 'Apellido',
+    'vcard.company': 'Empresa',
+    'vcard.jobTitle': 'Puesto de Trabajo',
+    'vcard.email': 'Correo Electrónico',
+    'vcard.phone': 'Número de Teléfono',
+    'vcard.website': 'Sitio Web',
+    'vcard.linkedin': 'Perfil de LinkedIn',
+    'vcard.instagram': 'Perfil de Instagram',
+    'vcard.twitter': 'Perfil de Twitter/X',
+    'vcard.whatsapp': 'Número de WhatsApp',
+    'vcard.address.street': 'Dirección',
+    'vcard.address.city': 'Ciudad',
+    'vcard.address.state': 'Estado/Provincia',
+    'vcard.address.country': 'País',
+    'vcard.address.zipCode': 'Código Postal',
+    
+    // vCard Placeholders
+    'vcard.placeholder.firstName': 'Juan',
+    'vcard.placeholder.lastName': 'Pérez',
+    'vcard.placeholder.company': 'Acme Corp',
+    'vcard.placeholder.jobTitle': 'Ingeniero de Software',
+    'vcard.placeholder.email': 'juan@ejemplo.com',
+    'vcard.placeholder.phone': '+34 123 456 789',
+    'vcard.placeholder.website': 'https://juanperez.com',
+    'vcard.placeholder.linkedin': 'linkedin.com/in/juanperez',
+    'vcard.placeholder.instagram': 'instagram.com/juanperez',
+    'vcard.placeholder.twitter': 'twitter.com/juanperez',
+    'vcard.placeholder.whatsapp': '+34 123 456 789',
+    'vcard.placeholder.street': 'Calle Principal 123',
+    'vcard.placeholder.city': 'Madrid',
+    'vcard.placeholder.state': 'Madrid',
+    'vcard.placeholder.country': 'España',
+    'vcard.placeholder.zipCode': '28001',
+    
+    // vCard Helper Text
+    'vcard.helper.company': 'Opcional - Tu empresa u organización',
+    'vcard.helper.jobTitle': 'Opcional - Tu puesto o cargo',
+    'vcard.helper.phone': 'Selecciona tu país e ingresa tu número de teléfono',
+    'vcard.helper.website': 'Opcional - Tu sitio web personal o de empresa',
+    'vcard.helper.linkedin': 'Opcional - URL de tu perfil de LinkedIn',
+    'vcard.helper.instagram': 'Opcional - URL de tu perfil de Instagram',
+    'vcard.helper.twitter': 'Opcional - URL de tu perfil de Twitter/X',
+    'vcard.helper.whatsapp': 'Opcional - Tu número de WhatsApp para mensajería',
+    'vcard.helper.address': 'Opcional - Tu dirección comercial o residencial',
+    'vcard.helper.theme': 'Elige el estilo que mejor te represente',
+    
+    // vCard Theme
+    'vcard.theme.title': 'Estilo del Tema',
+    'vcard.theme.placeholder': 'Elige un tema',
+    'vcard.theme.professional': 'Profesional',
+    'vcard.theme.creative': 'Creativo',
+    'vcard.theme.minimal': 'Minimalista',
+    
+    // vCard Buttons
+    'vcard.button.next': 'Siguiente',
+    'vcard.button.previous': 'Anterior',
+    'vcard.button.create': 'Crear vCard',
+    'vcard.button.creating': 'Creando...',
+    'vcard.button.download': 'Descargar vCard',
+    'vcard.button.viewQr': 'Ver Código QR',
+    'vcard.button.share': 'Compartir',
+    'vcard.button.copyUrl': 'Copiar URL',
+    'vcard.button.backToForm': 'Crear Otra',
 
     // Stats
     'stats.urls': 'URLs Acortadas',
@@ -347,6 +580,12 @@ const translations = {
     'user.myUrls': 'Mis URLs',
     'user.plan': 'Plan',
     'user.hi': 'Hola',
+
+    // Theme
+    'theme.toggle': 'Cambiar tema',
+    'theme.light': 'Claro',
+    'theme.dark': 'Oscuro',
+    'theme.system': 'Sistema',
   }
 };
 

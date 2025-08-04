@@ -119,8 +119,8 @@ export default function AdminDashboard() {
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
-          <h2 className="text-lg font-semibold text-gray-900 mb-2">Error Loading Dashboard</h2>
-          <p className="text-gray-600 mb-4">{error}</p>
+          <h2 className="text-lg font-semibold text-foreground mb-2">Error Loading Dashboard</h2>
+          <p className="text-muted-foreground mb-4">{error}</p>
           <Button onClick={handleRefresh}>
             <RefreshCw className="h-4 w-4 mr-2" />
             Try Again
@@ -137,8 +137,8 @@ export default function AdminDashboard() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-          <p className="text-gray-600">Welcome to SNR.red Admin Panel</p>
+          <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
+          <p className="text-muted-foreground">Welcome to SNR.red Admin Panel</p>
         </div>
         <Button onClick={handleRefresh} disabled={refreshing}>
           <RefreshCw className={`h-4 w-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
@@ -278,16 +278,16 @@ export default function AdminDashboard() {
           <div className="space-y-4">
             {stats.topUrls.length > 0 ? (
               stats.topUrls.map((url, index) => (
-                <div key={url._id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div key={url._id} className="flex items-center justify-between p-3 bg-muted rounded-lg">
                   <div className="flex items-center space-x-3">
                     <div className="flex-shrink-0 w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
                       <span className="text-sm font-semibold text-blue-800">#{index + 1}</span>
                     </div>
                     <div>
-                      <div className="text-sm font-medium text-gray-900 truncate max-w-xs">
+                      <div className="text-sm font-medium text-foreground truncate max-w-xs">
                         {url.originalUrl}
                       </div>
-                      <div className="text-xs text-gray-500">
+                      <div className="text-xs text-muted-foreground">
                         /{url.shortCode}
                         {url.registeredUserId && (
                           <span className="ml-2">• {url.registeredUserId.name}</span>
@@ -296,14 +296,14 @@ export default function AdminDashboard() {
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="text-sm font-semibold text-gray-900">
+                    <div className="text-sm font-semibold text-foreground">
                       {url.clicks.toLocaleString()} clicks
                     </div>
                   </div>
                 </div>
               ))
             ) : (
-              <div className="text-center py-8 text-gray-500">
+              <div className="text-center py-8 text-muted-foreground">
                 No URLs with clicks yet
               </div>
             )}

@@ -126,15 +126,15 @@ export default function URLShortener() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50/30 via-background to-purple-50/30 dark:from-blue-950/20 dark:via-background dark:to-purple-950/20">
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-gray-900 mb-2">
+            <h1 className="text-4xl font-bold text-foreground mb-2">
               URL Shortener
             </h1>
-            <p className="text-lg text-gray-600">
+            <p className="text-lg text-muted-foreground">
               Shorten your URLs and generate QR codes with detailed analytics
             </p>
           </div>
@@ -191,7 +191,7 @@ export default function URLShortener() {
 
                 {/* Advanced Options */}
                 {showAdvanced && (
-                  <div className="space-y-4 p-4 bg-gray-50 rounded-lg border">
+                  <div className="space-y-4 p-4 bg-muted rounded-lg border">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {/* Custom Short Code */}
                       <div className="space-y-2">
@@ -294,7 +294,7 @@ export default function URLShortener() {
                       variant="ghost"
                       size="sm"
                       onClick={resetForm}
-                      className="text-gray-500 hover:text-gray-700"
+                      className="text-muted-foreground hover:text-foreground"
                     >
                       <Trash2 className="w-4 h-4" />
                     </Button>
@@ -328,8 +328,8 @@ export default function URLShortener() {
 
                   {/* Original URL */}
                   <div className="space-y-1">
-                    <Label className="text-sm text-gray-600">Original URL:</Label>
-                    <p className="text-sm break-all text-gray-800">{shortenedUrl.originalUrl}</p>
+                    <Label className="text-sm text-muted-foreground">Original URL:</Label>
+                    <p className="text-sm break-all text-foreground">{shortenedUrl.originalUrl}</p>
                   </div>
 
                   {/* Metadata */}
@@ -337,14 +337,14 @@ export default function URLShortener() {
                     <div className="space-y-2">
                       {shortenedUrl.title && (
                         <div>
-                          <Label className="text-sm text-gray-600">Title:</Label>
-                          <p className="text-sm text-gray-800">{shortenedUrl.title}</p>
+                          <Label className="text-sm text-muted-foreground">Title:</Label>
+                          <p className="text-sm text-foreground">{shortenedUrl.title}</p>
                         </div>
                       )}
                       {shortenedUrl.description && (
                         <div>
-                          <Label className="text-sm text-gray-600">Description:</Label>
-                          <p className="text-sm text-gray-800">{shortenedUrl.description}</p>
+                          <Label className="text-sm text-muted-foreground">Description:</Label>
+                          <p className="text-sm text-foreground">{shortenedUrl.description}</p>
                         </div>
                       )}
                     </div>

@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { copyToClipboard } from '@/lib/utils';
 import { qrApi } from '@/lib/api';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface QRCodeDisplayProps {
   url: string;
@@ -26,6 +27,7 @@ interface QRCodeDisplayProps {
 }
 
 export default function EnhancedQRCodeDisplay({ url, qrCodeDataUrl }: Omit<QRCodeDisplayProps, 'qrCodeUrl'>) {
+  const { t } = useLanguage();
   const [localQrDataUrl, setLocalQrDataUrl] = useState<string | null>(qrCodeDataUrl || null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -45,7 +47,7 @@ export default function EnhancedQRCodeDisplay({ url, qrCodeDataUrl }: Omit<QRCod
         errorCorrectionLevel: 'M'
       });
       setLocalQrDataUrl(dataUrl);
-      toast.success('🎉 QR code generated successfully!');
+      toast.success(t('qrDisplay.generateSuccess'));
     } catch (error) {
       console.error('Error generating QR code:', error);
       toast.error('Failed to generate QR code');
@@ -63,7 +65,7 @@ export default function EnhancedQRCodeDisplay({ url, qrCodeDataUrl }: Omit<QRCod
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    toast.success('QR code downloaded!');
+    toast.success(t('qrDisplay.downloadSuccess'));
   };
 
   const handleCopy = async () => {
@@ -82,12 +84,12 @@ export default function EnhancedQRCodeDisplay({ url, qrCodeDataUrl }: Omit<QRCod
       ]);
       
       setCopied(true);
-      toast.success('QR code copied to clipboard!');
+      toast.success(t('qrDisplay.copySuccess'));
       setTimeout(() => setCopied(false), 2000);
     } catch {
       // Fallback to copying URL
       await copyToClipboard(url);
-      toast.success('URL copied to clipboard!');
+      toast.success(t('copyUrl'));
     }
   };
 
@@ -105,11 +107,11 @@ export default function EnhancedQRCodeDisplay({ url, qrCodeDataUrl }: Omit<QRCod
           text: `QR Code for ${url}`,
           files: [file]
         });
-        toast.success('QR code shared!');
+        toast.success(t('qrDisplay.shareSuccess'));
       } else {
         // Fallback - copy URL
         await copyToClipboard(url);
-        toast.success('URL copied to clipboard!');
+        toast.success(t('copyUrl'));
       }
     } catch (error) {
       console.error('Error sharing:', error);
@@ -123,26 +125,26 @@ export default function EnhancedQRCodeDisplay({ url, qrCodeDataUrl }: Omit<QRCod
       <CardHeader className="relative">
         <CardTitle className="flex items-center gap-2">
           <QrCode className="w-5 h-5 text-purple-600" />
-          QR Code Generator
+          {t('qrDisplay.title')}
           <Badge variant="secondary" className="ml-auto">
             <Sparkles className="w-3 h-3 mr-1" />
-            Premium
+            {t('qrDisplay.premium')}
           </Badge>
         </CardTitle>
         <CardDescription>
-          Generate a QR code for your shortened URL to share easily
+          {t('qrDisplay.description')}
         </CardDescription>
       </CardHeader>
       <CardContent className="relative space-y-6">
         {/* URL Display */}
-        <div className="bg-white/70 border border-purple-200 rounded-lg p-4">
+        <div className="bg-background/70 border border-purple-200 rounded-lg p-4">
           <div className="flex items-center gap-2 mb-2">
             <Badge variant="outline" className="text-xs">
-              TARGET URL
+              {t('qrDisplay.targetUrl')}
             </Badge>
           </div>
           <div className="flex items-center gap-2">
-            <code className="flex-1 bg-gray-100 px-3 py-2 rounded text-sm font-mono text-purple-700 truncate">
+            <code className="flex-1 bg-muted px-3 py-2 rounded text-sm font-mono text-purple-700 truncate">
               {url}
             </code>
             <Button
@@ -161,7 +163,7 @@ export default function EnhancedQRCodeDisplay({ url, qrCodeDataUrl }: Omit<QRCod
           <div className="text-center space-y-4">
             <div className="relative inline-block">
               <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg blur-xl opacity-20"></div>
-              <div className="relative bg-white p-4 rounded-lg shadow-lg">
+              <div className="relative bg-background p-4 rounded-lg shadow-lg">
                 <Image 
                   src={localQrDataUrl} 
                   alt="QR Code" 
@@ -178,7 +180,7 @@ export default function EnhancedQRCodeDisplay({ url, qrCodeDataUrl }: Omit<QRCod
                 className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 flex items-center gap-2"
               >
                 <Download className="w-4 h-4" />
-                Download
+                {t('qrDisplay.download')}
               </Button>
               
               <Button
@@ -189,12 +191,12 @@ export default function EnhancedQRCodeDisplay({ url, qrCodeDataUrl }: Omit<QRCod
                 {copied ? (
                   <>
                     <Check className="w-4 h-4" />
-                    Copied!
+                    {t('qrDisplay.copied')}
                   </>
                 ) : (
                   <>
                     <Copy className="w-4 h-4" />
-                    Copy
+                    {t('qrDisplay.copy')}
                   </>
                 )}
               </Button>
@@ -205,7 +207,7 @@ export default function EnhancedQRCodeDisplay({ url, qrCodeDataUrl }: Omit<QRCod
                 className="hover:bg-purple-50 hover:text-purple-600 flex items-center gap-2"
               >
                 <Share2 className="w-4 h-4" />
-                Share
+                {t('qrDisplay.share')}
               </Button>
               
               <Button
@@ -215,7 +217,7 @@ export default function EnhancedQRCodeDisplay({ url, qrCodeDataUrl }: Omit<QRCod
                 className="hover:bg-purple-50 hover:text-purple-600 flex items-center gap-2"
               >
                 <RefreshCw className={`w-4 h-4 ${isGenerating ? 'animate-spin' : ''}`} />
-                Regenerate
+                {t('qrDisplay.regenerate')}
               </Button>
             </div>
           </div>
@@ -226,11 +228,11 @@ export default function EnhancedQRCodeDisplay({ url, qrCodeDataUrl }: Omit<QRCod
               <QrCode className="relative w-16 h-16 text-purple-600 mx-auto mb-4" />
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                Generate QR Code
+              <h3 className="text-lg font-semibold text-foreground mb-2">
+                {t('qrDisplay.generateTitle')}
               </h3>
-              <p className="text-gray-600 mb-6">
-                Create a scannable QR code for your shortened URL
+              <p className="text-muted-foreground mb-6">
+                {t('qrDisplay.generateDescription')}
               </p>
               <Button
                 onClick={generateQrCode}
@@ -238,24 +240,24 @@ export default function EnhancedQRCodeDisplay({ url, qrCodeDataUrl }: Omit<QRCod
                 className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 flex items-center gap-2"
               >
                 <Zap className="w-4 h-4" />
-                {isGenerating ? 'Generating...' : 'Generate QR Code'}
+                {isGenerating ? t('qrDisplay.generating') : t('qrDisplay.generateButton')}
               </Button>
             </div>
           </div>
         )}
 
         {/* QR Code Info */}
-        <div className="bg-white/70 border border-purple-200 rounded-lg p-4">
+        <div className="bg-background/70 border border-purple-200 rounded-lg p-4">
           <h4 className="font-semibold text-purple-900 mb-2 flex items-center gap-2">
             <Sparkles className="w-4 h-4" />
-            QR Code Benefits
+            {t('qrDisplay.benefitsTitle')}
           </h4>
           <ul className="text-sm text-purple-700 space-y-1">
-            <li>• Scan with any smartphone camera</li>
-            <li>• Perfect for print materials and presentations</li>
-            <li>• High-quality PNG format</li>
-            <li>• Error correction for reliable scanning</li>
-            <li>• Customizable size and format</li>
+            <li>• {t('qrDisplay.benefit1')}</li>
+            <li>• {t('qrDisplay.benefit2')}</li>
+            <li>• {t('qrDisplay.benefit3')}</li>
+            <li>• {t('qrDisplay.benefit4')}</li>
+            <li>• {t('qrDisplay.benefit5')}</li>
           </ul>
         </div>
       </CardContent>

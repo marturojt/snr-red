@@ -124,6 +124,30 @@ export interface RegisterRequest {
   plan?: 'free' | 'premium';
 }
 
+// API keys (programmatic access from other projects)
+export type ApiKeyScope = 'urls:read' | 'urls:write' | 'analytics:read';
+
+export interface ApiKey {
+  id: string;
+  userId: string;
+  name: string;
+  keyPrefix: string; // visible prefix, e.g. "snr_live_ab12"
+  scopes: ApiKeyScope[];
+  lastUsedAt?: Date;
+  revoked: boolean;
+  createdAt: Date;
+}
+
+export interface CreateApiKeyRequest {
+  name: string;
+  scopes?: ApiKeyScope[];
+}
+
+// Returned only once, at creation time. `token` is never persisted or returned again.
+export interface CreateApiKeyResponse extends ApiKey {
+  token: string;
+}
+
 export interface VCardData {
   id: string;
   userId?: string;

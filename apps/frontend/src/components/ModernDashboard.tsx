@@ -16,11 +16,13 @@ import {
   TrendingUp,
   Crown,
   Shield,
-  Eye
+  Eye,
+  Key
 } from 'lucide-react';
 import { authApi } from '@/lib/api';
 import EnhancedUserUrls from './EnhancedUserUrls';
 import EnhancedAuthComponent from './EnhancedAuthComponent';
+import ApiKeysManager from './ApiKeysManager';
 
 interface User {
   id: string;
@@ -203,7 +205,7 @@ export default function ModernDashboard({ user, onBack, onUserUpdate }: Dashboar
 
           {/* Main Dashboard Tabs */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-            <TabsList className="grid w-full grid-cols-4 bg-background shadow-sm border">
+            <TabsList className="grid w-full grid-cols-5 bg-background shadow-sm border">
               <TabsTrigger value="overview" className="flex items-center gap-2">
                 <BarChart3 className="w-4 h-4" />
                 Overview
@@ -215,6 +217,10 @@ export default function ModernDashboard({ user, onBack, onUserUpdate }: Dashboar
               <TabsTrigger value="analytics" className="flex items-center gap-2">
                 <TrendingUp className="w-4 h-4" />
                 Analytics
+              </TabsTrigger>
+              <TabsTrigger value="api-keys" className="flex items-center gap-2">
+                <Key className="w-4 h-4" />
+                API Keys
               </TabsTrigger>
               <TabsTrigger value="settings" className="flex items-center gap-2">
                 <Settings className="w-4 h-4" />
@@ -368,6 +374,11 @@ export default function ModernDashboard({ user, onBack, onUserUpdate }: Dashboar
               </Card>
             </TabsContent>
 
+            {/* API Keys Tab */}
+            <TabsContent value="api-keys" className="space-y-6">
+              <ApiKeysManager />
+            </TabsContent>
+
             {/* Settings Tab */}
             <TabsContent value="settings" className="space-y-6">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -409,7 +420,7 @@ export default function ModernDashboard({ user, onBack, onUserUpdate }: Dashboar
                           <p className="font-medium">API Keys</p>
                           <p className="text-sm text-muted-foreground">Manage your API access</p>
                         </div>
-                        <Button variant="outline" size="sm">
+                        <Button variant="outline" size="sm" onClick={() => setActiveTab('api-keys')}>
                           Manage
                         </Button>
                       </div>

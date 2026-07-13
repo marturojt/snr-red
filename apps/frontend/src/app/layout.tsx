@@ -41,7 +41,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    // suppressHydrationWarning: the inline script below sets the theme class on
+    // <html> before React hydrates, so the server/client class attribute differs
+    // on purpose. This scopes the suppression to this one element only.
+    <html lang="en" suppressHydrationWarning>
       <head>
         <script
           dangerouslySetInnerHTML={{

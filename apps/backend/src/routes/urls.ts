@@ -3,9 +3,24 @@ import { body, param, validationResult } from 'express-validator';
 import { UrlService } from '../services/urlService';
 import { createError, asyncHandler } from '../middleware/errorHandler';
 import { optionalAuth, authenticateToken } from '../middleware/auth';
-import { CreateUrlRequest, ApiResponse } from '@url-shortener/types';
+import { optionalCombinedAuth } from '../middleware/apiKeyAuth';
+import { CreateUrlRequest, ApiResponse, UrlData } from '@url-shortener/types';
 
 const router = express.Router();
+
+// Ownership: a URL belongs to the caller if their authenticated principal (JWT
+// or API key) matches registeredUserId, or their anonymous x-user-id matches userId.
+function ownsUrl(url: UrlData, req: express.Request): boolean {
+  const principalId = req.principal?.id;
+  if (principalId && url.registeredUserId && url.registeredUserId === principalId) {
+    return true;
+  }
+  const anonId = req.headers['x-user-id'] as string | undefined;
+  if (anonId && url.userId && url.userId === anonId) {
+    return true;
+  }
+  return false;
+}
 
 // Validation middleware
 const validateUrl = [
@@ -130,9 +145,15 @@ router.get('/check/:shortCode', validateShortCode, asyncHandler(async (req, res)
   res.json(response);
 }));
 
-// Get user's URLs (if user system is implemented)
+// Get user's URLs. Anonymous listing is keyed by the browser-generated id, so
+// require the x-user-id header to match the requested userId (prevents trivially
+// enumerating another client's anonymous URLs).
 router.get('/user/:userId', asyncHandler(async (req, res) => {
   const { userId } = req.params;
+  const anonId = req.headers['x-user-id'] as string | undefined;
+  if (anonId !== userId) {
+    throw createError(403, 'Not authorized to list these URLs');
+  }
   const urls = await UrlService.getAllByUser(userId);
 
   const response: ApiResponse = {
@@ -156,14 +177,25 @@ router.get('/my-urls', authenticateToken, asyncHandler(async (req, res) => {
 }));
 
 // Update URL
-router.put('/:id', asyncHandler(async (req, res) => {
+router.put('/:id', optionalCombinedAuth, asyncHandler(async (req, res) => {
   const { id } = req.params;
   const updates = req.body;
+
+  const existing = await UrlService.getById(id);
+  if (!existing) {
+    throw createError(404, 'URL not found');
+  }
+  if (!ownsUrl(existing, req)) {
+    throw createError(403, 'Not authorized to modify this URL');
+  }
 
   // Remove fields that shouldn't be updated
   delete updates.shortCode;
   delete updates.shortUrl;
   delete updates.createdAt;
+  delete updates.userId;
+  delete updates.registeredUserId;
+  delete updates.userType;
 
   const url = await UrlService.update(id, updates);
 
@@ -181,8 +213,17 @@ router.put('/:id', asyncHandler(async (req, res) => {
 }));
 
 // Delete URL
-router.delete('/:id', asyncHandler(async (req, res) => {
+router.delete('/:id', optionalCombinedAuth, asyncHandler(async (req, res) => {
   const { id } = req.params;
+
+  const existing = await UrlService.getById(id);
+  if (!existing) {
+    throw createError(404, 'URL not found');
+  }
+  if (!ownsUrl(existing, req)) {
+    throw createError(403, 'Not authorized to delete this URL');
+  }
+
   const deleted = await UrlService.delete(id);
 
   if (!deleted) {

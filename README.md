@@ -175,6 +175,16 @@ docker run -d -p 27017:27017 --name mongodb mongo:latest
 ### Redirección
 - `GET /:shortCode` - Redirigir a URL original (con tracking)
 
+### API pública v1 (para consumir desde otros proyectos)
+Autenticada con **API keys** (header `X-API-Key`), gestionadas desde el dashboard (pestaña *API Keys*).
+- `POST /api/v1/urls` - Acortar URL
+- `GET /api/v1/urls` - Listar tus URLs
+- `GET /api/v1/urls/:shortCode` - Detalle
+- `DELETE /api/v1/urls/:shortCode` - Eliminar
+- `GET /api/v1/urls/:shortCode/analytics` - Estadísticas
+
+Referencia completa: [docs/development/API-V1-REFERENCE.md](docs/development/API-V1-REFERENCE.md).
+
 ## 🔧 Scripts Disponibles
 
 ### Root (Monorepo)
@@ -219,14 +229,19 @@ npm run start --workspace=backend
 3. Iniciar: `npm run start --workspace=frontend`
 
 #### MongoDB
-La configuración actual usa MongoDB sin autenticación para simplificar el deployment.
+En producción, MongoDB debe escuchar solo en `127.0.0.1` y (recomendado) con
+autenticación habilitada. No lo expongas al exterior.
 
 **Configuración en producción:**
 ```yaml
 # /etc/mongod.conf
+net:
+  bindIp: 127.0.0.1
 security:
-  authorization: disabled
+  authorization: enabled
 ```
+El backend además aborta el arranque en `NODE_ENV=production` si `JWT_SECRET`
+no es un valor aleatorio de >= 32 caracteres o si falta `MONGODB_URI`.
 
 **Variables de entorno:**
 ```bash

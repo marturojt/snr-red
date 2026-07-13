@@ -3,7 +3,6 @@ import { body, validationResult } from 'express-validator';
 import { AuthService, LoginRequest, RegisterRequest } from '../services/authService';
 import { createError, asyncHandler } from '../middleware/errorHandler';
 import { authenticateToken } from '../middleware/auth';
-import { User } from '../models/User';
 import { ApiResponse } from '@url-shortener/types';
 
 const router = express.Router();
@@ -109,28 +108,10 @@ router.get('/me', authenticateToken, asyncHandler(async (req, res) => {
   res.json(response);
 }));
 
-// Update user plan
-router.put('/plan', authenticateToken, asyncHandler(async (req, res) => {
-  const { plan } = req.body;
-
-  if (!plan || !['free', 'premium'].includes(plan)) {
-    throw createError(400, 'Invalid plan. Must be free or premium');
-  }
-
-  const user = await AuthService.updateUserPlan(req.user!.id, plan);
-
-  if (!user) {
-    throw createError(404, 'User not found');
-  }
-
-  const response: ApiResponse = {
-    success: true,
-    data: user,
-    message: 'Plan updated successfully'
-  };
-
-  res.json(response);
-}));
+// NOTE: Self-service plan changes were removed. A user must never be able to
+// upgrade themselves to `premium` for free. Plan changes are performed by an
+// admin via `PUT /api/admin/users/:id`, and in Fase 3 will be driven by the
+// Stripe billing webhook. See docs/development/API-V1-REFERENCE.md.
 
 // Deactivate account
 router.delete('/account', authenticateToken, asyncHandler(async (req, res) => {
@@ -146,34 +127,6 @@ router.delete('/account', authenticateToken, asyncHandler(async (req, res) => {
   };
 
   res.json(response);
-}));
-
-// Temporary debug login route
-router.post('/debug-login', asyncHandler(async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    console.log('Debug login attempt:', { email, password });
-    
-    const user = await User.findOne({ email });
-    console.log('User found in debug:', user ? 'Yes' : 'No');
-    
-    if (user) {
-      console.log('User details:', {
-        email: user.email,
-        isActive: user.isActive,
-        isAdmin: user.isAdmin
-      });
-      
-      const bcrypt = require('bcryptjs');
-      const isPasswordValid = await bcrypt.compare(password, user.password);
-      console.log('Password valid in debug:', isPasswordValid);
-    }
-    
-    res.json({ success: true, debug: 'Check server console for details' });
-  } catch (error) {
-    console.error('Debug login error:', error);
-    res.status(500).json({ success: false, error: error.message });
-  }
 }));
 
 export default router;

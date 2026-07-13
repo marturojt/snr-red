@@ -8,21 +8,9 @@ import { ApiResponse } from '@url-shortener/types';
 
 const router = express.Router();
 
-// Temporalmente comentamos la autenticación para diagnosticar
-// router.use(adminAuthMiddleware);
-
-// Test route to verify admin routes are working
-router.get('/test', (req, res) => {
-  res.json({ success: true, message: 'Admin routes are working' });
-});
-
-// Apply admin authentication to all routes except test
-router.use('/users', adminAuthMiddleware);
-router.use('/urls', adminAuthMiddleware);
-router.use('/analytics', adminAuthMiddleware);
-router.use('/stats', adminAuthMiddleware);
-router.use('/cleanup', adminAuthMiddleware);
-router.use('/cleanup-stats', adminAuthMiddleware);
+// Protect every admin route. adminAuthMiddleware verifies the JWT and requires
+// isAdmin + isActive on the user.
+router.use(adminAuthMiddleware);
 
 // Get system statistics
 router.get('/stats', asyncHandler(async (req, res) => {

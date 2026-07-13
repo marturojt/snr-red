@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { CreateUrlRequest, UrlData, UrlStatsResponse, ApiResponse, QrCodeOptions } from '@url-shortener/types';
+import { CreateUrlRequest, UrlData, UrlStatsResponse, ApiResponse, QrCodeOptions, ApiKey, ApiKeyScope, CreateApiKeyResponse } from '@url-shortener/types';
 import { getUserId } from './utils';
 
 // vCard interfaces (temporary u// QR Code options interface
@@ -232,10 +232,11 @@ export const authApi = {
     return response.data!;
   },
 
-  // Update user plan
-  updatePlan: async (plan: 'free' | 'premium'): Promise<User> => {
-    const response: ApiResponse<User> = await api.put('/auth/plan', { plan });
-    return response.data!;
+  // Self-service plan upgrades are disabled until billing ships (Fase 3).
+  // Kept as a stub so existing "upgrade" buttons surface a clear message instead
+  // of hitting a removed endpoint or silently self-upgrading to premium for free.
+  updatePlan: async (_plan: 'free' | 'premium'): Promise<User> => {
+    throw new Error('El plan Premium estará disponible próximamente.');
   },
 
   // Get user's URLs (authenticated)
@@ -265,6 +266,26 @@ export const authApi = {
   // Check if user is authenticated
   isAuthenticated: (): boolean => {
     return !!localStorage.getItem('auth-token');
+  }
+};
+
+// API keys management (dashboard, authenticated with JWT)
+export const keysApi = {
+  // List the current user's API keys
+  list: async (): Promise<ApiKey[]> => {
+    const response: ApiResponse<ApiKey[]> = await api.get('/keys');
+    return response.data!;
+  },
+
+  // Create a new API key. The `token` field is only present in this response.
+  create: async (name: string, scopes?: ApiKeyScope[]): Promise<CreateApiKeyResponse> => {
+    const response: ApiResponse<CreateApiKeyResponse> = await api.post('/keys', { name, scopes });
+    return response.data!;
+  },
+
+  // Revoke an API key
+  revoke: async (id: string): Promise<void> => {
+    await api.delete(`/keys/${id}`);
   }
 };
 

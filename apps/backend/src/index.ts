@@ -11,8 +11,9 @@ import analyticsRoutes from './routes/analytics';
 import qrRoutes from './routes/qr';
 import authRoutes from './routes/auth';
 import adminRoutes from './routes/admin';
-import adminTestRoutes from './routes/admin-test';
 import vcardRoutes from './routes/vcard';
+import keysRoutes from './routes/keys';
+import v1Routes from './routes/v1';
 import { CleanupService } from './services/cleanupService';
 
 dotenv.config();
@@ -59,8 +60,11 @@ app.use('/api/urls', urlRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/qr', qrRoutes);
 app.use('/api/admin', adminRoutes);
-app.use('/api/admin-test', adminTestRoutes);
 app.use('/api/vcard', vcardRoutes);
+
+// API key management (dashboard, JWT-protected) and public programmatic API (X-API-Key)
+app.use('/api/keys', keysRoutes);
+app.use('/api/v1', v1Routes);
 
 // Health check
 app.get('/health', (req, res) => {
@@ -111,20 +115,21 @@ app.get('/:shortCode', async (req, res) => {
     // Import here to avoid circular dependency
     const { UrlService } = await import('./services/urlService');
     const { AnalyticsService } = await import('./services/analyticsService');
-    
-    const url = await UrlService.getByShortCode(shortCode);
-    
+
+    // Update lastAccessedAt so inactivity-based cleanup counts from last click
+    const url = await UrlService.getByShortCodeAndUpdateAccess(shortCode);
+
     if (!url || !url.isActive) {
       return res.status(404).json({ error: 'URL not found' });
     }
-    
+
     if (url.expiresAt && new Date() > url.expiresAt) {
       return res.status(410).json({ error: 'URL has expired' });
     }
-    
+
     // Track analytics
     await AnalyticsService.trackClick(url.id, req);
-    
+
     res.redirect(301, url.originalUrl);
   } catch (error) {
     console.error('Redirect error:', error);
@@ -140,9 +145,10 @@ app.get('/redirect/:shortCode', async (req, res) => {
     // Import here to avoid circular dependency
     const { UrlService } = await import('./services/urlService');
     const { AnalyticsService } = await import('./services/analyticsService');
-    
-    const url = await UrlService.getByShortCode(shortCode);
-    
+
+    // Update lastAccessedAt so inactivity-based cleanup counts from last click
+    const url = await UrlService.getByShortCodeAndUpdateAccess(shortCode);
+
     if (!url || !url.isActive) {
       return res.status(404).send(`
         <!DOCTYPE html>
@@ -199,9 +205,35 @@ app.use('*', (req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });
 
+// Fail fast in production if critical secrets are missing or left at insecure defaults
+function validateEnv() {
+  if (process.env.NODE_ENV !== 'production') return;
+
+  const insecureSecrets = [
+    'your-secret-key-change-this-in-production',
+    'your-super-secret-jwt-key-change-this-in-production',
+    'dev-only-insecure-secret-change-me',
+    'super-secure-random-jwt-secret-32-chars-minimum'
+  ];
+  const jwtSecret = process.env.JWT_SECRET;
+
+  if (!jwtSecret || insecureSecrets.includes(jwtSecret) || jwtSecret.length < 32) {
+    console.error(
+      '❌ FATAL: JWT_SECRET must be set to a unique random value of at least 32 characters in production.'
+    );
+    process.exit(1);
+  }
+
+  if (!process.env.MONGODB_URI) {
+    console.error('❌ FATAL: MONGODB_URI must be set in production.');
+    process.exit(1);
+  }
+}
+
 // Start server
 async function startServer() {
   try {
+    validateEnv();
     await connectDatabase();
     app.listen(PORT, () => {
       console.log(`🚀 Server running on port ${PORT}`);

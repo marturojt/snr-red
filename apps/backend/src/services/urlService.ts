@@ -36,50 +36,67 @@ export class UrlService {
     registeredUserId?: string,
     userType: 'anonymous' | 'free' | 'premium' = 'anonymous'
   ): Promise<UrlData> {
-    // Generate short code
-    let shortCode = data.customCode;
-    if (!shortCode) {
-      shortCode = nanoid(8);
-      // Ensure uniqueness
-      while (await this.getByShortCode(shortCode)) {
-        shortCode = nanoid(8);
-      }
-    } else {
-      // Check if custom code is available
-      const existing = await this.getByShortCode(shortCode);
+    const isCustom = !!data.customCode;
+    const baseUrl = process.env.BASE_URL || 'http://localhost:3001';
+
+    // For custom codes, fail early with a clear message if already taken.
+    if (isCustom) {
+      const existing = await Url.findOne({ shortCode: data.customCode });
       if (existing) {
         throw new Error('Custom short code already exists');
       }
     }
 
-    const baseUrl = process.env.BASE_URL || 'http://localhost:3001';
-    const shortUrl = `${baseUrl}/${shortCode}`;
-
     // Calculate auto expiration based on user type
     const autoExpiresAt = CleanupService.calculateAutoExpiration(userType);
 
-    // Create URL record
-    const urlData = new Url({
-      originalUrl: data.originalUrl,
-      shortCode,
-      shortUrl,
-      title: data.title,
-      description: data.description,
-      expiresAt: data.expiresAt,
-      userId: userId || null,
-      registeredUserId: registeredUserId || null,
-      userType,
-      autoExpiresAt,
-      lastAccessedAt: new Date(),
-      isActive: true
-    });
+    // Persist, relying on the unique index as the source of truth. On a
+    // duplicate-key race (E11000) for auto-generated codes, re-roll and retry.
+    const maxAttempts = 5;
+    let savedUrl: IUrl | undefined;
 
-    const savedUrl = await urlData.save();
+    for (let attempt = 0; attempt < maxAttempts; attempt++) {
+      const shortCode = isCustom ? data.customCode! : nanoid(8);
+      const shortUrl = `${baseUrl}/${shortCode}`;
+
+      const urlData = new Url({
+        originalUrl: data.originalUrl,
+        shortCode,
+        shortUrl,
+        title: data.title,
+        description: data.description,
+        expiresAt: data.expiresAt,
+        userId: userId || null,
+        registeredUserId: registeredUserId || null,
+        userType,
+        autoExpiresAt,
+        lastAccessedAt: new Date(),
+        isActive: true
+      });
+
+      try {
+        savedUrl = await urlData.save();
+        break;
+      } catch (error: any) {
+        const isDuplicate = error?.code === 11000;
+        if (isDuplicate && isCustom) {
+          throw new Error('Custom short code already exists');
+        }
+        if (isDuplicate && attempt < maxAttempts - 1) {
+          continue; // collision on a generated code — try a fresh one
+        }
+        throw error;
+      }
+    }
+
+    if (!savedUrl) {
+      throw new Error('Failed to generate a unique short code, please retry');
+    }
 
     // Generate QR code if requested
     if (data.generateQr) {
       try {
-        const qrCodeUrl = await QrService.generateQrCode(shortUrl, {
+        const qrCodeUrl = await QrService.generateQrCode(savedUrl.shortUrl, {
           size: 200,
           format: 'png'
         });

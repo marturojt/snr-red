@@ -28,6 +28,7 @@ import {
 } from 'lucide-react';
 import { urlApi, qrApi, authApi } from '@/lib/api';
 import { copyToClipboard, isValidUrl } from '@/lib/utils';
+import { FEATURE_VCARDS, FEATURE_QR } from '@/lib/features';
 import { useLanguage } from '@/context/LanguageContext';
 import EnhancedQRCodeDisplay from './EnhancedQRCodeDisplay';
 import AuthComponent from './AuthComponent';
@@ -245,15 +246,17 @@ export default function ModernLandingPage() {
             <Card className="max-w-4xl mx-auto border shadow-lg">
               <CardContent className="p-8">
                 <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'url' | 'vcard')}>
-                  <TabsList className="grid w-full grid-cols-2 mb-8">
+                  <TabsList className={`grid w-full ${FEATURE_VCARDS ? 'grid-cols-2' : 'grid-cols-1'} mb-8`}>
                     <TabsTrigger value="url" className="flex items-center gap-2">
                       <Link className="w-4 h-4" />
                       {t('tabs.url')}
                     </TabsTrigger>
-                    <TabsTrigger value="vcard" className="flex items-center gap-2">
-                      <User className="w-4 h-4" />
-                      {t('tabs.vcard')}
-                    </TabsTrigger>
+                    {FEATURE_VCARDS && (
+                      <TabsTrigger value="vcard" className="flex items-center gap-2">
+                        <User className="w-4 h-4" />
+                        {t('tabs.vcard')}
+                      </TabsTrigger>
+                    )}
                   </TabsList>
 
                   <TabsContent value="url" className="space-y-6">
@@ -364,18 +367,20 @@ export default function ModernLandingPage() {
                     </form>
                   </TabsContent>
 
-                  <TabsContent value="vcard" className="space-y-6">
-                    <div className="text-center mb-6">
-                      <h3 className="text-2xl font-bold text-foreground mb-2">
-                        {t('vcard.title')}
-                      </h3>
-                      <p className="text-muted-foreground">
-                        {t('vcard.description')}
-                      </p>
-                    </div>
-                    
-                    <VCardGenerator />
-                  </TabsContent>
+                  {FEATURE_VCARDS && (
+                    <TabsContent value="vcard" className="space-y-6">
+                      <div className="text-center mb-6">
+                        <h3 className="text-2xl font-bold text-foreground mb-2">
+                          {t('vcard.title')}
+                        </h3>
+                        <p className="text-muted-foreground">
+                          {t('vcard.description')}
+                        </p>
+                      </div>
+
+                      <VCardGenerator />
+                    </TabsContent>
+                  )}
                 </Tabs>
               </CardContent>
             </Card>
@@ -413,7 +418,7 @@ export default function ModernLandingPage() {
                     </div>
                   </div>
 
-                  {qrCodeDataUrl && (
+                  {FEATURE_QR && qrCodeDataUrl && (
                     <div className="flex justify-center">
                       <EnhancedQRCodeDisplay url={shortenedUrl.shortUrl} qrCodeDataUrl={qrCodeDataUrl} />
                     </div>

@@ -38,7 +38,7 @@ Thumbs.db
 *~
 
 # Package manager files
-package-lock.json
+# package-lock.json is committed on purpose: reproducible installs + `npm ci` in deploy
 yarn.lock
 pnpm-lock.yaml
 
